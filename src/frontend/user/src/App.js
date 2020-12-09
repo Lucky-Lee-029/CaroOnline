@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { Route, Redirect, Switch} from 'react-router-dom';
 import LoginComponent from './components/Login/Login';
@@ -13,8 +12,9 @@ const App=(token)=> {
 					path="/"
 					render={() =>
 						<LoginComponent />
+						
 					}
-				/>
+					/>
         <Route
 					exact
 					path="/dashboard"
