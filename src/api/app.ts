@@ -6,6 +6,7 @@ import { connect, } from "mongoose";
 
 // routers
 import users from "./routes/users";
+import auth from "./routes/auth";
 
 dotenv.config({
   path: "../../.env",
@@ -32,7 +33,31 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/users", users);
+app.use("/auth", auth);
 
-app.listen(8000, () => {
+// socket
+let socket_user: Map<any, any> = new Map();
+const server = require("http").Server(app);
+const io = require("socket.io")(server);
+
+io.on("connection", (sock: any) => {
+  sock.on("online", (user: any) => {
+    socket_user.set(sock.id, user);
+    const users = [...socket_user.values()];
+    io.emit("list", users);
+  });
+  sock.on("logout", () => {
+    socket_user.delete(sock.id);
+    const users = [...socket_user.values()];
+    io.emit("list", users);
+  });
+  io.on("disconnect", () => {
+    socket_user.delete(sock.id);
+    const users = [...socket_user.values()];
+    io.emit("list", users);
+  });
+});
+
+server.listen(8000, () => {
   console.log("Server running on port 8000");
 });
