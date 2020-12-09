@@ -18,7 +18,4 @@ router.route("/")
 router.route("/username")
   .post(createUserByUsername);
 
-router.route("/facebook")
-  .get(loginByFacebook);
-
 export default router;
