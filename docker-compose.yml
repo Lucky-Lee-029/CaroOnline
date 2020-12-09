@@ -7,4 +7,12 @@ services:
     env_file:
       - ./.env
     ports:
-      - "5000:8000"
+      - "8000:8000"
+  admin-frontend:
+    container_name: admin_frontend
+    restart: always
+    build: ./src/frontend/admin
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    ports:
+      - "5000:5000"
