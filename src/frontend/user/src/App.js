@@ -2,6 +2,7 @@ import './App.css';
 import { Route, Redirect, Switch} from 'react-router-dom';
 import LoginComponent from './components/Login/Login';
 import DashboardComponent from './components/Dashboard/Dashboard';
+import GameComponent from './components/Game/Game'
 
 const App=(token)=> {
   return (
@@ -16,12 +17,17 @@ const App=(token)=> {
 					}
 					/>
         <Route
-					exact
 					path="/dashboard"
 					render={() =>
 						<DashboardComponent/> 
 					}
 				/>
+		<Route
+					path="/game"
+					render={()=>{
+						<GameComponent/>
+					}}
+		></Route>
       </Switch>
     </div>
   );
