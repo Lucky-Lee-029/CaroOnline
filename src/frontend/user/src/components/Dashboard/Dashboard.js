@@ -64,7 +64,8 @@ const DashboardComponent=(props)=>{
                     <GridItem roomId={6}/>
                     <GridItem roomId={6}/>
                     <GridItem roomId={6}/>
-                 </Grid> 
+                 </Grid>
+                 <Button onClick={handleClickJoinGame.bind(this)}>Game view</Button>
             </Container>
         </div>
     )

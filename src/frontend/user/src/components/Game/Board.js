@@ -21,16 +21,17 @@ function Board (props) {
     const { winCells } = props;
     const { squares } = props;
     const { handleClick } = props;
-    const { currentCell } = props;
+    // const { currentCell } = props;
 
-    for (let i = 0; i < squares.length; i += 1) {
-        for (let j = 0; j < squares[i].length; j += 1) {
+    for (let i = 0; i < 20; i += 1) {
+        for (let j = 0; j < 20; j += 1) {
 
             const squareKey = i * Config.brdSize + j;
-            const isCurrentCell = currentCell[0] === i && currentCell[1] === j;
+            const isCurrentCell = false;//currentCell[0] === i && currentCell[1] === j;
 
             squaresDiv.push(<Square winCell={checkWinCell(winCells, i, j)}
-                value={squares[i][j]}
+                // value={squares[i][j]}
+                value='X'
                 row={i}
                 col={j}
                 isCurrentCell={isCurrentCell}
