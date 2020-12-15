@@ -1,5 +1,6 @@
 import bodyParser from "body-parser";
-import cors from "cors";
+const cors = require("cors");
+//import cors from "cors";
 import dotenv from "dotenv";
 import express, { Application, Request, Response, } from "express";
 import { connect, } from "mongoose";
