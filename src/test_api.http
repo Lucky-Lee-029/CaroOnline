@@ -1,0 +1,17 @@
+POST http://localhost:8000/users_api/auth HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "philong",
+  "password": "123456"
+}
+###
+POST http://localhost:8000/users_api/user HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "philong",
+  "password": "123456",
+  "email": "yong9xi@gmail.com",
+  "nickname": "Long Pro Vip"
+}
