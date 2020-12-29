@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import { Route, Redirect, Switch} from 'react-router-dom';
 import LoginComponent from './components/Login/Login';
 import DashboardComponent from './components/Dashboard/Dashboard';
@@ -10,6 +10,7 @@ import thunkMiddleware from 'redux-thunk';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import rootReducers from './reducers/rootReducers';
+import { UserContext } from './context';
 
 
 function saveToLocalStorage(state) {
@@ -49,30 +50,35 @@ store.subscribe(() => saveToLocalStorage(store.getState()));
 
 
 const App=(token)=> {
-  return (
-    <div>
-      <Switch>
-        <Route
-					exact
-					path="/"
-					render={() =>
-						<LoginComponent />
-					}
-					/>
-        <Route
-					path="/dashboard"
-					render={() =>
-						<DashboardComponent/> 
-					}
-				/>
-		<Route
-					path="/game"
-					render={()=>
-						<Game/>
-					}
-		></Route>
-      </Switch>
-    </div>
+    const [userCtx, setUserCtx] = useState({});
+    return (
+        <div>
+            <UserContext.Provider value={
+                {userCtx,setUserCtx}
+            }>
+                <Switch>
+                    <Route
+                        exact
+                        path="/"
+                        render={() =>
+                            <LoginComponent />
+                        }
+                    />
+                    <Route
+                        path="/dashboard"
+                        render={() =>
+                            <DashboardComponent/> 
+                        }
+                    />
+                    <Route
+                        path="/game"
+                        render={()=>
+                            <Game/>
+                        }
+                    ></Route>
+                </Switch>
+            </UserContext.Provider>
+        </div>
   );
 }
 

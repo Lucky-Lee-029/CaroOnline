@@ -56,13 +56,13 @@ const SignIn = (props) => {
     e.preventDefault();
     (async () => {
       try {
-        const res = await axios.post(process.env.REACT_APP_API_URL + "/auth/admin", user)
+        const res = await axios.post(process.env.REACT_APP_API_URL + "auth/", user)
         if (res.data.success) {
-          localStorage.setItem("access_token", res.data.body.token);
+          localStorage.setItem("access_token", res.data.token);
           setUserCtx({
               ...userCtx,
               is_auth: true,
-              user: res.data.body.user,
+              user: res.data.user,
               });
           props.history.replace("/");
         }

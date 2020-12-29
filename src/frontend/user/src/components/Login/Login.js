@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from '../../context';
 import { withRouter } from "react-router";
 import SearchAppBar from "../Bar/Bar";
-import { FormControl } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Axios from 'axios';
+import axios from 'axios';
 
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -30,6 +29,8 @@ function Copyright() {
     </Typography>
   );
 }
+
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,29 +64,42 @@ const useStyles = makeStyles((theme) => ({
 }));
 const LoginComponent=(props)=>{
     const classes=useStyles();
-    const loginEvent = (email,password) => {
-        return Axios.post('http://localhost:8000/login',{email,password})
-        .then((res) => {
-          console.log(res.data);
-          if(res.data==="OK"){
-            props.history.push("./dashboard");
-          }else{
-            console.log(res.data);
-            alert("Login failed! Username or password is incorrect.");
-            props.history.push("/");
-          }
-          
-        })
-        .catch((e) =>{
-          console.log(e);
-        });
-      };
+    const [username, setUsername]=useState("");
+    const [password, setPassword]=useState("");
+    const {userCtx, setUserCtx} = useContext(UserContext);
     const handleSubmitLogin=async (event)=>{
         event.preventDefault();
-        // const email = event.target.elements.email.value;
-        // const password = event.target.elements.password.value;
-        // const loginRes=await loginEvent(email,password);
-        props.history.push("./dashboard");
+        ( async ()=>{
+          try{
+            const userLogin={
+              username: username,
+              password: password
+            }
+            const res= await axios.post("http://localhost:8000/users_api/auth/", userLogin);
+            if(res.data.token){
+              localStorage.setItem("access_token", res.data.token);
+              setUserCtx({
+                ...userCtx,
+                is_auth: true,
+                user: res.data.user,
+              });
+              console.log("Passs!");
+              // props.history.push("./dashboard");
+              props.history.replace("/dashboard");
+            }else{
+              alert('Login failed');              
+            }
+          }catch(err){
+            
+          }
+          })();
+    }
+    const handleUsernameChange = (e) => {
+      setUsername(e.target.value);
+    }
+  
+    const handlePasswordChange = (e) => {
+      setPassword(e.target.value);
     }
     return(
         <div>
@@ -95,8 +109,7 @@ const LoginComponent=(props)=>{
                 <Grid item xs={false} sm={4} md={7} className={classes.image} />
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                   <div className={classes.paper}>
-                  <Avatar className={classes.avatar}>
-                  </Avatar>
+                  <Avatar className={classes.avatar}></Avatar>
                   <Typography component="h1" variant="h5">
                     Sign in
                   </Typography>
@@ -111,9 +124,10 @@ const LoginComponent=(props)=>{
                       name="email"
                       autoComplete="email"
                       autoFocus
+                      onChange={handleUsernameChange}
                     />
                     <TextField
-                    variant="outlined"
+                      variant="outlined"
                       margin="normal"
                       required
                       fullWidth
@@ -122,6 +136,7 @@ const LoginComponent=(props)=>{
                       type="password"
                       id="password"
                       autoComplete="current-password"
+                      onChange={handlePasswordChange}
                     />
                     <FormControlLabel
                       control={<Checkbox value="remember" color="primary" />}
