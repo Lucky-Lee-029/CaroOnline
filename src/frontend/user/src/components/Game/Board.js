@@ -35,7 +35,11 @@ function Board (props) {
                 row={i}
                 col={j}
                 isCurrentCell={isCurrentCell}
-                handleClick={(row, col) => handleClick(row, col)}
+                handleClick={() => {
+                        console.log("Click on ("+i+","+ i+")");
+                        handleClick(i, j);
+                    }
+                }
                 key={squareKey}/>);
         }
     }
