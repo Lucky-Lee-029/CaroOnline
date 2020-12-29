@@ -57,7 +57,6 @@ const App=(token)=> {
 					path="/"
 					render={() =>
 						<LoginComponent />
-						
 					}
 					/>
         <Route
