@@ -91,7 +91,7 @@ const GridItem=(props)=>{
                 <CardActions>
                     <Button 
                     size="small" variant="contained" color="primary" 
-                    onClick={(props.order==="Public")?handleJoinRoomPublic:handleJoinRoomPrivate}>
+                    onClick={(props.order==="Private")?handleJoinRoomPrivate:handleJoinRoomPublic}>
                         Join
                     </Button>
                     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
@@ -138,9 +138,33 @@ const GridItem=(props)=>{
                 <CardActions>
                     <Button 
                     size="small" variant="contained" color="primary"
-                    onClick={(props.order==="Public")?handleWatchRoomPublic:handleWatchRoomPrivate}>
+                    onClick={(props.order==="Private")?handleWatchRoomPrivate:handleWatchRoomPublic}>
                         Watch
                     </Button>
+                    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Notification</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                This is private room, please enter password
+                            </DialogContentText>
+                            <TextField
+                            autoFocus
+                            margin="dense"
+                            id="passwordRoom"
+                            label="Password"
+                            type="passwordRoom"
+                            fullWidth
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleClose} color="primary">
+                                Enter
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </CardActions>
             </Card>
         </Grid>
