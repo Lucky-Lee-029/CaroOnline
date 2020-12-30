@@ -6,6 +6,8 @@ import Container from '@material-ui/core/Container';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import GridItem from'./Grid';
+import QuickJoinRoomBtn from './QuickJoinRoomBtn'
+import CreateRoomBtn from './CreateRoomBtn'
 import { checkPropTypes } from "prop-types";
 const styles = {
     fontFamily: "sans-serif",
@@ -17,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
       flexWrap: 'wrap',
       justifyContent: 'space-around',
       overflow: 'hidden',
-      backgroundColor: theme.palette.background.paper,
+      //backgroundColor: theme.palette.background.paper,
     },
     gridList: {
       width: 500,
@@ -45,28 +47,41 @@ const useStyles = makeStyles((theme) => ({
       },
       bull: {
 
-      }
+      },
+     
   }));
 const DashboardComponent=(props)=>{
     const classes=useStyles();
-    const handleClickJoinGame=()=>{
-        props.history.push("./game");
-    }
+    
     return(
         <div>
             <SearchAppBar/>
-            <Container >
-                <div style={styles}>
-                    <h1>Caro online project make by HLL</h1>
-                </div>
-                <Grid container spacing={6}>
-                    <GridItem status="create"/>
-                    <GridItem roomId={6}/>
-                    <GridItem roomId={6}/>
-                    <GridItem roomId={6}/>
-                 </Grid>
-                 <Button onClick={handleClickJoinGame.bind(this)}>Game view</Button>
-            </Container>
+            <Grid container className = {classes.root}>
+              <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
+                <QuickJoinRoomBtn />
+                <CreateRoomBtn />
+              </Grid>
+              <Grid container item xs={12} spacing={2}>
+                <Grid item xs={12} sm={4}>
+                  <GridItem status="gaming" roomId={1}/>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <GridItem roomId={2}/>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <GridItem order="Private" roomId={3}/>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <GridItem order="Private" roomId={4}/>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <GridItem roomId={5}/>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                  <GridItem status="gaming" order="Private" roomId={6}/>
+                </Grid>
+              </Grid>
+            </Grid>
         </div>
     )
 }

@@ -1,3 +1,4 @@
+import React, {useState} from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
@@ -6,6 +7,14 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router';
+
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -17,8 +26,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.palette.background.paper,
     },
     gridList: {
-      width: 500,
-      height: 450,
+      width: 800,
+      height: 350,
     },
     gridItem:{
         border: 5,
@@ -46,41 +55,92 @@ const useStyles = makeStyles((theme) => ({
   }));
 const GridItem=(props)=>{
     const classes=useStyles();
-    const btnText=(props.status==="create")?"Create": "Join";
+    const orderText=(props.order==="Private")?"Private": "Public";
+    const [open, setOpen] = useState(false);
+
+    const handleJoinRoomPublic = () => {alert("Public")};
+    const handleJoinRoomPrivate = () => {
+        setOpen(true);
+    };
+    const handleWatchRoomPublic = () => {alert("Public")};
+    const handleWatchRoomPrivate = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+      };
+
     return(
-        props.status!=="create"?
-        <Grid item xs={12} sm={4}>
+        props.status!=="gaming"?
+        <Grid item xs={12}>
             <Card className={classes.root} variant="outlined">
                 <CardContent>
+                    <Typography className={classes.pos} color="textSecondary">
+                        Room ID: {props.roomId}
+                    </Typography>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
                         Waiting...
                     </Typography>
                     <Typography variant="h5" component="h2">
                     </Typography>
-                    <Typography className={classes.pos} color="textSecondary">
-                        Room ID: {props.roomId}
+                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                        {orderText}
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small" variant="contained" color="primary">Join</Button>
+                    <Button 
+                    size="small" variant="contained" color="primary" 
+                    onClick={(props.order==="Public")?handleJoinRoomPublic:handleJoinRoomPrivate}>
+                        Join
+                    </Button>
+                    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title">Notification</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                This is private room, please enter password
+                            </DialogContentText>
+                            <TextField
+                            autoFocus
+                            margin="dense"
+                            id="passwordRoom"
+                            label="Password"
+                            type="passwordRoom"
+                            fullWidth
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={handleClose} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={handleClose} color="primary">
+                                Enter
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </CardActions>
             </Card>
         </Grid>
         :
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12}>
             <Card className={classes.root} variant="outlined">
                 <CardContent>
-                    <Typography className={classes.title} color="textSecondary" gutterBottom>
-                        Waiting game
-                    </Typography>
-                    <Typography variant="h5" component="h2">
-                    </Typography>
                     <Typography className={classes.pos} color="textSecondary">
-                        Create an room to wait people...
+                        Room ID: {props.roomId}
+                    </Typography>
+                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                        Gaming ...
+                    </Typography>
+                    <Typography className={classes.title} color="textSecondary" gutterBottom>
+                        {orderText}
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <Button size="small" variant="contained" color="primary">Create</Button>
+                    <Button 
+                    size="small" variant="contained" color="primary"
+                    onClick={(props.order==="Public")?handleWatchRoomPublic:handleWatchRoomPrivate}>
+                        Watch
+                    </Button>
                 </CardActions>
             </Card>
         </Grid>
