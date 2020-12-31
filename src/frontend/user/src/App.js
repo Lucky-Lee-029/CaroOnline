@@ -71,6 +71,12 @@ const App=(token)=> {
 						<Game/>
 					}
 		></Route>
+        <Route
+					path="/profile"
+					render={() =>
+						<Profile/> 
+					}
+				/>
       </Switch>
     </div>
   );
