@@ -101,6 +101,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Badge from '@material-ui/core/Badge';
 import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -108,6 +109,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -244,8 +246,13 @@ export default function SearchAppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-          <IconButton aria-label="Chart" color="inherit">
+            <IconButton aria-label="Chart" color="inherit">
                 <InsertChartIcon/>
+            </IconButton>
+            <IconButton aria-label="show 8 new notifications" color="inherit">
+              <Badge badgeContent={8} color="secondary">
+                <NotificationsIcon />
+              </Badge>
             </IconButton>
             <IconButton
               edge="end"

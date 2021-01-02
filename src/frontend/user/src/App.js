@@ -4,6 +4,7 @@ import { Route, Redirect, Switch} from 'react-router-dom';
 import LoginComponent from './components/Login/Login';
 import DashboardComponent from './components/Dashboard/Dashboard';
 import Game from './components/Game/Game';
+import Profile from './components/Profile/Profile'
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
@@ -76,6 +77,12 @@ const App=(token)=> {
                             <Game/>
                         }
                     ></Route>
+                    <Route
+                        path="/profile"
+                        render={() =>
+                            <Profile/> 
+                        }
+                    />
                 </Switch>
             </UserContext.Provider>
         </div>

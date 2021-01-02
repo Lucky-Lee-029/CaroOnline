@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Title from './Title'
+import AvaPic from './avatar.jpg'
 
 function preventDefault(event) {
   event.preventDefault();
@@ -18,8 +19,12 @@ const useStyles = makeStyles({
     margin: '28px'
   },
   cover: {
-    width: 150,
-    height: 150,
+    width: 130,
+    height: 130,
+    margin: 'auto',
+  },
+  marginAuto: {
+    margin: 'auto',
   },
 });
 
@@ -27,10 +32,10 @@ export default function AvatarUser() {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Avatar</Title>
-      <Avatar className = {classes.cover} alt="Avatar 1" src="/static/images/avatar/1.jpg" />
-      <div>
-        <Button color="primary" href="#" onClick={preventDefault}>
+      <Title className={classes.title}>Avatar</Title>
+      <Avatar className = {classes.cover} alt="Avatar 1" src={AvaPic} />
+      <div className={classes.marginAuto}>
+        <Button color="primary" onClick={preventDefault}>
           Change Avatar
         </Button>
       </div>
