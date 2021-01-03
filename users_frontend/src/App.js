@@ -5,6 +5,7 @@ import LoginComponent from './components/Login/Login';
 import DashboardComponent from './components/Dashboard/Dashboard';
 import Game from './components/Game/Game';
 import Profile from './components/Profile/Profile'
+import SignUp from './components/SignUp/SignUp'
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
@@ -63,6 +64,12 @@ const App=(token)=> {
                         path="/"
                         render={() =>
                             <LoginComponent />
+                        }
+                    />
+                    <Route
+                        path="/signup"
+                        render={() =>
+                            <SignUp/> 
                         }
                     />
                     <Route

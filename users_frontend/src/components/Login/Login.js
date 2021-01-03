@@ -17,6 +17,14 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const darktheme = createMuiTheme({
+    palette: {
+      type: 'dark',
+    },
+  });
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -52,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    //backgroundColor: theme.palette.primary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -61,6 +69,10 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  googleBtn: {
+    backgroundColor: 'FF0000',
+  },
+
 }));
 const LoginComponent=(props)=>{
     const classes=useStyles();
@@ -103,7 +115,7 @@ const LoginComponent=(props)=>{
     }
     return(
         <div>
-            <SearchAppBar/>
+          <ThemeProvider theme = {darktheme}>
             <Grid container component="main" className={classes.root}>
                 <CssBaseline />
                 <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -119,10 +131,10 @@ const LoginComponent=(props)=>{
                       margin="normal"
                       required
                       fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
+                      id="username"
+                      label="User Name"
+                      name="username"
+                      autoComplete="username"
                       autoFocus
                       onChange={handleUsernameChange}
                     />
@@ -163,6 +175,33 @@ const LoginComponent=(props)=>{
                       </Link>
                     </Grid>
                   </Grid>
+
+                  <Grid  container spacing = {2}>
+                    <Grid item xs={12} sm={12}>
+                    <Typography align="center" color="textSecondary" >
+                      OR
+                    </Typography>
+                    </Grid>
+                    
+                    <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
+                    <Button         
+                        variant="contained"
+                        color="secondary" 
+                        fullWidth 
+                        aria-label="GoogleLogin" >
+                        Google Login
+                    </Button>
+                    </Grid>
+                    <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
+                    <Button 
+                      fullWidth 
+                      aria-label="FacebookLogin"
+                      variant="contained"
+                      color="primary">
+                      Facebook Login
+                    </Button>
+                    </Grid>
+                  </Grid>
                     <Box mt={5}>
                       <Copyright />
                     </Box>
@@ -170,6 +209,7 @@ const LoginComponent=(props)=>{
                 </div>
               </Grid>
             </Grid>
+          </ThemeProvider>
         </div>
     )
 }
