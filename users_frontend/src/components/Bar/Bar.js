@@ -110,6 +110,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -177,6 +178,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchAppBar() {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -199,6 +201,9 @@ export default function SearchAppBar() {
   const handleLogout = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+
+    localStorage.removeItem('token'); // Remove token
+    history.replace('/login'); // Redirect to Login
   }
 
   const handleMobileMenuOpen = (event) => {
