@@ -194,6 +194,7 @@ const Game=(props)=>{
     }
 
     function userClick(row, col) {
+        /*
         const { nextMove } = props;
 
         // Prevent user click if rival is disconnected
@@ -210,6 +211,7 @@ const Game=(props)=>{
         if (handleClick(row, col)) {
             socket.emit('move', { row: row, col: col });
         }
+        */
     }
 }
 
