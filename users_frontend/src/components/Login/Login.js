@@ -17,6 +17,11 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
 
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100vh',
@@ -45,6 +50,10 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  marginAuto: {
+    margin: 'auto',
+    width: 'fullWidth',
   },
 }));
 
@@ -80,9 +89,26 @@ function Login() {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
   }
+
+  //Google login
+  const responseGoogle = (response) => {
+    console.log(response);
+  }
+  const GoogleClicked = () => {
+    alert("Google login clicked");
+  }
+
+  //Facebook Login
+  const responseFacebook = (response) => {
+    console.log(response);
+  }
+
+  const FacebookClicked = () => {
+    alert("Facebook login clicked");
+  }
+
   return (
     <div>
-      <SearchAppBar />
       <Grid container component="main" className={classes.root}>
         <CssBaseline />
         <Grid item xs={false} sm={4} md={7} className={classes.image} />
@@ -99,7 +125,7 @@ function Login() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="User Name"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -142,6 +168,40 @@ function Login() {
                   </Link>
                 </Grid>
               </Grid>
+
+              <Grid  container spacing = {2}>
+                    <Grid item xs={12} sm={12}>
+                    <Typography align="center" color="textSecondary" >
+                      OR
+                    </Typography>
+                    </Grid>
+                    
+                    <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
+                      {/* <Button         
+                          variant="contained"
+                          color="secondary" 
+                          fullWidth 
+                          aria-label="GoogleLogin" >
+                          Google Login
+                      </Button> */}
+                      <GoogleLogin
+                        //clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                        buttonText="LOGIN WITH GOOGLE"
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        onClick={GoogleClicked}
+                        cookiePolicy={'single_host_origin'}/>
+                    </Grid>
+                    <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
+                      <FacebookLogin
+                        //appId="1088597931155576"
+                        autoLoad={true}
+                        fields="name,email,picture"
+                        onClick={FacebookClicked}
+                        callback={responseFacebook} />
+                    </Grid>
+                  </Grid>
+
               <Box mt={5}>
                 {(error) ? <Alert severity="error">{error}</Alert> : null}
               </Box>
