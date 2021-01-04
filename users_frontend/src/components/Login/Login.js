@@ -69,7 +69,7 @@ function Login() {
         localStorage.setItem('token', obj.token); // Store token
         history.replace('/'); // redirect to Dashboard
       } catch (err) {
-        setError(err.response);
+        setError(err.response.data.msg);
       }
     })(apiUrl, form);
   }
