@@ -65,7 +65,6 @@ function Dashboard() {
   const [onlineUsers, setOnlineUsers] = useState();
 
   useEffect(() => {
-    console.log(localStorage.getItem('token'));
     const api = 'http://localhost:8000/users_api/auth';
     const opts = {
       headers: {
@@ -79,7 +78,6 @@ function Dashboard() {
         const obj = await res.data;
         setUser(obj.user); // Set user context
       } catch (err) {
-        console.log(err.response.data);
         setUser(null); // Set null context
         history.replace('/login'); // Redirect to Login screen
       }

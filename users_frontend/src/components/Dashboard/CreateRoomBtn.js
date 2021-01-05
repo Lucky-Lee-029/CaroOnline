@@ -15,7 +15,9 @@ const CreateRoomBtn = () => {
   const classes = useStyles();
   const roomIdRef = useRef();
 
-  const handleCreateRoom = () => {};
+  const handleCreateRoom = () => {
+    console.log('clicked');
+  }
 
   return (
     <Grid item>

@@ -1,5 +1,6 @@
 function handle(io) {
   io.on("connection", (socket) => {
+    console.log("rooms, a client connected: ", socket.id);
     socket.on("join_room", (room) => {
       socket.join(room);
       const rooms = socket.adapter.rooms;
