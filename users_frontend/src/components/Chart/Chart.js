@@ -10,10 +10,19 @@ import Grid from '@material-ui/core/Grid';
 import StarIcon from '@material-ui/icons/StarBorder';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
+import Trophy from './Trophy.jpg'
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableContainer from '@material-ui/core/TableContainer';
+import Paper from '@material-ui/core/Paper';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -24,15 +33,6 @@ const useStyles = makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
-  appBar: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-  },
-  toolbar: {
-    flexWrap: 'wrap',
-  },
-  toolbarTitle: {
-    flexGrow: 1,
-  },
   link: {
     margin: theme.spacing(1, 1.5),
   },
@@ -41,7 +41,11 @@ const useStyles = makeStyles((theme) => ({
   },
   cardHeader: {
     backgroundColor:
-      theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[700],
+      theme.palette.type === 'light' ? theme.palette.common.black : theme.palette.common.white,
+    color: 'white',
+  },
+  subheader:{
+    color: 'white',
   },
   cardChart: {
     display: 'flex',
@@ -49,41 +53,68 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'baseline',
     marginBottom: theme.spacing(2),
   },
+  cover: {
+    marginLeft: 20,
+  },
+  table: {
+    minWidth: 700,
+  },
+  tableContainer: {
+    marginTop: 30,
+    marginBottom: 50,
+  },
 }));
 
-const users = [
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
+
+const StyledTableRow = withStyles((theme) => ({
+  root: {
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  },
+}))(TableRow);
+
+const topusers = [
   {
-    title: 'Free',
-    price: '0',
-    description: ['10 users included', '2 GB of storage', 'Help center access', 'Email support'],
-    buttonText: 'Sign up for free',
-    buttonVariant: 'outlined',
+    title: '2nd Player',
+    username: 'Phi Long',
+    trophy: '25',
+    // description: ['10 users included', '2 GB of storage', 'Help center access', 'Email support'],
   },
   {
-    title: 'Pro',
-    subheader: 'Most popular',
-    price: '15',
-    description: [
-      '20 users included',
-      '10 GB of storage',
-      'Help center access',
-      'Priority email support',
-    ],
-    buttonText: 'Get started',
-    buttonVariant: 'contained',
+    title: '1st Player',
+    subheader: 'Pro Player',
+    username: 'Gia Lợi',
+    trophy: '30',
   },
   {
-    title: 'Enterprise',
-    price: '30',
-    description: [
-      '50 users included',
-      '30 GB of storage',
-      'Help center access',
-      'Phone & email support',
-    ],
-    buttonText: 'Contact us',
-    buttonVariant: 'outlined',
+    title: '3rd Player',
+    username: 'Hải Lê',
+    trophy: '21',
   },
+];
+
+function createData(id, rank, username, ratio, trophy) {
+  return { id, rank, username, ratio, trophy };
+}
+
+const rows = [
+  createData(4, 4, 'BlackPink', '80%', 10),
+  createData(5, 5, 'BlackPink', '80%', 10),
+  createData(6, 6, 'BlackPink', '80%', 10),
+  createData(7, 7, 'BlackPink', '80%', 10),
+  createData(8, 8, 'BlackPink', '80%', 10),
+  createData(9, 9, 'BlackPink', '80%', 10),
+  createData(10, 10, 'BlackPink', '80%', 10),
 ];
 
 
@@ -99,45 +130,67 @@ export default function Chart() {
           CHART
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" component="p">
-          Top 10 of pro Player
+          Top Pro Player
         </Typography>
       </Container>
       {/* End hero unit */}
       <Container maxWidth="md" component="main">
         <Grid container spacing={5} alignItems="flex-end">
-          {users.map((user) => (
+          {topusers.map((user) => (
             // Enterprise card is full width at sm breakpoint
-            <Grid item key={user.title} xs={12} sm={user.title === 'Enterprise' ? 12 : 6} md={4}>
+            <Grid item key={user.title} xs={12} sm={user.title === '3rd Player' ? 12 : 6} md={4}>
               <Card>
                 <CardHeader
                   title={user.title}
-                  subheader={user.subheader}
+                  subheader={user.username}
                   titleTypographyProps={{ align: 'center' }}
                   subheaderTypographyProps={{ align: 'center' }}
-                  action={user.title === 'Pro' ? <StarIcon /> : null}
-                  className={classes.cardHeader}
-                />
+                  action={user.title === '1st Player' ? <StarIcon /> : null}
+                  className={classes.cardHeader}>
+                  </CardHeader>
                 <CardContent>
                   <div className={classes.cardChart}>
                     <Typography component="h2" variant="h3" color="textPrimary">
-                      ${user.price}
+                      {user.trophy}
                     </Typography>
-                    <Typography variant="h6" color="textSecondary">
-                      /mo
-                    </Typography>
+                    <Avatar className = {classes.cover} alt="Trophy" src={Trophy} />
                   </div>
-                  <ul>
+                  {/* <ul>
                     {user.description.map((line) => (
                       <Typography component="li" variant="subtitle1" align="center" key={line}>
                         {line}
                       </Typography>
                     ))}
-                  </ul>
+                  </ul> */}
                 </CardContent>
               </Card>
             </Grid>
           ))}
         </Grid>
+        <TableContainer className = {classes.tableContainer} component={Paper}>
+          <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="center">Rank</StyledTableCell>
+                <StyledTableCell align="center">User Name</StyledTableCell>
+                <StyledTableCell align="center">Ratio</StyledTableCell>
+                <StyledTableCell align="center">Trophy</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <StyledTableRow key={row.name}>
+                  <StyledTableCell align="center" component="th" scope="row">
+                    {row.rank}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">{row.username}</StyledTableCell>
+                  <StyledTableCell align="center">{row.ratio}</StyledTableCell>
+                  <StyledTableCell align="center">{row.trophy} </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+    </TableContainer>
       </Container>
     </React.Fragment>
   );
