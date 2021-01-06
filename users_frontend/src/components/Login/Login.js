@@ -78,7 +78,7 @@ function Login() {
         localStorage.setItem('token', obj.token); // Store token
         history.replace('/'); // redirect to Dashboard
       } catch (err) {
-        setError(err.response.data.msg);
+        setError(err.response);
       }
     })(apiUrl, form);
   }
@@ -177,13 +177,6 @@ function Login() {
                     </Grid>
                     
                     <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
-                      {/* <Button         
-                          variant="contained"
-                          color="secondary" 
-                          fullWidth 
-                          aria-label="GoogleLogin" >
-                          Google Login
-                      </Button> */}
                       <GoogleLogin
                         //clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
                         buttonText="LOGIN WITH GOOGLE"
@@ -195,10 +188,12 @@ function Login() {
                     <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
                       <FacebookLogin
                         //appId="1088597931155576"
+                        size = "small"
                         autoLoad={true}
                         fields="name,email,picture"
                         onClick={FacebookClicked}
-                        callback={responseFacebook} />
+                        callback={responseFacebook}
+                        icon="fa-facebook" />
                     </Grid>
                   </Grid>
 
