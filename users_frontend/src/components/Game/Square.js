@@ -8,15 +8,18 @@ function Square(props) {
     const { winCell } = props;
     const { isCurrentCell } = props;
     const {handleClick}=props;
+    const { currentPlayer} = props;
     
     const moveColor = value === Config.xPlayer ? Config.plColor.X : Config.plColor.O;
     const className = isCurrentCell ? 'square-current' : (winCell === false ? 'square' : 'square-win');
     return (
-        <button className="button" onClick={()=>{
-            setValue(value==='X'?'O':'X');
-            handleClick();
+        <button className={className} onClick={()=>{
+                if(value === ""){
+                    setValue(currentPlayer===0? "X":"O");
+                }
+                handleClick();
             }}>
-            {value}
+            <font color={moveColor}>{value}</font>
         </button>
     );
 }

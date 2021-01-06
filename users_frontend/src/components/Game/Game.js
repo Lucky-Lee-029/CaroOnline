@@ -11,11 +11,20 @@ import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 
 const Game=(props)=>{
-    const { history } = props;
     const { stepNumber } = props;
     const { nextMove } = props;
     const { winCells } = props;
     const { accendingMode } = props;
+    const [currentSquare, setCurrentSquare] = useState({x:0,y:0});
+    const [ step, setStep ] = useState(0);
+    const [currentPlayer, setCurrentPlayer] = useState(0);
+    const [history, setHistory] = useState([{
+        x: null,
+        y: null,
+        squares: Array(Config.brdSize).fill(null).map(() => {
+            return Array(Config.brdSize).fill(null)
+        })
+    }])
     // board game
     // const current = history[stepNumber];
     // const sortMode = accendingMode ? `Nước đi tăng dần` : `Nước đi giảm dần`;
@@ -38,8 +47,9 @@ const Game=(props)=>{
                     <div>
                         <Board  winCells={null}
                                 //squares={current.squares}
-                                currentCell={[1,2]}
-                                handleClick={(i, j) => console.log(i,j)}/>
+                                currentPlayer={currentPlayer}
+                                currentCell={currentSquare}
+                                handleClick={userClick}/>
                     </div>
                                         
                     <br></br>
@@ -61,7 +71,6 @@ const Game=(props)=>{
             return null;
         }
 
-        const { history } = props;
         const current = history[stepNumber];
         const squares = current.squares.slice();
 
@@ -75,7 +84,7 @@ const Game=(props)=>{
         let countSkewDiagonal = 1;
         let isBlock;
         const rival = (user === Config.xPlayer) ? Config.oPlayer : Config.xPlayer;
- 
+  
         // Check col
         isBlock = true;
         let winCells = [];
@@ -194,22 +203,36 @@ const Game=(props)=>{
     }
 
     function userClick(row, col) {
-        const { nextMove } = props;
-
-        // Prevent user click if rival is disconnected
-        if (needToDisable) {
-            return;
-        }
+        // const { nextMove } = props;
 
         // Prevent user click if not his turn
-        if ((isPlayerX && nextMove === Config.oPlayer) || (!isPlayerX && nextMove === Config.xPlayer)) {
-            return;
+        // if ((isPlayerX && nextMove === Config.oPlayer) || (!isPlayerX && nextMove === Config.xPlayer)) {
+        //     return;
+        // }
+        let currentUser = (currentPlayer === 0) ? Config.xPlayer : Config.oPlayer;
+        if(step > 0){
+            if(history[step].squares[row][col] !== null)
+                return;
+        }
+        console.log("" + row + ", " + col);
+        console.log(currentPlayer);
+        setStep(step +1);
+        setCurrentPlayer(1-currentPlayer);
+        let currentHis = history;
+        console.log("Step: " + step);
+        setCurrentSquare({x: row, y: col});
+        let newState = {
+            x: row,
+            y: col,
+            squares: history[step].squares
+        };
+        newState.squares[row][col] = currentUser;
+        currentHis.push(newState);
+        setHistory(currentHis);
+        if(checkWin(row, col, currentUser, step)){
+            console.log("WON");
         }
         
-        // Send move to server if it is valid
-        if (handleClick(row, col)) {
-            socket.emit('move', { row: row, col: col });
-        }
     }
 }
 
