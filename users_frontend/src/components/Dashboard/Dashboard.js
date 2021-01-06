@@ -18,6 +18,7 @@ import {
   ListSubheader,
   makeStyles
 } from "@material-ui/core";
+import CreateRoomDialog from './CreateRoomDialog';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -121,7 +122,7 @@ function Dashboard() {
         <Grid item xs={10}>
           <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
             <QuickJoinRoomBtn />
-            <CreateRoomBtn />
+            <CreateRoomDialog />
           </Grid>
           <Grid container item xs={12} spacing={2}>
             <Grid item xs={12} sm={4}>
