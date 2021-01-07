@@ -41,7 +41,7 @@ export default function Information() {
             Number of matches participated: 1000
           </Typography>
           <Typography color="textSecondary" className={classes.depositContext}>
-            Odds of winning: 90% 
+            Ratio of winning: 90% 
           </Typography>
         </Grid>
         <Grid item xs={12} sm ={6}>

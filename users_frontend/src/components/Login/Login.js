@@ -1,6 +1,5 @@
-import React, { useState, useContext } from "react";
-import { UserContext } from '../../context';
-import { withRouter } from "react-router";
+import React, { useState } from "react";
+import { useHistory, withRouter } from "react-router";
 import SearchAppBar from "../Bar/Bar";
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -16,27 +15,10 @@ import Paper from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Alert from '@material-ui/lab/Alert';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-
-const darktheme = createMuiTheme({
-    palette: {
-      type: 'dark',
-    },
-  });
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
 
 
 
@@ -69,114 +51,125 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  googleBtn: {
-    backgroundColor: 'FF0000',
+  marginAuto: {
+    margin: 'auto',
+    width: 'fullWidth',
   },
-
 }));
-const LoginComponent=(props)=>{
-    const classes=useStyles();
-    const [username, setUsername]=useState("");
-    const [password, setPassword]=useState("");
-    const {userCtx, setUserCtx} = useContext(UserContext);
-    const handleSubmitLogin=async (event)=>{
-        event.preventDefault();
-        ( async ()=>{
-          try{
-            const userLogin={
-              username: username,
-              password: password
-            }
-            const res= await axios.post("http://localhost:8000/users_api/auth/", userLogin);
-            if(res.data.token){
-              localStorage.setItem("access_token", res.data.token);
-              setUserCtx({
-                ...userCtx,
-                is_auth: true,
-                user: res.data.user,
-              });
-              console.log("Passs!");
-              // props.history.push("./dashboard");
-              props.history.replace("/dashboard");
-            }else{
-              alert('Login failed');              
-            }
-          }catch(err){
-            
-          }
-          })();
-    }
-    const handleUsernameChange = (e) => {
-      setUsername(e.target.value);
-    }
-  
-    const handlePasswordChange = (e) => {
-      setPassword(e.target.value);
-    }
-    return(
-        <div>
-          <ThemeProvider theme = {darktheme}>
-            <Grid container component="main" className={classes.root}>
-                <CssBaseline />
-                <Grid item xs={false} sm={4} md={7} className={classes.image} />
-                <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-                  <div className={classes.paper}>
-                  <Avatar className={classes.avatar}></Avatar>
-                  <Typography component="h1" variant="h5">
-                    Sign in
-                  </Typography>
-                  <form className={classes.form} noValidate onSubmit={handleSubmitLogin}>
-                    <TextField
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      fullWidth
-                      id="username"
-                      label="User Name"
-                      name="username"
-                      autoComplete="username"
-                      autoFocus
-                      onChange={handleUsernameChange}
-                    />
-                    <TextField
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      id="password"
-                      autoComplete="current-password"
-                      onChange={handlePasswordChange}
-                    />
-                    <FormControlLabel
-                      control={<Checkbox value="remember" color="primary" />}
-                      label="Remember me"
-                    />
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      color="primary"
-                      className={classes.submit}
-                    >
-                      Sign In
-                    </Button>
-                  <Grid container>
-                    <Grid item xs>
-                    <Link href="#" variant="body2">
-                      Forgot password?
-                    </Link>
-                    </Grid>
-                    <Grid item>
-                      <Link href="#" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                      </Link>
-                    </Grid>
-                  </Grid>
 
-                  <Grid  container spacing = {2}>
+const Login= (props) => {
+  const classes = useStyles();
+  const history = useHistory();
+  const [error, setError] = useState();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmitLogin = async (event) => {
+    event.preventDefault();
+
+    const apiUrl = 'http://localhost:8000/users_api/auth';
+    const form = { username, password };
+
+    (async function (apiUrl, form) {
+      try {
+        const res = await axios.post(apiUrl, form);
+        const obj = await res.data;
+
+        localStorage.setItem('token', obj.token); // Store token
+        history.replace('/'); // redirect to Dashboard
+      } catch (err) {
+        setError(err.response);
+      }
+    })(apiUrl, form);
+  }
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  }
+
+  //Google login
+  const responseGoogle = (response) => {
+    console.log(response);
+  }
+  const GoogleClicked = () => {
+    alert("Google login clicked");
+  }
+
+  //Facebook Login
+  const responseFacebook = (response) => {
+    console.log(response);
+  }
+
+  const FacebookClicked = () => {
+    alert("Facebook login clicked");
+  }
+
+  return (
+    <div>
+      <Grid container component="main" className={classes.root}>
+        <CssBaseline />
+        <Grid item xs={false} sm={4} md={7} className={classes.image} />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}></Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+                  </Typography>
+            <form className={classes.form} noValidate onSubmit={handleSubmitLogin}>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="User Name"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                onChange={handleUsernameChange}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={handlePasswordChange}
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign In
+                    </Button>
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                    </Link>
+                </Grid>
+                <Grid item>
+                  <Link href="#" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+
+              <Grid  container spacing = {2}>
                     <Grid item xs={12} sm={12}>
                     <Typography align="center" color="textSecondary" >
                       OR
@@ -184,34 +177,34 @@ const LoginComponent=(props)=>{
                     </Grid>
                     
                     <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
-                    <Button         
-                        variant="contained"
-                        color="secondary" 
-                        fullWidth 
-                        aria-label="GoogleLogin" >
-                        Google Login
-                    </Button>
+                      <GoogleLogin
+                        //clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+                        buttonText="LOGIN WITH GOOGLE"
+                        onSuccess={responseGoogle}
+                        onFailure={responseGoogle}
+                        onClick={GoogleClicked}
+                        cookiePolicy={'single_host_origin'}/>
                     </Grid>
                     <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
-                    <Button 
-                      fullWidth 
-                      aria-label="FacebookLogin"
-                      variant="contained"
-                      color="primary">
-                      Facebook Login
-                    </Button>
+                      <FacebookLogin
+                        //appId="1088597931155576"
+                        size = "small"
+                        autoLoad={true}
+                        fields="name,email,picture"
+                        onClick={FacebookClicked}
+                        callback={responseFacebook}
+                        icon="fa-facebook" />
                     </Grid>
                   </Grid>
-                    <Box mt={5}>
-                      <Copyright />
-                    </Box>
-                  </form>
-                </div>
-              </Grid>
-            </Grid>
-          </ThemeProvider>
-        </div>
-    )
+              <Box mt={5}>
+                {(error) ? <Alert severity="error">{error}</Alert> : null}
+              </Box>
+            </form>
+          </div>
+        </Grid>
+      </Grid>
+    </div>
+  )
 }
 
-export default withRouter(LoginComponent);
+export default Login;

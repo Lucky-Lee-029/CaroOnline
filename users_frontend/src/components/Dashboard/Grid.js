@@ -24,16 +24,11 @@ const useStyles = makeStyles((theme) => ({
       justifyContent: 'space-around',
       overflow: 'hidden',
       backgroundColor: theme.palette.background.paper,
+      borderWidth: 'medium',
     },
     gridList: {
       width: 800,
       height: 350,
-    },
-    gridItem:{
-        border: 5,
-        borderRadius: 3,
-        borderColor: "black",
-        textAlign: "center",
     },
     icon: {
       color: 'rgba(255, 255, 255, 0.54)',
@@ -76,8 +71,8 @@ const GridItem=(props)=>{
         <Grid item xs={12}>
             <Card className={classes.root} variant="outlined">
                 <CardContent>
-                    <Typography className={classes.pos} color="textSecondary">
-                        Room ID: {props.roomId}
+                    <Typography className={classes.pos} color='initial'>
+                       <strong> Room ID: {props.roomId} </strong>
                     </Typography>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
                         Waiting...
@@ -125,8 +120,8 @@ const GridItem=(props)=>{
         <Grid item xs={12}>
             <Card className={classes.root} variant="outlined">
                 <CardContent>
-                    <Typography className={classes.pos} color="textSecondary">
-                        Room ID: {props.roomId}
+                    <Typography className={classes.pos} color='initial'>
+                    <strong> Room ID: {props.roomId} </strong>
                     </Typography>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
                         Gaming ...

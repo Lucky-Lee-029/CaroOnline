@@ -1,19 +1,16 @@
-import './App.css';
-import React, { useState } from 'react';
-import { Route, Redirect, Switch} from 'react-router-dom';
-import LoginComponent from './components/Login/Login';
-import DashboardComponent from './components/Dashboard/Dashboard';
-import Game from './components/Game/Game';
+import { useState } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Login from './components/Login/Login';
+import DashBoard from './components/Dashboard/Dashboard';
 import Profile from './components/Profile/Profile'
 import SignUp from './components/SignUp/SignUp'
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import ReactDOM from 'react-dom';
-import * as serviceWorker from './serviceWorker';
 import rootReducers from './reducers/rootReducers';
-import { UserContext } from './context';
-
+import UserCtx from './context/User';
+import Chart from './components/Chart/Chart'
 
 function saveToLocalStorage(state) {
     try {
@@ -50,52 +47,22 @@ const store = createStore(
 store.subscribe(() => saveToLocalStorage(store.getState()));
 
 
+function App() {
+  const userState = useState();
 
-const App=(token)=> {
-    const [userCtx, setUserCtx] = useState({});
-    return (
-        <div>
-            <UserContext.Provider value={
-                {userCtx,setUserCtx}
-            }>
-                <Switch>
-                    <Route
-                        exact
-                        path="/"
-                        render={() =>
-                            <LoginComponent />
-                        }
-                    />
-                    <Route
-                        path="/signup"
-                        render={() =>
-                            <SignUp/> 
-                        }
-                    />
-                    <Route
-                        path="/dashboard"
-                        render={() =>
-                            <DashboardComponent/> 
-                        }
-                    />
-                    <Route
-                        path="/game"
-                        render={()=>
-                            <Game/>
-                        }
-                    ></Route>
-                    <Route
-                        path="/profile"
-                        render={() =>
-                            <Profile/> 
-                        }
-                    />
-                </Switch>
-            </UserContext.Provider>
-        </div>
+  return (
+    <UserCtx.Provider value={userState}>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={DashBoard} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={SignUp} />
+          <Route path="/chart" component={Chart} />
+          <Route path="/profile" component={Profile} />
+        </Switch>
+      </BrowserRouter>
+    </UserCtx.Provider >
   );
 }
 
 export default App;
-
-serviceWorker.unregister();
