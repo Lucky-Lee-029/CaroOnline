@@ -1,23 +1,24 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import axios from 'axios';
+import { withRouter } from "react-router";
 
-const darktheme = createMuiTheme({
-    palette: {
-      type: 'dark',
-    },
-  });
+// import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+// const darktheme = createMuiTheme({
+//     palette: {
+//       type: 'dark',
+//     },
+//   });
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,11 +40,49 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+const SignUp = (props) =>{
   const classes = useStyles();
+  const [username, setUsername]=useState("");
+  const [password, setPassword]=useState("");
+  const [email, setEmail]=useState("");
+  const [nickname, setNickname]=useState("");
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  }
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  }
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  }
+  const handleNicknameChange = (e) => {
+    setNickname(e.target.value);
+  }
 
+  const handleSubmitSignUp=async (event)=>{
+    event.preventDefault();
+    ( async ()=>{
+      try{
+        const userRegister={
+          username: username,
+          password: password,
+          email: email,
+          nickname: nickname
+        }
+        const res= await axios.post("http://localhost:8000/users_api/user/", userRegister);
+        if(res.data.user){
+          console.log(res.data.user);
+          props.history.replace("/");
+        }else{
+          alert('pass');              
+        }
+      }catch(err){
+        
+      }
+    })();
+  }
   return (
-    <ThemeProvider theme = {darktheme}>
+    // <ThemeProvider theme = {darktheme}>
         <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -53,7 +92,7 @@ export default function SignUp() {
             <Typography component="h1" variant="h5">
             Sign up
             </Typography>
-            <form className={classes.form} noValidate>
+            <form className={classes.form} noValidate onSubmit={handleSubmitSignUp}>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                 <TextField
@@ -65,6 +104,7 @@ export default function SignUp() {
                     id="userName"
                     label="User Name"
                     autoFocus
+                    onChange={handleUsernameChange}
                 />
                 </Grid>
 
@@ -77,6 +117,7 @@ export default function SignUp() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    onChange={handleEmailChange}
                 />
                 </Grid>
                 <Grid item xs={12}>
@@ -89,6 +130,19 @@ export default function SignUp() {
                     type="password"
                     id="password"
                     autoComplete="current-password"
+                    onChange={handlePasswordChange}
+                />
+                </Grid>
+                <Grid item xs={12}>
+                <TextField
+                    variant="outlined"
+                    required
+                    fullWidth
+                    name="nickname"
+                    label="Nickname"
+                    id="nickname"
+                    autoComplete="your-nickname"
+                    onChange={handleNicknameChange}
                 />
                 </Grid>
                 {/* <Grid item xs={12}>
@@ -117,6 +171,7 @@ export default function SignUp() {
             </form>
         </div>
         </Container>
-    </ThemeProvider>
+    // </ThemeProvider>
   );
 }
+export default withRouter(SignUp);
