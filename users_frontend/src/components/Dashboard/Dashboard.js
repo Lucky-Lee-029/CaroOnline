@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from 'react-router-dom';
 import SearchAppBar from "../Bar/Bar";
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import GridItem from './Grid';
 import QuickJoinRoomBtn from './QuickJoinRoomBtn'
 import UserCtx from '../../context/User';
@@ -18,6 +18,12 @@ import {
   makeStyles
 } from "@material-ui/core";
 import CreateRoomDialog from './CreateRoomDialog';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -63,6 +69,18 @@ function Dashboard() {
   const history = useHistory();
   const [user, setUser] = useContext(UserCtx);
   const [onlineUsers, setOnlineUsers] = useState();
+  const [userDialog, setUserDialog] = useState();
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = (userItem) => {
+    setOpen(true);
+    setUserDialog(userItem);
+    console.log(userItem);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     const api = 'http://localhost:8000/users_api/auth';
@@ -95,13 +113,13 @@ function Dashboard() {
       const obj = Object.entries(users).sort(); // Convert obj to array
       setOnlineUsers(obj);
     });
-  });
+  }, []);
 
   const renderListItems = (items) => {
     if (items) {
       return Array.from(items).map((item) => {
         return (
-          <ListItem key={item[0]} button>
+          <ListItem key={item[0]} button onClick={() => handleClickOpen(item[1].user)}>
             <ListItemAvatar>
               <Avatar>
                 <AccountCircle />
@@ -116,6 +134,27 @@ function Dashboard() {
 
   return (
     <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">User infomation</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            <Typography>
+              <strong>Nickname: </strong>
+            {(userDialog) ? userDialog.profile.nickname : null}
+            </Typography>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} variant="contained" color="primary" autoFocus>
+            Invite
+          </Button>
+        </DialogActions>
+      </Dialog>
       <SearchAppBar />
       <Grid container className={classes.root}>
         <Grid item xs={10}>
