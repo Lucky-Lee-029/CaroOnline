@@ -5,7 +5,6 @@ import SearchAppBar from "../Bar/Bar";
 import { Grid } from '@material-ui/core';
 import GridItem from './Grid';
 import QuickJoinRoomBtn from './QuickJoinRoomBtn'
-import CreateRoomBtn from './CreateRoomBtn'
 import UserCtx from '../../context/User';
 import { nspOnlineUsers } from '../../socket';
 import { AccountCircle } from "@material-ui/icons";
