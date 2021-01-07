@@ -5,9 +5,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import PeopleIcon from '@material-ui/icons/People';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+//import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import BookmarksIcon from '@material-ui/icons/Bookmarks';
 
 export const mainListItems = (
   <div>
@@ -17,17 +17,17 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button>
+    {/* <ListItem button>
       <ListItemIcon>
         <AccountCircleIcon/>
       </ListItemIcon>
       <ListItemText primary="My Account" />
-    </ListItem>
+    </ListItem> */}
     <ListItem button>
       <ListItemIcon>
-        <MonetizationOnIcon />
+         <BookmarksIcon/>
       </ListItemIcon>
-      <ListItemText primary="Recharge Management" />
+      <ListItemText primary="Matches" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
