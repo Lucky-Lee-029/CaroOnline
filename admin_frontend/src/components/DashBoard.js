@@ -24,8 +24,10 @@ import Paper from '@material-ui/core/Paper';
 //import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-//import NotificationsIcon from '@material-ui/icons/Notifications';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { mainListItems, secondaryListItems } from './listItem';
+import UserAccount from './UserAccount';
+import Matches from './Matches';
 
 const drawerWidth = 240;
 
@@ -147,11 +149,9 @@ function DashBoard() {
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             Dashboard
           </Typography>
-          {/* <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton> */}
+          <IconButton color="inherit">
+            <ExitToAppIcon/>
+          </IconButton>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -169,7 +169,7 @@ function DashBoard() {
         <Divider />
         <List>{mainListItems}</List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        {/* <List>{secondaryListItems}</List> */}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -189,16 +189,15 @@ function DashBoard() {
               </Paper>
             </Grid>
           </Grid> */}
+          <Matches/>
         </Container>
       </main>
     </div>
-      // <NavBar>
-      //   <Users users={users}/> 
-      // </NavBar>
     );
   } else {
     return (
       <NavBar>
+        <Users users={users}/> 
       </NavBar>
     );
   }
