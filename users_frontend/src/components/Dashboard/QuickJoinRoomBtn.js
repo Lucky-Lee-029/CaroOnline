@@ -10,11 +10,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const QuickJoinRoomBtn = () => {
+const QuickJoinRoomBtn = (props) => {
   const classes = useStyles();
   const roomIdRef = useRef();
 
-  const handleJoinRoom = () => {};
+  const handleJoinRoom = props.handleJoinRoom;
 
   return (
     <Grid item>

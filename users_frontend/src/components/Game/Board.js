@@ -32,9 +32,8 @@ function Board (props) {
             const isCurrentCell = (i === currentCell.x && j === currentCell.y);
 
             squaresDiv.push(<Square winCell={checkWinCell(winCells, i, j)}
-                // value={squares[i][j]}
+                value={squares[i][j]}
                 currentPlayer={currentPlayer}
-                value='X'
                 row={i}
                 col={j}
                 isCurrentCell={isCurrentCell}

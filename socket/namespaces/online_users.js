@@ -41,6 +41,13 @@ function handle(io) {
         io.emit("list_users", users);
       }
     });
+    socket.on("play_new_step", (data)=>{
+      console.log("Get new step: " + data.x +" , " + data.y);
+      socket.broadcast.emit("got_new_step", data);
+    });
+    socket.on("win_game", ()=>{
+      console.log("Win game: ");
+    })
   });
 }
 

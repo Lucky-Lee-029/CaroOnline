@@ -1,22 +1,26 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback, useMemo } from 'react';
 import { withRouter } from "react-router";
 import Board from './Board';
 import Config from '../../constants/configs';
 import Status from './Status';
+import UserCtx from '../../context/User';
 import './css/game.css';
 import axios from 'axios';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
+import { nspOnlineUsers } from '../../socket';
 
 const Game=(props)=>{
+    let isYourTurn;
     const { stepNumber } = props;
     const { nextMove } = props;
     const { winCells } = props;
     const { accendingMode } = props;
+    const [user, setUser] = useContext(UserCtx);
     const [currentSquare, setCurrentSquare] = useState({x:0,y:0});
-    const [ step, setStep ] = useState(0);
+    const [step, setStep ] = useState(0);
     const [currentPlayer, setCurrentPlayer] = useState(0);
     const [history, setHistory] = useState([{
         x: null,
@@ -25,6 +29,18 @@ const Game=(props)=>{
             return Array(Config.brdSize).fill(null)
         })
     }])
+    useEffect(()=>{
+        // if(!nspOnlineUsers.hasListener("got_new_step")){
+            nspOnlineUsers.on("got_new_step", (data)=>{
+                handleNewStep(data);
+            });
+        // }
+    },[]);
+    useEffect(()=>{
+        console.log("STEP" + step);
+        console.log("Data lenght: " + history.length);
+        setStep(history.length - 1);
+    },[history]);
     // board game
     // const current = history[stepNumber];
     // const sortMode = accendingMode ? `Nước đi tăng dần` : `Nước đi giảm dần`;
@@ -46,7 +62,7 @@ const Game=(props)=>{
                     <br></br>
                     <div>
                         <Board  winCells={null}
-                                //squares={current.squares}
+                                squares = {history[history.length - 1].squares}
                                 currentPlayer={currentPlayer}
                                 currentCell={currentSquare}
                                 handleClick={userClick}/>
@@ -209,17 +225,20 @@ const Game=(props)=>{
         // if ((isPlayerX && nextMove === Config.oPlayer) || (!isPlayerX && nextMove === Config.xPlayer)) {
         //     return;
         // }
-        let currentUser = (currentPlayer === 0) ? Config.xPlayer : Config.oPlayer;
+        // if(!isYourTurn){
+        //     console.log("prevent!!");
+        //     return;
+        // }
+        let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
         if(step > 0){
             if(history[step].squares[row][col] !== null)
                 return;
         }
         console.log("" + row + ", " + col);
         console.log(currentPlayer);
-        setStep(step +1);
         setCurrentPlayer(1-currentPlayer);
         let currentHis = history;
-        console.log("Step: " + step);
+
         setCurrentSquare({x: row, y: col});
         let newState = {
             x: row,
@@ -227,12 +246,29 @@ const Game=(props)=>{
             squares: history[step].squares
         };
         newState.squares[row][col] = currentUser;
+        // let newHis = currentHis.concat(newState);
         currentHis.push(newState);
         setHistory(currentHis);
+        // let newStep = step + 1;
+        
         if(checkWin(row, col, currentUser, step)){
             console.log("WON");
+            nspOnlineUsers.emit("win_game");
         }
-        
+        console.log("Step: " + step);
+        nspOnlineUsers.emit("play_new_step", newState);
+        setStep(step + 1);
+    }
+    function handleNewStep(data){
+        let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
+        let currentHis = history;
+        // setCurrentPlayer(1-currentPlayer);
+        // setCurrentSquare({x: data.x, y: data.y});
+        let newState = data;
+        console.log("current user: "+ currentUser);
+        newState.squares[data.x][data.y] = currentUser;
+        const newHis = currentHis.concat(newState);
+        setHistory(newHis);
     }
 }
 
