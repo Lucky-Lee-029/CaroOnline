@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState} from 'react';
 import { withRouter } from "react-router";
 import Board from './Board';
+import Timer from './Timer';
 import Config from '../../constants/configs';
 import Status from './Status';
 import UserCtx from '../../context/User';
@@ -10,18 +11,14 @@ import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell'
+import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import CardContent from '@material-ui/core/CardContent';
 import { nspOnlineUsers } from '../../socket';
 import TextField from '@material-ui/core/TextField';
 
+const time=30;
 const Game=(props)=>{
-    let isYourTurn;
-    // const { stepNumber } = props;
-    // const { nextMove } = props;
-    // const { winCells } = props;
-    // const { accendingMode } = props;
     const [chats, setChats] = useState([{content: "Chat 1", id: "123"}, {content: "Chat 2", id: "123"}]);
     const [message, setMessage] = useState("");
     const [user, setUser] = useContext(UserCtx);
@@ -29,6 +26,8 @@ const Game=(props)=>{
     const [step, setStep ] = useState(0);
     const [currentPlayer, setCurrentPlayer] = useState(0);
     const [winner, setWinner] = useState(null);
+    const [countDown, setCountDown] = useState(30);
+    const [isYourTurn, setIsYourTurn] = useState(true);
     const [history, setHistory] = useState([{
         x: null,
         y: null,
@@ -78,6 +77,14 @@ const Game=(props)=>{
         }
         nspOnlineUsers.emit("chat", data);
     }
+
+    const onTimeOut = ()=>{
+        if(!isYourTurn){
+            let currentUser = (history.length % 2 === 0) ? Config.xPlayer : Config.oPlayer;
+            nspOnlineUsers.emit("win_game", currentUser);
+        }
+    }
+
     // board game
     // const current = history[stepNumber];
     // const sortMode = accendingMode ? `Nước đi tăng dần` : `Nước đi giảm dần`;
@@ -105,12 +112,24 @@ const Game=(props)=>{
                                 <Table aria-label="custom pagination table">
                                     <TableBody>
                                         <TableRow>
-                                            <TableCell>
-                                                Your info
-                                            </TableCell>
-                                            <TableCell>
-                                                Rival info
-                                            </TableCell>
+                                            {
+                                                (isYourTurn && !winner) ?(
+                                                    <Timer
+                                                        onTimeOut={onTimeOut}
+                                                    />
+                                                ):(
+                                                    <TableCell>Wait</TableCell>
+                                                )
+                                            }
+                                            {
+                                                (!isYourTurn && !winner)?(
+                                                    <Timer
+                                                        onTimeOut={onTimeOut}
+                                                    />
+                                                ):(
+                                                    <TableCell>Wait</TableCell>
+                                                )
+                                            }
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -286,6 +305,9 @@ const Game=(props)=>{
     }
 
     function userClick(row, col) {
+        if(!isYourTurn){
+            return;
+        }
         let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
         if(step > 0){
             if(history[step].squares[row][col] !== null)
@@ -315,6 +337,10 @@ const Game=(props)=>{
         console.log("Step: " + step);
         nspOnlineUsers.emit("play_new_step", newState);
         setStep(step + 1);
+        setIsYourTurn((turn)=>{
+            return false;
+        })
+        setCountDown(time);
     }
     function handleNewStep(data){
         let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
@@ -329,6 +355,10 @@ const Game=(props)=>{
         setHistory(currentHis =>{
             return currentHis.concat(newState);
         });
+        setIsYourTurn((turn)=>{
+            return true;
+        });
+        setCountDown(time);
     }
 }
 export default Game;
