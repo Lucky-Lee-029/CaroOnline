@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState} from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Board from '../Game/Board';
 import Config from '../../constants/configs';
 import UserCtx from '../../context/User';
@@ -13,7 +14,26 @@ import TableRow from '@material-ui/core/TableRow';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import TextField from '@material-ui/core/TextField';
-
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+      height: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+      position: 'relative',
+      overflow: 'auto',
+      maxHeight: 400,
+    },
+    listSection: {
+      backgroundColor: 'inherit',
+    },
+    ul: {
+      backgroundColor: 'inherit',
+      padding: 0,
+    },
+}));
 const sq1 = Array(Config.brdSize).fill(null).map(() => {
     return Array(Config.brdSize).fill(null)
 });
@@ -35,7 +55,9 @@ sq4[1][4]="0";
 
 
 const ReviewGame=(props)=>{
+    const classes = useStyles();
     const [step, setStep] = useState(0);
+    const [stepchat, setStepchat] = useState(0);
     const [history, setHistory] = useState([
         {
             x: null,
@@ -58,9 +80,49 @@ const ReviewGame=(props)=>{
             x: 2,
             y: 4,
             squares: sq3
+        },
+        {
+            x: 1,
+            y: 1,
+            squares: sq1
+        },
+        {
+            x: 2,
+            y: 2,
+            squares: sq2
+        },
+        {
+            x: 2,
+            y: 4,
+            squares: sq3
+        },
+        {
+            x: 1,
+            y: 1,
+            squares: sq1
+        },
+        {
+            x: 2,
+            y: 2,
+            squares: sq2
+        },
+        {
+            x: 2,
+            y: 4,
+            squares: sq3
+        },
+        {
+            x: 2,
+            y: 2,
+            squares: sq2
+        },
+        {
+            x: 2,
+            y: 4,
+            squares: sq3
         }
     ])
-    const [chats, setChats] = useState([]);
+    const [chats, setChats] = useState([{content: "A"},{content: "A"},{content: "A"},{content: "A"},{content: "A"},{content: "A"}]);
     return(
         <div className="App"> 
             <header className="App-header">
@@ -79,18 +141,19 @@ const ReviewGame=(props)=>{
                         <Card className="card-review">
                             <CardContent>
                                 <h3>Danh sách nước đi</h3>
+                                <List cols={1} className={classes.root}>
                                 {
                                     history.map((items,index)=>{
                                         return(
-                                        <div>
-                                        <Button onClick={()=>handleChangeStep(index)}>
+                                        <ListItem>
+                                        <Button className="btnStep" variant="contained" color={index===step?"primary":""} onClick={()=>handleChangeStep(index)}>
                                             #{index}: Player {index%2===0?"X":"O"} at {items.x},{items.y}
                                         </Button>
-                                        <br></br>
-                                        </div>
+                                        </ListItem  >
                                         )
                                     })
                                 }
+                                </List>
                             </CardContent>
                         </Card>
                     </div>
@@ -115,15 +178,18 @@ const ReviewGame=(props)=>{
                                         <TableRow>
                                             Khung chat
                                         </TableRow>
+                                        <List>
                                         {
-                                            chats.map((item)=>{
+                                            chats.map((item, index)=>{
+                                                if(index < stepchat)
                                                 return(
-                                                    <TableRow>
+                                                    <ListItem>
                                                         {item.content}
-                                                    </TableRow>
+                                                    </ListItem>
                                                 )
                                             })
                                         }
+                                        </List>
                                     </TableBody>
                                 </Table>
                             </CardContent>
@@ -138,6 +204,7 @@ const ReviewGame=(props)=>{
     }
     function handleChangeStep(step){
         setStep(step);
+        setStepchat(step*2);
     }
 }
 export default ReviewGame;

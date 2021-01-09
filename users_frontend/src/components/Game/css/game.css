@@ -277,3 +277,18 @@
     padding-bottom: 5px;
     padding-right: 10px;
   }
+  .btnStep{
+    width: 300px;
+  }
+  .gridList{
+    width: 350px;
+    height: 400px;
+  }
+  .gridItem{
+    width: 350px;
+    height: 50px;
+  }
+
+  gridItem{
+    height: 50px !important;
+  }
