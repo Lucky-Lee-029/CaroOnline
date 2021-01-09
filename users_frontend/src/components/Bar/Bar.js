@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -16,6 +16,7 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useHistory } from 'react-router';
 import { nspOnlineUsers } from '../../socket';
 import UserCtx from '../../context/User';
+import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -79,6 +80,10 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  small: {
+    width: theme.spacing(3),
+    height: theme.spacing(3),
+  },
 }));
 
 export default function SearchAppBar() {
@@ -119,6 +124,21 @@ export default function SearchAppBar() {
   };
 
   const menuId = 'primary-search-account-menu';
+
+  function stringToHslColor(str, s, l) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    var h = hash % 360;
+    return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
+  }
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
 
   const renderMenu = (
     <Menu
@@ -167,6 +187,7 @@ export default function SearchAppBar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
+            {(user)?
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -175,8 +196,13 @@ export default function SearchAppBar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
-            </IconButton>
+              {(user.type === 'local') ?
+                <Avatar className={classes.small} style={{ backgroundColor: stringToHslColor(user.profile.name, 100, 50) }}>
+                  {user.profile.name[0]}
+                </Avatar> :
+                <Avatar className={classes.small} alt={user._id} src={user.profile.avatar} />
+              }
+            </IconButton> : null}
           </div>
           <div className={classes.sectionMobile}>
             <IconButton

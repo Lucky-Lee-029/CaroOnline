@@ -7,7 +7,7 @@ import GridItem from './Grid';
 import QuickJoinRoomBtn from './QuickJoinRoomBtn'
 import UserCtx from '../../context/User';
 import { nspOnlineUsers } from '../../socket';
-import { AccountCircle } from "@material-ui/icons";
+import Badge from '@material-ui/core/Badge';
 import {
   Avatar,
   List,
@@ -15,7 +15,9 @@ import {
   ListItemAvatar,
   ListItemText,
   ListSubheader,
-  makeStyles
+  Paper,
+  makeStyles,
+  withStyles
 } from "@material-ui/core";
 import CreateRoomDialog from './CreateRoomDialog';
 import Button from '@material-ui/core/Button';
@@ -58,11 +60,41 @@ const useStyles = makeStyles((theme) => ({
   pos: {
     marginBottom: 12,
   },
-  bull: {
-
+  paper: {
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
   },
-
 }));
+
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    backgroundColor: '#44b700',
+    color: '#44b700',
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    '&::after': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: '$ripple 1.2s infinite ease-in-out',
+      border: '1px solid currentColor',
+      content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0,
+    },
+  },
+}))(Badge);
 
 function Dashboard() {
   const classes = useStyles();
@@ -95,6 +127,7 @@ function Dashboard() {
         const obj = await res.data;
         setUser(obj.user); // Set user context
       } catch (err) {
+        nspOnlineUsers.emit("logout");
         setUser(null); // Set null context
         history.replace('/login'); // Redirect to Login screen
       }
@@ -104,8 +137,11 @@ function Dashboard() {
   useEffect(() => {
     if (user) {
       nspOnlineUsers.emit("active", user);
+      if (user.type === 'local' && !user.local.isVerified) {
+        history.replace('/verify_email');
+      }
     }
-  }, [user]);
+  }, [history, user]);
 
   useEffect(() => {
     nspOnlineUsers.on("list_users", (users) => {
@@ -127,15 +163,28 @@ function Dashboard() {
   const renderListItems = (items) => {
     if (items) {
       return Array.from(items).map((item) => {
+        //if (user._id === item[0]) {
+        //  return;
+        //}
+
         return (
           <ListItem key={item[0]} button onClick={() => handleClickOpen(item[1].user)}>
             <ListItemAvatar>
-              {(item[1].user.type === 'local') ?
-                <Avatar style={{ backgroundColor: stringToHslColor(item[1].user.profile.name, 100, 50) }}>
-                  {item[1].user.profile.name[0]}
-                </Avatar> : 
-                <Avatar alt={item[0]} src={item[1].user.profile.avatar} />
+              <StyledBadge
+                overlap="circle"
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                variant="dot"
+              >
+                {(item[1].user.type === 'local') ?
+                  <Avatar style={{ backgroundColor: stringToHslColor(item[1].user.profile.name, 100, 50) }}>
+                    {item[1].user.profile.name[0]}
+                  </Avatar> :
+                  <Avatar alt={item[0]} src={item[1].user.profile.avatar} />
                 }
+              </StyledBadge>
             </ListItemAvatar>
             <ListItemText primary={item[1].user.profile.name} />
           </ListItem>
@@ -146,23 +195,51 @@ function Dashboard() {
 
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">User infomation</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} variant="contained" color="primary" autoFocus>
-            Invite
+      {(userDialog) ?
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth={true}
+          maxWidth="sm"
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">User infomation</DialogTitle>
+          <DialogContent>
+            <Grid container style={{ flexRow: 1 }} spacing={1}>
+              <Grid item xs={4} align="center">
+                <div>
+                  {
+                    (userDialog.type === 'local') ?
+                      <Avatar variant="rounded" style={{ backgroundColor: stringToHslColor(userDialog.profile.name, 100, 50) }}>
+                        {userDialog.profile.name[0]}
+                      </Avatar> :
+                      <Avatar variant="rounded" alt={userDialog._id} src={userDialog.profile.avatar} />
+                  }
+                </div>
+              </Grid>
+              <Grid item xs={8}>
+                <Paper className={classes.paper}>{userDialog.profile.name}</Paper>
+              </Grid>
+              <Grid item xs={4}>
+                <Paper className={classes.paper}>
+                  Created At
+                </Paper>
+              </Grid>
+              <Grid item xs={8}>
+                <Paper className={classes.paper}>
+                  {userDialog.createdAt}
+                </Paper>
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} variant="contained" color="primary" autoFocus>
+              Invite
           </Button>
-        </DialogActions>
-      </Dialog>
+          </DialogActions>
+        </Dialog>
+        : null}
       <SearchAppBar />
       <Grid container className={classes.root}>
         <Grid item xs={10}>
