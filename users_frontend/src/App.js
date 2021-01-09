@@ -5,6 +5,7 @@ import DashBoard from './components/Dashboard/Dashboard';
 import Profile from './components/Profile/Profile';
 import SignUp from './components/SignUp/SignUp';
 import Game from './components/Game/Game';
+import ReviewGame from './components/ReviewMatch/ReviewGame'
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
@@ -61,6 +62,7 @@ function App() {
           <Route path="/chart" component={Chart} />
           <Route path="/profile" component={Profile} />
           <Route path="/game" component={Game} />
+          <Route path="/review" component={ReviewGame} />
         </Switch>
       </BrowserRouter>
     </UserCtx.Provider >

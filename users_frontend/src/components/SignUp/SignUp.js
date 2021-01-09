@@ -116,6 +116,7 @@ const SignUp = (props) =>{
                     id="email"
                     label="Email Address"
                     name="email"
+                    type="email"
                     autoComplete="email"
                     onChange={handleEmailChange}
                 />
