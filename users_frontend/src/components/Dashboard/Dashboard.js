@@ -75,7 +75,6 @@ function Dashboard() {
   const handleClickOpen = (userItem) => {
     setOpen(true);
     setUserDialog(userItem);
-    console.log(userItem);
   };
 
   const handleClose = () => {
@@ -115,17 +114,30 @@ function Dashboard() {
     });
   }, []);
 
+  function stringToHslColor(str, s, l) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    var h = hash % 360;
+    return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
+  }
+
   const renderListItems = (items) => {
     if (items) {
       return Array.from(items).map((item) => {
         return (
           <ListItem key={item[0]} button onClick={() => handleClickOpen(item[1].user)}>
             <ListItemAvatar>
-              <Avatar>
-                <AccountCircle />
-              </Avatar>
+              {(item[1].user.type === 'local') ?
+                <Avatar style={{ backgroundColor: stringToHslColor(item[1].user.profile.name, 100, 50) }}>
+                  {item[1].user.profile.name[0]}
+                </Avatar> : 
+                <Avatar alt={item[0]} src={item[1].user.profile.avatar} />
+                }
             </ListItemAvatar>
-            <ListItemText primary={item[1].user.profile.nickname} />
+            <ListItemText primary={item[1].user.profile.name} />
           </ListItem>
         );
       });
@@ -143,10 +155,6 @@ function Dashboard() {
         <DialogTitle id="alert-dialog-title">User infomation</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Typography>
-              <strong>Nickname: </strong>
-            {(userDialog) ? userDialog.profile.nickname : null}
-            </Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

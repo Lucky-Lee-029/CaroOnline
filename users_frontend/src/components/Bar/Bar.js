@@ -1,101 +1,4 @@
-// import React from 'react';
-// import AppBar from '@material-ui/core/AppBar';
-// import Toolbar from '@material-ui/core/Toolbar';
-// import IconButton from '@material-ui/core/IconButton';
-// import Typography from '@material-ui/core/Typography';
-// import InputBase from '@material-ui/core/InputBase';
-// import { fade, makeStyles } from '@material-ui/core/styles';
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//   },
-//   menuButton: {
-//     marginRight: theme.spacing(2),
-//   },
-//   title: {
-//     flexGrow: 1,
-//     display: 'none',
-//     [theme.breakpoints.up('sm')]: {
-//       display: 'block',
-//     },
-//   },
-//   search: {
-//     position: 'relative',
-//     borderRadius: theme.shape.borderRadius,
-//     backgroundColor: fade(theme.palette.common.white, 0.15),
-//     '&:hover': {
-//       backgroundColor: fade(theme.palette.common.white, 0.25),
-//     },
-//     marginLeft: 0,
-//     width: '100%',
-//     [theme.breakpoints.up('sm')]: {
-//       marginLeft: theme.spacing(1),
-//       width: 'auto',
-//     },
-//   },
-//   searchIcon: {
-//     padding: theme.spacing(0, 2),
-//     height: '100%',
-//     position: 'absolute',
-//     pointerEvents: 'none',
-//     display: 'flex',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-//   inputRoot: {
-//     color: 'inherit',
-//   },
-//   inputInput: {
-//     padding: theme.spacing(1, 1, 1, 0),
-//     // vertical padding + font size from searchIcon
-//     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-//     transition: theme.transitions.create('width'),
-//     width: '100%',
-//     [theme.breakpoints.up('sm')]: {
-//       width: '12ch',
-//       '&:focus': {
-//         width: '20ch',
-//       },
-//     },
-//   },
-// }));
-
-// export default function SearchAppBar() {
-//   const classes = useStyles();
-
-//   return (
-//     <div className={classes.root}>
-//       <AppBar position="static">
-//         <Toolbar>
-//           <IconButton
-//             edge="start"
-//             className={classes.menuButton}
-//             color="inherit"
-//             aria-label="open drawer"
-//           >
-//           </IconButton>
-//           <Typography className={classes.title} variant="h6" noWrap>
-//             Caro Online
-//           </Typography>
-//           <div className={classes.search}>
-//             <div className={classes.searchIcon}>
-//             </div>
-//             <InputBase
-//               placeholder="Search…"
-//               classes={{
-//                 root: classes.inputRoot,
-//                 input: classes.inputInput,
-//               }}
-//               inputProps={{ 'aria-label': 'search' }}
-//             />
-//           </div>
-//         </Toolbar>
-//       </AppBar>
-//     </div>
-//   );
-// }
-import React from 'react';
+import React, { useContext } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -111,6 +14,8 @@ import MoreIcon from '@material-ui/icons/MoreVert';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useHistory } from 'react-router';
+import { nspOnlineUsers } from '../../socket';
+import UserCtx from '../../context/User';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -179,6 +84,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SearchAppBar() {
   const classes = useStyles();
   const history = useHistory();
+  const [user, setUser] = useContext(UserCtx);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -202,6 +108,8 @@ export default function SearchAppBar() {
     setAnchorEl(null);
     handleMobileMenuClose();
 
+    setUser(null);
+    nspOnlineUsers.emit("logout"); // Socket
     localStorage.removeItem('token'); // Remove token
     history.replace('/login'); // Redirect to Login
   }
@@ -211,7 +119,7 @@ export default function SearchAppBar() {
   };
 
   const menuId = 'primary-search-account-menu';
-  
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -252,7 +160,7 @@ export default function SearchAppBar() {
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="Chart" color="inherit">
-                <InsertChartIcon/>
+              <InsertChartIcon />
             </IconButton>
             <IconButton aria-label="show 8 new notifications" color="inherit">
               <Badge badgeContent={8} color="secondary">

@@ -1,16 +1,42 @@
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
-  username: {
+  type: {
     type: String,
     trim: true,
-    unique: true,
-    lowercase: true,
-    required: true
+    enum: ["local", "facebook", "google"],
+    default: "local"
   },
-  password: {
+  createdAt: {
+    type: Date,
+    default: Date.now()
+  },
+  active: {
+    type: Boolean,
+    default: true
+  },
+  local: {
+    username: {
+      type: String,
+      trim: true,
+      unique: true,
+      lowercase: true
+    },
+    password: {
+      type: String
+    },
+    isVerified: {
+      type: Boolean,
+      default: false
+    }
+  },
+  facebook: {
     type: String,
-    required: true
+    trim: true
+  },
+  google: {
+    type: String,
+    trim: true
   },
   profile: {
     type: mongoose.SchemaTypes.ObjectId,

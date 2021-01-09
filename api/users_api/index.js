@@ -12,6 +12,18 @@ router.route("/auth")
   .put()
   .delete();
 
+router.route("/auth/fb")
+  .get()
+  .post(authCtrl.loginWithFb)
+  .put()
+  .delete();
+  
+router.route("/auth/gg")
+  .get()
+  .post(authCtrl.loginWithGg)
+  .put()
+  .delete();
+
 router.route("/user")
   .get()
   .post(userCtrl.register)
