@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useContext, useEffect, useState} from 'react';
 import { withRouter } from "react-router";
 import Board from './Board';
 import Config from '../../constants/configs';
@@ -8,20 +8,27 @@ import './css/game.css';
 import axios from 'axios';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell'
+import TableRow from '@material-ui/core/TableRow';
 import CardContent from '@material-ui/core/CardContent';
-import { makeStyles } from '@material-ui/core/styles';
 import { nspOnlineUsers } from '../../socket';
+import TextField from '@material-ui/core/TextField';
 
 const Game=(props)=>{
     let isYourTurn;
-    const { stepNumber } = props;
-    const { nextMove } = props;
-    const { winCells } = props;
-    const { accendingMode } = props;
+    // const { stepNumber } = props;
+    // const { nextMove } = props;
+    // const { winCells } = props;
+    // const { accendingMode } = props;
+    const [chats, setChats] = useState([{content: "Chat 1", id: "123"}, {content: "Chat 2", id: "123"}]);
+    const [message, setMessage] = useState("");
     const [user, setUser] = useContext(UserCtx);
     const [currentSquare, setCurrentSquare] = useState({x:0,y:0});
     const [step, setStep ] = useState(0);
     const [currentPlayer, setCurrentPlayer] = useState(0);
+    const [winner, setWinner] = useState(null);
     const [history, setHistory] = useState([{
         x: null,
         y: null,
@@ -36,30 +43,52 @@ const Game=(props)=>{
             });
         // }
     },[]);
+
+    useEffect(()=>{
+        nspOnlineUsers.on("new_chat", (data)=>{
+            // let currentChats = chats;
+            // console.log(chats);
+            // let newChats = currentChats.concat(data);
+            setChats(currentChats=>{
+                return currentChats.concat(data);
+            });
+        });
+    },[])
+
+    useEffect(()=>{
+        nspOnlineUsers.on("got_winner", data =>{
+            setWinner(data);
+        })
+    },[])
+
     useEffect(()=>{
         console.log("STEP" + step);
         console.log("Data lenght: " + history.length);
+        console.log(history);
         setStep(history.length - 1);
     },[history]);
+
+    const handleChatChange = (e) => {
+        setMessage(e.target.value);
+    }
+    const handleSendChat = () =>{
+        const data = {
+            content: message,
+            id: 1
+        }
+        nspOnlineUsers.emit("chat", data);
+    }
     // board game
     // const current = history[stepNumber];
     // const sortMode = accendingMode ? `Nước đi tăng dần` : `Nước đi giảm dần`;
     const moves = [];
     const isPlayerX=true;
     return(
-        <div className="App">
+        <div className="App"> 
             <header className="App-header">
                 <Status 
-                    messages="{winCells}"/>
+                    messages={winner ? ("Winner: " + winner) : "Playing..."}/>
                 <div className="board-game">
-                    <div>
-                        <Card className="card">
-                            <CardContent>
-                                My infor
-                            </CardContent>
-                        </Card>
-                    </div>
-                    <br></br>
                     <div>
                         <Board  winCells={null}
                                 squares = {history[history.length - 1].squares}
@@ -73,7 +102,45 @@ const Game=(props)=>{
                     <div>
                         <Card className="card">
                             <CardContent>
-                                Rival infor
+                                <Table aria-label="custom pagination table">
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell>
+                                                Your info
+                                            </TableCell>
+                                            <TableCell>
+                                                Rival info
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                                <Table>
+                                    <TableBody>
+                                        <TableRow>
+                                            Khung chat
+                                        </TableRow>
+                                        {
+                                            chats.map((item)=>{
+                                                return(
+                                                    <TableRow>
+                                                        {item.content}
+                                                    </TableRow>
+                                                )
+                                            })
+                                        }
+                                    </TableBody>
+                                </Table>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    fullWidth
+                                    id="mess"
+                                    label="mess"
+                                    name="mess"
+                                    autoComplete="mess"
+                                    onChange={handleChatChange}
+                                />
+                                <Button onClick={handleSendChat}>Gửi</Button>
                             </CardContent>
                         </Card>
                     </div>
@@ -219,16 +286,6 @@ const Game=(props)=>{
     }
 
     function userClick(row, col) {
-        // const { nextMove } = props;
-
-        // Prevent user click if not his turn
-        // if ((isPlayerX && nextMove === Config.oPlayer) || (!isPlayerX && nextMove === Config.xPlayer)) {
-        //     return;
-        // }
-        // if(!isYourTurn){
-        //     console.log("prevent!!");
-        //     return;
-        // }
         let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
         if(step > 0){
             if(history[step].squares[row][col] !== null)
@@ -253,7 +310,7 @@ const Game=(props)=>{
         
         if(checkWin(row, col, currentUser, step)){
             console.log("WON");
-            nspOnlineUsers.emit("win_game");
+            nspOnlineUsers.emit("win_game", currentUser);
         }
         console.log("Step: " + step);
         nspOnlineUsers.emit("play_new_step", newState);
@@ -262,14 +319,16 @@ const Game=(props)=>{
     function handleNewStep(data){
         let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
         let currentHis = history;
-        // setCurrentPlayer(1-currentPlayer);
-        // setCurrentSquare({x: data.x, y: data.y});
+        console.log(history);
+        setCurrentPlayer(1-currentPlayer);
+        setCurrentSquare({x: data.x, y: data.y});
         let newState = data;
         console.log("current user: "+ currentUser);
         newState.squares[data.x][data.y] = currentUser;
         const newHis = currentHis.concat(newState);
-        setHistory(newHis);
+        setHistory(currentHis =>{
+            return currentHis.concat(newState);
+        });
     }
 }
-
 export default Game;

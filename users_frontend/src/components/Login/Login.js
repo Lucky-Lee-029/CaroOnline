@@ -117,7 +117,7 @@ const Login= (props) => {
             <Avatar className={classes.avatar}></Avatar>
             <Typography component="h1" variant="h5">
               Sign in
-                  </Typography>
+            </Typography>
             <form className={classes.form} noValidate onSubmit={handleSubmitLogin}>
               <TextField
                 variant="outlined"
@@ -195,7 +195,7 @@ const Login= (props) => {
                         callback={responseFacebook}
                         icon="fa-facebook" />
                     </Grid>
-                  </Grid>
+              </Grid>
               <Box mt={5}>
                 {(error) ? <Alert severity="error">{error}</Alert> : null}
               </Box>
