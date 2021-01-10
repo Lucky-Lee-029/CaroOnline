@@ -156,6 +156,8 @@ function Dashboard() {
     }
   }, [history, user]);
 
+  
+
   useEffect(() => {
     nspOnlineUsers.on("list_users", (users) => {
       const obj = Object.entries(users).sort(); // Convert obj to array
@@ -272,7 +274,7 @@ function Dashboard() {
       <Grid container className={classes.root}>
         <Grid item xs={10}>
           <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
-            <QuickJoinRoomBtn />
+            <QuickJoinRoomBtn handleJoinRoom={()=>{}}/>
             <CreateRoomDialog />
           </Grid>
           <Grid container item xs={12} spacing={2}>

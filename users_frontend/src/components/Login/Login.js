@@ -83,9 +83,11 @@ function Login(props) {
 
   const handleSubmitLogin = async (event) => {
     event.preventDefault();
+    console.log("Name: " + username);
+    console.log("pass: " + password);
     fetchData('http://localhost:8000/users_api/auth', {
-      username,
-      password
+      username: username,
+      password: password
     });
   }
 
@@ -109,7 +111,7 @@ function Login(props) {
             <Avatar className={classes.avatar}></Avatar>
             <Typography component="h1" variant="h5">
               Sign in
-                  </Typography>
+            </Typography>
             <form className={classes.form} noValidate onSubmit={handleSubmitLogin}>
               <TextField
                 variant="outlined"

@@ -18,9 +18,11 @@ async function verifyToken(req, res) {
 
 async function login(req, res) {
   try {
+    console.log(res.body);
     const { username, password } = req.body;
     const user = await User.findOne({ "local.username": username });
     if (!user) {
+      console.log("No user!");
       throw new Error();
     }
     const isMatch = await bcrypt.compare(password, user.local.password);
@@ -37,6 +39,7 @@ async function login(req, res) {
       throw new Error();
     }
   } catch (err) {
+    console.log("errr");
     res.status(400).json({
       msg: "Invalid Credentials"
     });
