@@ -11,6 +11,7 @@ import ReactDOM from 'react-dom';
 import rootReducers from './reducers/rootReducers';
 import UserCtx from './context/User';
 import Chart from './components/Chart/Chart'
+import { AppBar } from '@material-ui/core';
 
 function saveToLocalStorage(state) {
     try {
@@ -54,9 +55,9 @@ function App() {
     <UserCtx.Provider value={userState}>
       <BrowserRouter>
         <Switch>
-          <Route exact path="/" component={DashBoard} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={SignUp} />
+          <Route exact path="/" component={DashBoard} />
           <Route path="/chart" component={Chart} />
           <Route path="/profile" component={Profile} />
         </Switch>

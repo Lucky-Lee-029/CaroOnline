@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,7 +9,6 @@ import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import InsertChartIcon from '@material-ui/icons/InsertChart';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -17,6 +16,7 @@ import { useHistory } from 'react-router';
 import { nspOnlineUsers } from '../../socket';
 import UserCtx from '../../context/User';
 import Avatar from '@material-ui/core/Avatar';
+import { CssBaseline } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -91,37 +91,25 @@ export default function SearchAppBar() {
   const history = useHistory();
   const [user, setUser] = useContext(UserCtx);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
   const handleLogout = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
 
     setUser(null);
     nspOnlineUsers.emit("logout"); // Socket
     localStorage.removeItem('token'); // Remove token
     history.replace('/login'); // Redirect to Login
   }
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
 
   const menuId = 'primary-search-account-menu';
 
@@ -134,10 +122,6 @@ export default function SearchAppBar() {
     var h = hash % 360;
     return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
   }
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
 
   const renderMenu = (
@@ -159,6 +143,7 @@ export default function SearchAppBar() {
 
   return (
     <div className={classes.grow}>
+      <CssBaseline /> 
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap>
@@ -209,7 +194,6 @@ export default function SearchAppBar() {
               aria-label="show more"
               aria-controls={mobileMenuId}
               aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
               color="inherit"
             >
               <MoreIcon />

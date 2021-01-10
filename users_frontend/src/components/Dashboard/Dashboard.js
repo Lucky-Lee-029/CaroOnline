@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import SearchAppBar from "../Bar/Bar";
 import { Grid, Typography } from '@material-ui/core';
 import GridItem from './Grid';
 import QuickJoinRoomBtn from './QuickJoinRoomBtn'
 import UserCtx from '../../context/User';
-import { nspOnlineUsers } from '../../socket';
+import { nspOnlineUsers, nspRooms } from '../../socket';
 import Badge from '@material-ui/core/Badge';
 import {
   Avatar,
@@ -26,6 +26,18 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+function About() {
+  return (
+    <div>about</div>
+  );
+}
+
+function Profile() {
+  return (
+    <div>profile</div>
+  );
+}
 
 
 const useStyles = makeStyles((theme) => ({
@@ -103,6 +115,7 @@ function Dashboard() {
   const [onlineUsers, setOnlineUsers] = useState();
   const [userDialog, setUserDialog] = useState();
   const [open, setOpen] = useState(false);
+  const [listRooms, setListRooms] = useState([]);
 
   const handleClickOpen = (userItem) => {
     setOpen(true);
@@ -193,6 +206,17 @@ function Dashboard() {
     }
   }
 
+  useEffect(() => {
+    nspRooms.emit("list_rooms");
+  }, []);
+
+  useEffect(() => {
+    nspRooms.on("rooms", (rooms) => {
+      const obj = Object.entries(rooms).sort(); // Convert obj to array
+      setListRooms(obj);
+    });
+  }, [setListRooms]);
+
   return (
     <div>
       {(userDialog) ?
@@ -241,6 +265,10 @@ function Dashboard() {
         </Dialog>
         : null}
       <SearchAppBar />
+      <Switch>
+        <Route path='about' component={About} />
+        <Route path='profile' component={Profile} />
+      </Switch>
       <Grid container className={classes.root}>
         <Grid item xs={10}>
           <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
@@ -248,24 +276,13 @@ function Dashboard() {
             <CreateRoomDialog />
           </Grid>
           <Grid container item xs={12} spacing={2}>
-            <Grid item xs={12} sm={4}>
-              <GridItem status="gaming" roomId={1} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <GridItem roomId={2} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <GridItem order="Private" roomId={3} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <GridItem order="Private" roomId={4} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <GridItem roomId={5} />
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <GridItem status="gaming" order="Private" roomId={6} />
-            </Grid>
+            {
+              listRooms.map(room => (
+                <Grid item xs={12} sm={4} key={room[0]}>
+                  <GridItem roomInfo={room} />
+                </Grid>
+              ))
+            }
           </Grid>
         </Grid>
         <Grid item xs={2}>

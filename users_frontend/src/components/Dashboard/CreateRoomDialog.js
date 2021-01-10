@@ -15,6 +15,7 @@ import Switch from '@material-ui/core/Switch';
 import AddIcon from '@material-ui/icons/Add';
 import { nspRooms } from '../../socket';
 import UserCtx from '../../context/User';
+import { TextField } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -40,6 +41,8 @@ export default function CreateRoomDialog() {
   const [user] = useContext(UserCtx);
   const [open, setOpen] = React.useState(false);
   const [val, setVal] = React.useState(50);
+  const [password, setPassword] = React.useState("");
+  const [turn, setTurn] = React.useState(20);
   const [status, setStatus] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -54,22 +57,42 @@ export default function CreateRoomDialog() {
     setVal(event.target.value);
   };
 
+  const handleTurnChange = (event) => {
+    setTurn(event.target.value);
+  };
+
   const handleStatusChange = (event) => {
     setStatus(event.target.checked);
   };
 
   // Socket create room
   const handleCreateRoom = () => {
-    const data = {
-      user,
-      roomInfo: {
-        cups: val,
-        isPrivate: status
-      }
-    };
+    let data;
+    if (status) {
+      data = {
+        user,
+        roomInfo: {
+          cups: val,
+          turn,
+          password,
+          isPrivate: status,
+        }
+      };
+    } else {
+      data = {
+        user,
+        roomInfo: {
+          cups: val,
+          turn,
+          isPrivate: status,
+        }
+      };
+    }
     nspRooms.emit('create_room', data);
     handleClose();
   }
+
+  const handlePasswordChange = e => setPassword(e.target.value);
 
   return (
     <React.Fragment>
@@ -92,28 +115,52 @@ export default function CreateRoomDialog() {
         <DialogTitle id="max-width-dialog-title">Room Information</DialogTitle>
         <DialogContent>
           <form className={classes.form} noValidate>
-            <FormControl className={classes.formControl}>
-              <InputLabel htmlFor="max-width">Cups</InputLabel>
-              <Select
-                value={val}
-                onChange={handleValChange}
-                inputProps={{
-                  name: 'max-width',
-                  id: 'max-width',
-                }}
-              >
-                <MenuItem value={50}>50</MenuItem>
-                <MenuItem value={100}>100</MenuItem>
-                <MenuItem value={200}>200</MenuItem>
-                <MenuItem value={500}>500</MenuItem>
-                <MenuItem value={1000}>1000</MenuItem>
-              </Select>
-            </FormControl>
+            <InputLabel htmlFor="cups">Cups</InputLabel>
+            <Select
+              value={val}
+              onChange={handleValChange}
+              inputProps={{
+                name: 'cups',
+                id: 'cups'
+              }}
+            >
+              <MenuItem value={50}>50</MenuItem>
+              <MenuItem value={100}>100</MenuItem>
+              <MenuItem value={200}>200</MenuItem>
+              <MenuItem value={500}>500</MenuItem>
+              <MenuItem value={1000}>1000</MenuItem>
+            </Select>
+            <InputLabel htmlFor="turn">Cups</InputLabel>
+            <Select
+              value={turn}
+              onChange={handleTurnChange}
+              inputProps={{
+                name: 'turn',
+                id: 'turn'
+              }}
+            >
+              <MenuItem value={20}>20s</MenuItem>
+              <MenuItem value={30}>30s</MenuItem>
+              <MenuItem value={60}>60s</MenuItem>
+            </Select>
             <FormControlLabel
               className={classes.formControlLabel}
               control={<Switch checked={status} onChange={handleStatusChange} />}
               label="Private"
             />
+            {(status) ?
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={handlePasswordChange}
+              /> : null}
           </form>
         </DialogContent>
         <DialogActions>
