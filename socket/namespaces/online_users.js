@@ -60,6 +60,10 @@ function handle(io) {
       console.log(data.content);
       io.emit("new_chat", data);
     })
+    socket.on("ready", ()=>{
+      console.log("Player ready!");
+      socket.broadcast.emit("ready");
+    })
   });
 }
 

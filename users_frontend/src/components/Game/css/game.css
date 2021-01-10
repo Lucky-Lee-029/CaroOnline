@@ -3,9 +3,6 @@
     text-align: center;
   }
   
-  body {
-    background-color: #151618;
-  }
   
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -287,6 +284,10 @@
   .gridItem{
     width: 350px;
     height: 50px;
+  }
+  .isreadybtn{
+    margin: auto;
+    width: 300px;
   }
 
   gridItem{

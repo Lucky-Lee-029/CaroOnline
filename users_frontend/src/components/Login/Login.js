@@ -83,9 +83,11 @@ function Login(props) {
 
   const handleSubmitLogin = async (event) => {
     event.preventDefault();
+    console.log("Name: " + username);
+    console.log("pass: " + password);
     fetchData('http://localhost:8000/users_api/auth', {
-      username,
-      password
+      username: username,
+      password: password
     });
   }
 

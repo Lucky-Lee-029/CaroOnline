@@ -59,10 +59,10 @@ const SignUp = (props) => {
     (async () => {
       try {
         const userRegister = {
-          username,
-          password,
-          email,
-          name
+          username: username,
+          password: password,
+          email: email,
+          name: name
         }
         const res = await axios.post("http://localhost:8000/users_api/user/", userRegister);
         if (res.data.user) {
@@ -171,7 +171,6 @@ const SignUp = (props) => {
         </form>
       </div>
     </Container>
-    // </ThemeProvider>
   );
 }
 export default withRouter(SignUp);

@@ -30,7 +30,10 @@ const Game=(props)=>{
     const [currentPlayer, setCurrentPlayer] = useState(0);
     const [winner, setWinner] = useState(null);
     const [winCells, setWinCells] = useState([]);
-    const [isYourTurn, setIsYourTurn] = useState(true);
+    const [isStart, setIsStart] = useState(false);
+    const [isYourTurn, setIsYourTurn] = useState(false);
+    const [isReady, setIsReady] = useState(false);
+    const [isRivalReady, setIsRivalReady] = useState(false);
     const [history, setHistory] = useState([{
         x: null,
         y: null,
@@ -45,7 +48,11 @@ const Game=(props)=>{
             });
         // }
     },[]);
-
+    useEffect(()=>{
+        nspOnlineUsers.on("ready",()=>{
+            setIsRivalReady(true);
+        })
+    },[])
     useEffect(()=>{
         nspOnlineUsers.on("new_chat", (data)=>{
             setChats(currentChats=>{
@@ -71,7 +78,12 @@ const Game=(props)=>{
         console.log("Data lenght: " + history.length);
         console.log(history);
         setStep(history.length - 1);
-    },[history]);
+    },[history]); 
+    useEffect(()=>{
+        if(isReady && isRivalReady){
+            setIsStart(true);
+        }
+    },[isReady, isRivalReady])
 
     const handleChatChange = (e) => {
         setMessage(e.target.value);
@@ -91,6 +103,13 @@ const Game=(props)=>{
         }
     }
 
+    const handelReady = ()=>{
+        setIsReady(true);
+        if(!isRivalReady){
+            setIsYourTurn(true);
+        }
+        nspOnlineUsers.emit("ready");
+    }
     // board game
     // const current = history[stepNumber];
     // const sortMode = accendingMode ? `Nước đi tăng dần` : `Nước đi giảm dần`;
@@ -99,7 +118,7 @@ const Game=(props)=>{
     return(
         <div className="App"> 
             <header className="App-header">
-                <Status messages={winner ? ("Winner: " + winner) : "Playing..."}/>
+                <Status messages={winner ? ("Winner: " + winner) : ( isYourTurn ? "Luot cua ban" : "Cho doi thu" )}/>
                 <div className="board-game">
                     <div>
                         <Board  winCells={winCells}
@@ -115,8 +134,26 @@ const Game=(props)=>{
                                 <Table aria-label="custom pagination table">
                                     <TableBody>
                                         <TableRow>
+                                            <TableCell>
+                                                Your info
+                                            </TableCell>
+                                            <TableCell>
+                                                Rival info
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
                                             {
-                                                (isYourTurn && !winner) ?(
+                                                !isStart ? (
+                                                    isReady ? (<Button className="isreadybtn">Cho nguoi choi</Button>) :
+                                                    (<Button className="isreadybtn" variant="contained" color="primary" onClick={handelReady}>San sang</Button>)
+                                                ): (
+                                                    <Button></Button>
+                                                )
+                                            }
+                                        </TableRow>
+                                        <TableRow>
+                                            {
+                                                (isYourTurn && !winner && isStart) ?(
                                                     <Timer
                                                         onTimeOut={onTimeOut}
                                                     />
@@ -125,7 +162,7 @@ const Game=(props)=>{
                                                 )
                                             }
                                             {
-                                                (!isYourTurn && !winner)?(
+                                                (!isYourTurn && !winner && isStart)?(
                                                     <Timer
                                                         onTimeOut={onTimeOut}
                                                     />
@@ -170,6 +207,7 @@ const Game=(props)=>{
             </header>
         </div>
     )
+
     function checkWin(row, col, user, stepNumber) {
 
         if (stepNumber === 0) {
@@ -309,6 +347,9 @@ const Game=(props)=>{
     function userClick(row, col) {
         // prevent click in rival turn
         if(!isYourTurn){
+            return;
+        };
+        if(winner){
             return;
         }
         // set current uset
