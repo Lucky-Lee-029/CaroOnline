@@ -31,6 +31,7 @@ import {
   } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import SavedBtn from './SavedBtn';
+import MenuItem from '@material-ui/core/MenuItem';
 
 //Pagination
 const useStyles1 = makeStyles((theme) => ({
@@ -158,23 +159,44 @@ const rows = [
     },
   ];
 
+const selections = [
+  {
+    value: 'All',
+    label: 'All',
+  },
+  {
+    value: 'Saved',
+    label: 'Saved',
+  },
+  {
+    value: 'Unsaved',
+    label: 'Unsaved',
+  },
+];
 
 const useStyles = makeStyles((theme) => ({
-    margin: {
-        marginBottom: 30,
-    },
-    button:{
-        marginLeft: 5,
-        marginRight: 5,
-        width: 100,
-        height: 40,
-    }
+  margin: {
+    marginBottom: 30,
+},
+button:{
+    marginLeft: 5,
+    marginRight: 5,
+    width: 100,
+    height: 40,
+},
+inputSelection : {
+    marginTop: 15,
+    marginRight: 55,
+    width: 220,
+    float: 'right',
+},
   }));
 
 export default function Matches() {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [selection, setSelection] = React.useState('All');
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -185,6 +207,15 @@ export default function Matches() {
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
+    };
+
+    const handleChangeSelection = (event) => {
+      setSelection(event.target.value);
+      setSelectionItems(
+          rows.filter((item) => {
+              return item.status === selection;
+          })
+      );
     };
   return (
     <Container>
@@ -215,6 +246,20 @@ export default function Matches() {
         </Card>
     </Box>
     <TableContainer component={Paper}>
+      <TextField
+          id="status"
+          select
+          label="Select your option"
+          value={selection}
+          onChange={handleChangeSelection}
+          variant="outlined"
+          className = {classes.inputSelection}>
+          {selections.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+              {option.label}
+              </MenuItem>
+          ))}
+      </TextField>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>

@@ -3,7 +3,10 @@
     text-align: center;
   }
   
-  
+  /* body {
+    background-color: #151618;
+  }
+   */
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
     height: 10vmin;
