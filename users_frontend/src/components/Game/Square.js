@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import Config from '../../constants/configs';
 import './css/game.css'
-// import Button from '@material-ui/core/Button';
 
 function Square(props) {
-    // const  [value, setValue]  = useState("");
     const {value} = props;
     const { winCell } = props;
     const { isCurrentCell } = props;

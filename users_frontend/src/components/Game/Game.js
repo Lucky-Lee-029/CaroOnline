@@ -1,12 +1,17 @@
 import React, { useContext, useEffect, useState} from 'react';
 import { withRouter } from "react-router";
+
+import './css/game.css';
+import axios from 'axios';
+
 import Board from './Board';
 import Timer from './Timer';
+
 import Config from '../../constants/configs';
 import Status from './Status';
 import UserCtx from '../../context/User';
-import './css/game.css';
-import axios from 'axios';
+import { nspOnlineUsers } from '../../socket';
+
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -14,19 +19,17 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import CardContent from '@material-ui/core/CardContent';
-import { nspOnlineUsers } from '../../socket';
 import TextField from '@material-ui/core/TextField';
 
-const time=30;
 const Game=(props)=>{
-    const [chats, setChats] = useState([{content: "Chat 1", id: "123"}, {content: "Chat 2", id: "123"}]);
+    const [chats, setChats] = useState([]);
     const [message, setMessage] = useState("");
     const [user, setUser] = useContext(UserCtx);
     const [currentSquare, setCurrentSquare] = useState({x:0,y:0});
     const [step, setStep ] = useState(0);
     const [currentPlayer, setCurrentPlayer] = useState(0);
     const [winner, setWinner] = useState(null);
-    const [countDown, setCountDown] = useState(30);
+    const [winCells, setWinCells] = useState([]);
     const [isYourTurn, setIsYourTurn] = useState(true);
     const [history, setHistory] = useState([{
         x: null,
@@ -45,9 +48,6 @@ const Game=(props)=>{
 
     useEffect(()=>{
         nspOnlineUsers.on("new_chat", (data)=>{
-            // let currentChats = chats;
-            // console.log(chats);
-            // let newChats = currentChats.concat(data);
             setChats(currentChats=>{
                 return currentChats.concat(data);
             });
@@ -58,7 +58,13 @@ const Game=(props)=>{
         nspOnlineUsers.on("got_winner", data =>{
             setWinner(data);
         })
-    },[])
+    },[]);
+
+    useEffect(()=>{
+        setWinCells(checkWin(currentSquare.x, currentSquare.y, winner, step));
+        console.log("-" + currentSquare.x + ", " + currentSquare.y + "," + ", " + winner + ", " + step);
+        console.log(winCells);
+    },[winner]);
 
     useEffect(()=>{
         console.log("STEP" + step);
@@ -93,19 +99,16 @@ const Game=(props)=>{
     return(
         <div className="App"> 
             <header className="App-header">
-                <Status 
-                    messages={winner ? ("Winner: " + winner) : "Playing..."}/>
+                <Status messages={winner ? ("Winner: " + winner) : "Playing..."}/>
                 <div className="board-game">
                     <div>
-                        <Board  winCells={null}
+                        <Board  winCells={winCells}
                                 squares = {history[history.length - 1].squares}
                                 currentPlayer={currentPlayer}
                                 currentCell={currentSquare}
                                 handleClick={userClick}/>
                     </div>
-                                        
                     <br></br>
-                    
                     <div>
                         <Card className="card">
                             <CardContent>
@@ -176,7 +179,6 @@ const Game=(props)=>{
         const current = history[stepNumber];
         const squares = current.squares.slice();
 
-        // Get coordinates
         let coorX = row;
         let coorY = col;
  
@@ -305,19 +307,19 @@ const Game=(props)=>{
     }
 
     function userClick(row, col) {
+        // prevent click in rival turn
         if(!isYourTurn){
             return;
         }
+        // set current uset
         let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
         if(step > 0){
             if(history[step].squares[row][col] !== null)
                 return;
         }
-        console.log("" + row + ", " + col);
-        console.log(currentPlayer);
         setCurrentPlayer(1-currentPlayer);
+        // set new history
         let currentHis = history;
-
         setCurrentSquare({x: row, y: col});
         let newState = {
             x: row,
@@ -325,22 +327,23 @@ const Game=(props)=>{
             squares: history[step].squares
         };
         newState.squares[row][col] = currentUser;
-        // let newHis = currentHis.concat(newState);
         currentHis.push(newState);
         setHistory(currentHis);
-        // let newStep = step + 1;
-        
+        // emit event play
+        nspOnlineUsers.emit("play_new_step", newState);
+        // emit event win game
         if(checkWin(row, col, currentUser, step)){
             console.log("WON");
             nspOnlineUsers.emit("win_game", currentUser);
+            console.log("-" + row + ", " + col + "," + ", " + currentUser + ", " + step);
+            // setWinCells(checkWin(row, col, currentUser, step));
         }
-        console.log("Step: " + step);
-        nspOnlineUsers.emit("play_new_step", newState);
+        // set new step
         setStep(step + 1);
         setIsYourTurn((turn)=>{
             return false;
         })
-        setCountDown(time);
+        // setCountDown(time);
     }
     function handleNewStep(data){
         let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
@@ -358,7 +361,7 @@ const Game=(props)=>{
         setIsYourTurn((turn)=>{
             return true;
         });
-        setCountDown(time);
+        // setCountDown(time);
     }
 }
 export default Game;
