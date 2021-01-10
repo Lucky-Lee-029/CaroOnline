@@ -1,9 +1,9 @@
 import TableCell from '@material-ui/core/TableCell';
 import React, {useEffect, useState} from 'react';
-const time = 30;
 function Timer (props){
     const {onTimeOut} = props;
-    const [countDown, setCountDown] = useState(30);
+    const {time} = props;
+    const [countDown, setCountDown] = useState(time);
     const timer = ()=>{setCountDown(countDown-1)}; 
     useEffect(()=>{
         if(countDown <= 0){

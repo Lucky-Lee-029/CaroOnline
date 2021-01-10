@@ -69,12 +69,13 @@ const GridItem = ({ roomInfo }) => {
     setOpen(false);
   };
 
-  const handleJoinRoom = (roomId) => {
+  const handleJoinRoom = (roomId, time) => {
     console.log(roomId);
     nspRooms.emit("join", { roomId, user });
     history.push({
       pathname: '/game',
-      state: roomId
+      state: roomId,
+      time: time,
     });
   };
 
@@ -103,7 +104,7 @@ const GridItem = ({ roomInfo }) => {
           <CardActions>
             <Button
               size="small" variant="contained" color="primary"
-              onClick={() => handleJoinRoom(roomInfo[0])} >
+              onClick={() => handleJoinRoom(roomInfo[0], roomInfo[1].turn)} >
               Join
                         </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">

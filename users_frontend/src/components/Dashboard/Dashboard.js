@@ -274,7 +274,7 @@ function Dashboard() {
       <Grid container className={classes.root}>
         <Grid item xs={10}>
           <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
-            <QuickJoinRoomBtn handleJoinRoom={()=>{}}/>
+            <QuickJoinRoomBtn user={user} handleJoinRoom={()=>{}}/>
             <CreateRoomDialog />
           </Grid>
           <Grid container item xs={12} spacing={2}>

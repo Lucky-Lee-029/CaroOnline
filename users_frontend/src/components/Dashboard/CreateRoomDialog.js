@@ -100,7 +100,8 @@ export default function CreateRoomDialog() {
     nspRooms.on("create_room_success", (stateId)=>{
         history.push({
           pathname: '/game',
-          state: stateId
+          state: stateId,
+          time: turn
         });
     })
   })

@@ -41,6 +41,11 @@ const Game=(props)=>{
         })
     }]);
 
+    const getTime = () =>{
+        let date = new Date();
+        return date.getTime();
+    }
+
     useEffect(()=>{
         // if(!nspOnlineUsers.hasListener("got_new_step")){
             nspRooms.on("got_new_step", (data)=>{
@@ -94,7 +99,8 @@ const Game=(props)=>{
     const handleSendChat = () =>{
         const data = {
             content: message,
-            id: 1
+            id: 1,
+            time: getTime()
         }
         nspRooms.emit("chat",  data, String(props.location.state));
     }
@@ -103,7 +109,21 @@ const Game=(props)=>{
         if(!isYourTurn){
             let currentUser = (history.length % 2 === 0) ? Config.xPlayer : Config.oPlayer;
             nspRooms.emit("win_game", currentUser, String(props.location.state));
+            const model = getModel();
+            console.log(model);
         }
+    }
+
+    // lưu model gửi lên db
+    const getModel = ()=>{
+        const model={};
+        model.cup = 10;
+        model.history = history;
+        model.chats = chats;
+        model.winner = 12;
+        model.loser = 13;
+        model.timeend = getTime();
+        return model;
     }
 
     const handelReady = ()=>{
@@ -158,6 +178,7 @@ const Game=(props)=>{
                                             {
                                                 (isYourTurn && !winner && isStart) ?(
                                                     <Timer
+                                                        time = {props.location.time}
                                                         onTimeOut={onTimeOut}
                                                     />
                                                 ):(
@@ -167,6 +188,7 @@ const Game=(props)=>{
                                             {
                                                 (!isYourTurn && !winner && isStart)?(
                                                     <Timer
+                                                        time = {props.location.time}
                                                         onTimeOut={onTimeOut}
                                                     />
                                                 ):(
@@ -366,6 +388,7 @@ const Game=(props)=>{
         let currentHis = history;
         setCurrentSquare({x: row, y: col});
         let newState = {
+            time: getTime(),
             x: row,
             y: col,
             squares: history[step].squares
@@ -380,6 +403,8 @@ const Game=(props)=>{
             console.log("WON");
             nspRooms.emit("win_game",  currentUser, String(props.location.state));
             console.log("-" + row + ", " + col + "," + ", " + currentUser + ", " + step);
+            const model = getModel();
+            console.log(model);
             // setWinCells(checkWin(row, col, currentUser, step));
         }
         // set new step

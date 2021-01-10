@@ -36,12 +36,26 @@ function handle(io) {
         io.emit("rooms", rooms);
       }
     });
+    socket.on("create_flash_room", ({ user, roomInfo }) => {
+      console.log("create quick", roomInfo);
+      const roomsJoined = socket.adapter.sids.get(socket.id);
+      if (roomsJoined.size > 1) {
+        socket.emit("err_create_room", "Can not create room");
+      } else {
+        const room = genRoom(user, roomInfo);
+        console.log("Id: ",room);
+        socket.join(room);
+        socket.emit("create_room_success", room);
+        io.emit("quick_join", room);
+      }
+    });
 
     socket.on("list_rooms", () => {
       io.emit("rooms", rooms);
     });
 
     socket.on("join", ({ roomId, user }) => {
+      console.log("join room");
       const roomsJoined = socket.adapter.sids.get(socket.id);
       if (roomsJoined > 1) {
         socket.emit("err_join_room", "Can not join room");
@@ -75,6 +89,7 @@ function handle(io) {
       socket.to(roomId).emit("got_new_step", data);
     });
     socket.on("win_game", (data, roomId)=>{
+      console.log(rooms[roomId]);
       console.log("Win game: " + data);
       io.to(roomId).emit("got_winner", data);
     });
