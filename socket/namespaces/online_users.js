@@ -35,6 +35,13 @@ function handle(io) {
       socket.emit("list_users", users);
     });
 
+    socket.on("logout", () => {
+      if (socket.user) {
+        handleDisconnect(socket);
+      }
+      socket.user = null;
+    });
+
     socket.on("disconnect", () => {
       if (socket.user) {
         handleDisconnect(socket);

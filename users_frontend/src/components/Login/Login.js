@@ -1,10 +1,8 @@
-import React, { useState } from "react";
-import { useHistory, withRouter } from "react-router";
-import SearchAppBar from "../Bar/Bar";
+import axios from 'axios';
+import { useState } from "react";
+import { useHistory } from "react-router";
 import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import axios from 'axios';
-
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -16,7 +14,6 @@ import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
-
 import FacebookLogin from 'react-facebook-login';
 import GoogleLogin from 'react-google-login';
 
@@ -57,31 +54,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login= (props) => {
+function Login(props) {
   const classes = useStyles();
   const history = useHistory();
   const [error, setError] = useState();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmitLogin = async (event) => {
-    event.preventDefault();
-
-    const apiUrl = 'http://localhost:8000/users_api/auth';
-    const form = { username, password };
-
-    (async function (apiUrl, form) {
-      try {
-        const res = await axios.post(apiUrl, form);
-        const obj = await res.data;
-
-        localStorage.setItem('token', obj.token); // Store token
-        history.replace('/'); // redirect to Dashboard
-      } catch (err) {
-        setError(err.response);
-      }
-    })(apiUrl, form);
-  }
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   }
@@ -90,21 +69,34 @@ const Login= (props) => {
     setPassword(e.target.value);
   }
 
-  //Google login
-  const responseGoogle = (response) => {
-    console.log(response);
-  }
-  const GoogleClicked = () => {
-    alert("Google login clicked");
+  const fetchData = async (apiUrl, form) => {
+    try {
+      const res = await axios.post(apiUrl, form);
+      const obj = await res.data;
+
+      localStorage.setItem('token', obj.token); // Store token
+      history.replace('/'); // Redirect to Dashboard
+    } catch (err) {
+      setError(err.response.data.msg);
+    }
   }
 
-  //Facebook Login
+  const handleSubmitLogin = async (event) => {
+    event.preventDefault();
+    fetchData('http://localhost:8000/users_api/auth', {
+      username,
+      password
+    });
+  }
+
   const responseFacebook = (response) => {
     console.log(response);
+    fetchData('http://localhost:8000/users_api/auth/fb', response);
   }
 
-  const FacebookClicked = () => {
-    alert("Facebook login clicked");
+  const responseGoogle = (response) => {
+    console.log(response);
+    fetchData('http://localhost:8000/users_api/auth/gg', response);
   }
 
   return (
@@ -163,39 +155,42 @@ const Login= (props) => {
                     </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
+                  <Link href="/signup" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>
               </Grid>
 
-              <Grid  container spacing = {2}>
-                    <Grid item xs={12} sm={12}>
-                    <Typography align="center" color="textSecondary" >
-                      OR
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={12}>
+                  <Typography align="center" color="textSecondary" >
+                    OR
                     </Typography>
-                    </Grid>
-                    
-                    <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
-                      <GoogleLogin
-                        //clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
-                        buttonText="LOGIN WITH GOOGLE"
-                        onSuccess={responseGoogle}
-                        onFailure={responseGoogle}
-                        onClick={GoogleClicked}
-                        cookiePolicy={'single_host_origin'}/>
-                    </Grid>
-                    <Grid item className = {classes.marginAuto} xs= {12} sm = {6}>
-                      <FacebookLogin
-                        //appId="1088597931155576"
-                        size = "small"
-                        autoLoad={true}
-                        fields="name,email,picture"
-                        onClick={FacebookClicked}
-                        callback={responseFacebook}
-                        icon="fa-facebook" />
-                    </Grid>
-                  </Grid>
+                </Grid>
+
+                <Grid item className={classes.marginAuto} xs={12} sm={6}>
+                  <GoogleLogin
+                    clientId={process.env.REACT_APP_GG_APP_ID}
+                    buttonText="LOGIN WITH GOOGLE"
+                    onSuccess={responseGoogle}
+                    isSignedIn={false}
+                  />
+                </Grid>
+                <Grid item className={classes.marginAuto} xs={12} sm={6}>
+                  <FacebookLogin
+                    appId={process.env.REACT_APP_FB_APP_ID}
+                    size="small"
+                    autoLoad={false}
+                    fields="name,email,picture.type(large)"
+                    callback={responseFacebook}
+                    icon="fa-facebook"
+                  />
+                </Grid>
+              </Grid>
+              <Box mt={5}>
+                {(props.location.state) ? 
+                <Alert severity="success">{props.location.state.success}</Alert> : null}
+              </Box>
               <Box mt={5}>
                 {(error) ? <Alert severity="error">{error}</Alert> : null}
               </Box>
