@@ -1,23 +1,36 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState} from 'react';
 import { withRouter } from "react-router";
-import Board from './Board';
-import Config from '../../constants/configs';
-import Status from './Status';
+
 import './css/game.css';
 import axios from 'axios';
+
+import Board from './Board';
+import Timer from './Timer';
+
+import Config from '../../constants/configs';
+import Status from './Status';
+import UserCtx from '../../context/User';
+import { nspOnlineUsers } from '../../socket';
+
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 import CardContent from '@material-ui/core/CardContent';
-import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 const Game=(props)=>{
-    const { stepNumber } = props;
-    const { nextMove } = props;
-    const { winCells } = props;
-    const { accendingMode } = props;
+    const [chats, setChats] = useState([]);
+    const [message, setMessage] = useState("");
+    const [user, setUser] = useContext(UserCtx);
     const [currentSquare, setCurrentSquare] = useState({x:0,y:0});
-    const [ step, setStep ] = useState(0);
+    const [step, setStep ] = useState(0);
     const [currentPlayer, setCurrentPlayer] = useState(0);
+    const [winner, setWinner] = useState(null);
+    const [winCells, setWinCells] = useState([]);
+    const [isYourTurn, setIsYourTurn] = useState(true);
     const [history, setHistory] = useState([{
         x: null,
         y: null,
@@ -25,39 +38,131 @@ const Game=(props)=>{
             return Array(Config.brdSize).fill(null)
         })
     }])
+    useEffect(()=>{
+        // if(!nspOnlineUsers.hasListener("got_new_step")){
+            nspOnlineUsers.on("got_new_step", (data)=>{
+                handleNewStep(data);
+            });
+        // }
+    },[]);
+
+    useEffect(()=>{
+        nspOnlineUsers.on("new_chat", (data)=>{
+            setChats(currentChats=>{
+                return currentChats.concat(data);
+            });
+        });
+    },[])
+
+    useEffect(()=>{
+        nspOnlineUsers.on("got_winner", data =>{
+            setWinner(data);
+        })
+    },[]);
+
+    useEffect(()=>{
+        setWinCells(checkWin(currentSquare.x, currentSquare.y, winner, step));
+        console.log("-" + currentSquare.x + ", " + currentSquare.y + "," + ", " + winner + ", " + step);
+        console.log(winCells);
+    },[winner]);
+
+    useEffect(()=>{
+        console.log("STEP" + step);
+        console.log("Data lenght: " + history.length);
+        console.log(history);
+        setStep(history.length - 1);
+    },[history]);
+
+    const handleChatChange = (e) => {
+        setMessage(e.target.value);
+    }
+    const handleSendChat = () =>{
+        const data = {
+            content: message,
+            id: 1
+        }
+        nspOnlineUsers.emit("chat", data);
+    }
+
+    const onTimeOut = ()=>{
+        if(!isYourTurn){
+            let currentUser = (history.length % 2 === 0) ? Config.xPlayer : Config.oPlayer;
+            nspOnlineUsers.emit("win_game", currentUser);
+        }
+    }
+
     // board game
     // const current = history[stepNumber];
     // const sortMode = accendingMode ? `Nước đi tăng dần` : `Nước đi giảm dần`;
     const moves = [];
     const isPlayerX=true;
     return(
-        <div className="App">
+        <div className="App"> 
             <header className="App-header">
-                <Status 
-                    messages="{winCells}"/>
+                <Status messages={winner ? ("Winner: " + winner) : "Playing..."}/>
                 <div className="board-game">
                     <div>
-                        <Card className="card">
-                            <CardContent>
-                                My infor
-                            </CardContent>
-                        </Card>
-                    </div>
-                    <br></br>
-                    <div>
-                        <Board  winCells={null}
-                                //squares={current.squares}
+                        <Board  winCells={winCells}
+                                squares = {history[history.length - 1].squares}
                                 currentPlayer={currentPlayer}
                                 currentCell={currentSquare}
                                 handleClick={userClick}/>
                     </div>
-                                        
                     <br></br>
-                    
                     <div>
                         <Card className="card">
                             <CardContent>
-                                Rival infor
+                                <Table aria-label="custom pagination table">
+                                    <TableBody>
+                                        <TableRow>
+                                            {
+                                                (isYourTurn && !winner) ?(
+                                                    <Timer
+                                                        onTimeOut={onTimeOut}
+                                                    />
+                                                ):(
+                                                    <TableCell>Wait</TableCell>
+                                                )
+                                            }
+                                            {
+                                                (!isYourTurn && !winner)?(
+                                                    <Timer
+                                                        onTimeOut={onTimeOut}
+                                                    />
+                                                ):(
+                                                    <TableCell>Wait</TableCell>
+                                                )
+                                            }
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                                <Table>
+                                    <TableBody>
+                                        <TableRow>
+                                            Khung chat
+                                        </TableRow>
+                                        {
+                                            chats.map((item)=>{
+                                                return(
+                                                    <TableRow>
+                                                        {item.content}
+                                                    </TableRow>
+                                                )
+                                            })
+                                        }
+                                    </TableBody>
+                                </Table>
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    fullWidth
+                                    id="mess"
+                                    label="mess"
+                                    name="mess"
+                                    autoComplete="mess"
+                                    onChange={handleChatChange}
+                                />
+                                <Button onClick={handleSendChat}>Gửi</Button>
                             </CardContent>
                         </Card>
                     </div>
@@ -74,7 +179,6 @@ const Game=(props)=>{
         const current = history[stepNumber];
         const squares = current.squares.slice();
 
-        // Get coordinates
         let coorX = row;
         let coorY = col;
  
@@ -203,23 +307,19 @@ const Game=(props)=>{
     }
 
     function userClick(row, col) {
-        // const { nextMove } = props;
-
-        // Prevent user click if not his turn
-        // if ((isPlayerX && nextMove === Config.oPlayer) || (!isPlayerX && nextMove === Config.xPlayer)) {
-        //     return;
-        // }
-        let currentUser = (currentPlayer === 0) ? Config.xPlayer : Config.oPlayer;
+        // prevent click in rival turn
+        if(!isYourTurn){
+            return;
+        }
+        // set current uset
+        let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
         if(step > 0){
             if(history[step].squares[row][col] !== null)
                 return;
         }
-        console.log("" + row + ", " + col);
-        console.log(currentPlayer);
-        setStep(step +1);
         setCurrentPlayer(1-currentPlayer);
+        // set new history
         let currentHis = history;
-        console.log("Step: " + step);
         setCurrentSquare({x: row, y: col});
         let newState = {
             x: row,
@@ -229,11 +329,39 @@ const Game=(props)=>{
         newState.squares[row][col] = currentUser;
         currentHis.push(newState);
         setHistory(currentHis);
+        // emit event play
+        nspOnlineUsers.emit("play_new_step", newState);
+        // emit event win game
         if(checkWin(row, col, currentUser, step)){
             console.log("WON");
+            nspOnlineUsers.emit("win_game", currentUser);
+            console.log("-" + row + ", " + col + "," + ", " + currentUser + ", " + step);
+            // setWinCells(checkWin(row, col, currentUser, step));
         }
-        
+        // set new step
+        setStep(step + 1);
+        setIsYourTurn((turn)=>{
+            return false;
+        })
+        // setCountDown(time);
+    }
+    function handleNewStep(data){
+        let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
+        let currentHis = history;
+        console.log(history);
+        setCurrentPlayer(1-currentPlayer);
+        setCurrentSquare({x: data.x, y: data.y});
+        let newState = data;
+        console.log("current user: "+ currentUser);
+        newState.squares[data.x][data.y] = currentUser;
+        const newHis = currentHis.concat(newState);
+        setHistory(currentHis =>{
+            return currentHis.concat(newState);
+        });
+        setIsYourTurn((turn)=>{
+            return true;
+        });
+        // setCountDown(time);
     }
 }
-
 export default Game;

@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './components/Login/Login';
 import DashBoard from './components/Dashboard/Dashboard';
-import Profile from './components/Profile/Profile'
-import SignUp from './components/SignUp/SignUp'
+import Profile from './components/Profile/Profile';
+import SignUp from './components/SignUp/SignUp';
+import Game from './components/Game/Game';
+import ReviewGame from './components/ReviewMatch/ReviewGame'
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import ReactDOM from 'react-dom';
 import rootReducers from './reducers/rootReducers';
 import UserCtx from './context/User';
-import Chart from './components/Chart/Chart'
+import Chart from './components/Chart/Chart';
 
 function saveToLocalStorage(state) {
     try {
@@ -59,6 +61,8 @@ function App() {
           <Route path="/signup" component={SignUp} />
           <Route path="/chart" component={Chart} />
           <Route path="/profile" component={Profile} />
+          <Route path="/game" component={Game} />
+          <Route path="/review" component={ReviewGame} />
         </Switch>
       </BrowserRouter>
     </UserCtx.Provider >
