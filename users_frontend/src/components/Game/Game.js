@@ -10,8 +10,7 @@ import Timer from './Timer';
 import Config from '../../constants/configs';
 import Status from './Status';
 import UserCtx from '../../context/User';
-import { nspOnlineUsers } from '../../socket';
-
+import { nspRooms} from '../../socket';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -40,21 +39,25 @@ const Game=(props)=>{
         squares: Array(Config.brdSize).fill(null).map(() => {
             return Array(Config.brdSize).fill(null)
         })
-    }])
+    }]);
+
     useEffect(()=>{
         // if(!nspOnlineUsers.hasListener("got_new_step")){
-            nspOnlineUsers.on("got_new_step", (data)=>{
+            nspRooms.on("got_new_step", (data)=>{
                 handleNewStep(data);
             });
         // }
     },[]);
     useEffect(()=>{
-        nspOnlineUsers.on("ready",()=>{
+        console.log("Listening rival");
+        nspRooms.on("ready_client", ()=>{
+            console.log("Rival ready!");
             setIsRivalReady(true);
         })
     },[])
     useEffect(()=>{
-        nspOnlineUsers.on("new_chat", (data)=>{
+        nspRooms.on("new_chat", (data)=>{
+            console.log("new chat");
             setChats(currentChats=>{
                 return currentChats.concat(data);
             });
@@ -62,7 +65,7 @@ const Game=(props)=>{
     },[])
 
     useEffect(()=>{
-        nspOnlineUsers.on("got_winner", data =>{
+        nspRooms.on("got_winner", data =>{
             setWinner(data);
         })
     },[]);
@@ -93,13 +96,13 @@ const Game=(props)=>{
             content: message,
             id: 1
         }
-        nspOnlineUsers.emit("chat", data);
+        nspRooms.emit("chat",  data, String(props.location.state));
     }
 
     const onTimeOut = ()=>{
         if(!isYourTurn){
             let currentUser = (history.length % 2 === 0) ? Config.xPlayer : Config.oPlayer;
-            nspOnlineUsers.emit("win_game", currentUser);
+            nspRooms.emit("win_game", currentUser, String(props.location.state));
         }
     }
 
@@ -108,7 +111,7 @@ const Game=(props)=>{
         if(!isRivalReady){
             setIsYourTurn(true);
         }
-        nspOnlineUsers.emit("ready");
+        nspRooms.emit("ready", String(props.location.state));
     }
     // board game
     // const current = history[stepNumber];
@@ -371,11 +374,11 @@ const Game=(props)=>{
         currentHis.push(newState);
         setHistory(currentHis);
         // emit event play
-        nspOnlineUsers.emit("play_new_step", newState);
+        nspRooms.emit("play_new_step",  newState, String(props.location.state));
         // emit event win game
         if(checkWin(row, col, currentUser, step)){
             console.log("WON");
-            nspOnlineUsers.emit("win_game", currentUser);
+            nspRooms.emit("win_game",  currentUser, String(props.location.state));
             console.log("-" + row + ", " + col + "," + ", " + currentUser + ", " + step);
             // setWinCells(checkWin(row, col, currentUser, step));
         }

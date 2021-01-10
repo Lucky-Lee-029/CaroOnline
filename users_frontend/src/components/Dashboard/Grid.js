@@ -16,7 +16,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { nspRooms } from "../../socket";
 import UserCtx from "../../context/User";
-
+import { useHistory } from 'react-router';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +54,7 @@ const GridItem = ({ roomInfo }) => {
   const classes = useStyles();
   const [user] = useContext(UserCtx);
   const [open, setOpen] = useState(false);
+  const history = useHistory();
 
   const handleJoinRoomPublic = () => { alert("Public") };
   const handleJoinRoomPrivate = () => {
@@ -71,6 +72,10 @@ const GridItem = ({ roomInfo }) => {
   const handleJoinRoom = (roomId) => {
     console.log(roomId);
     nspRooms.emit("join", { roomId, user });
+    history.push({
+      pathname: '/game',
+      state: roomId
+    });
   };
 
 

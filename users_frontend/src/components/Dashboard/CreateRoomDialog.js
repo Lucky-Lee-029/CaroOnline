@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,6 +16,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { nspRooms } from '../../socket';
 import UserCtx from '../../context/User';
 import { TextField } from '@material-ui/core';
+import { useHistory } from 'react-router';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreateRoomDialog() {
   const classes = useStyles();
+  const history = useHistory();
   const [user] = useContext(UserCtx);
   const [open, setOpen] = React.useState(false);
   const [val, setVal] = React.useState(50);
@@ -93,6 +95,15 @@ export default function CreateRoomDialog() {
   }
 
   const handlePasswordChange = e => setPassword(e.target.value);
+
+  useEffect(() => {
+    nspRooms.on("create_room_success", (stateId)=>{
+        history.push({
+          pathname: '/game',
+          state: stateId
+        });
+    })
+  })
 
   return (
     <React.Fragment>

@@ -15,7 +15,7 @@ function genRoom(user, roomInfo) {
       roomInfo.players = [];
       roomInfo.players.push(user);
       rooms[num] = roomInfo
-      return num;
+      return String(num);
     }
   }
 }
@@ -29,11 +29,10 @@ function handle(io) {
       if (roomsJoined.size > 1) {
         socket.emit("err_create_room", "Can not create room");
       } else {
-        socket.room = genRoom(user, roomInfo);
-        socket.join(socket.room);
-        console.log(rooms);
-
-        socket.emit("create_room_success", socket.room);
+        const room = genRoom(user, roomInfo);
+        console.log("Id: ",room);
+        socket.join(room);
+        socket.emit("create_room_success", room);
         io.emit("rooms", rooms);
       }
     });
@@ -49,6 +48,7 @@ function handle(io) {
       } else if (roomsJoined == 0) {
         socket.emit("err_join_room", "Can not join room");
       } else {
+        console.log(roomId);
         socket.join(roomId);
         rooms[roomId].players.push(user);
         rooms[roomId].status = "Full";
@@ -69,6 +69,26 @@ function handle(io) {
       socket.leave(socket.room);
       console.log("rooms, a client disconnect: ", socket.id);
     });
+
+    socket.on("play_new_step", (data, roomId)=>{
+      console.log("Get new step: " + data.x +" , " + data.y);
+      socket.to(roomId).emit("got_new_step", data);
+    });
+    socket.on("win_game", (data, roomId)=>{
+      console.log("Win game: " + data);
+      io.to(roomId).emit("got_winner", data);
+    });
+    socket.on("chat", (data, roomId)=>{
+      console.log(data.content);
+      console.log(roomId);
+      io.to(roomId).emit("new_chat", data);
+    })
+    socket.on("ready", (roomId)=>{
+      console.log("Player ready!");
+      console.log(roomId);
+      socket.to(roomId).emit("ready_client");
+    })
+
   });
 }
 

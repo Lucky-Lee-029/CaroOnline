@@ -48,22 +48,6 @@ function handle(io) {
         io.emit("list_users", users);
       }
     });
-    socket.on("play_new_step", (data)=>{
-      console.log("Get new step: " + data.x +" , " + data.y);
-      socket.broadcast.emit("got_new_step", data);
-    });
-    socket.on("win_game", (data)=>{
-      console.log("Win game: " + data);
-      io.emit("got_winner", data);
-    });
-    socket.on("chat", (data)=>{
-      console.log(data.content);
-      io.emit("new_chat", data);
-    })
-    socket.on("ready", ()=>{
-      console.log("Player ready!");
-      socket.broadcast.emit("ready");
-    })
   });
 }
 
