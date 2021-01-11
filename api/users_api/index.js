@@ -5,6 +5,8 @@ const auth = require("./middleware/auth");
 // Controllers
 const authCtrl = require("./controllers/auth");
 const userCtrl = require("./controllers/user");
+const gameCtrl = require("./controllers/game");
+const cupCtrl = require("./controllers/cup");
 
 router.route("/auth")
   .get(auth, authCtrl.verifyToken)
@@ -29,5 +31,23 @@ router.route("/user")
   .post(userCtrl.register)
   .put()
   .delete();
+
+router.route("/game")
+  .get(gameCtrl.getGame)
+  .post(gameCtrl.storeGame)
+  .put()
+  .delete();
+
+router.route("/cup/:id")
+  .get()
+  .post()
+  .put(cupCtrl.updateCup)
+  .delete();
+
+router.route("/ranking/:id")
+   .get()
+   .post()
+   .put()
+   .delete();
 
 module.exports = router;

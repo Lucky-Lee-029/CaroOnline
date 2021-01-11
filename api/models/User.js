@@ -42,6 +42,18 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "profile",
     required: true
+  },
+  cup: {
+    type: Number,
+    default: 0
+  },
+  ranking: {
+    type: String,
+    enum: [
+      "none",
+      "F", "E", "D", "C", "B", "A", "S"
+    ],
+    default: "none"
   }
 });
 
