@@ -96,7 +96,7 @@ function handle(io) {
       // io.to(roomId).emit("got_winner", data);
     });
     socket.on("chat", (data, roomId)=>{
-      console.log(data.content);
+      console.log(data.name);
       console.log(roomId);
       io.to(roomId).emit("new_chat", data);
     })
@@ -106,7 +106,7 @@ function handle(io) {
       socket.to(roomId).emit("ready_client");
     })
     socket.on("leave_room", (roomId, user)=>{
-      console.log("leave", roomId);
+      console.log("leave", user.profile);
       socket.leave(roomId);
       if(!user)
         return;
@@ -116,6 +116,14 @@ function handle(io) {
         rooms[roomId].players.pop();
       }
       io.emit("rooms", rooms);
+    })
+    socket.on("join_game", (user, room) =>{
+      console.log("join: " + room);
+      socket.to(room).emit("rival_join", user);
+      console.log("play: " + rooms[room].players.length)
+      if(rooms[room].players.length === 2){
+          socket.emit("old_player", rooms[room].players[0].profile.name);
+      }
     })
   });
 }

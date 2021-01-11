@@ -20,7 +20,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, useRadioGroup } from '@material-ui/core';
 import { ExitToApp } from '@material-ui/icons';
 
 const Game = (props) => {
@@ -37,6 +37,7 @@ const Game = (props) => {
   const [isReady, setIsReady] = useState(false);
   const [open, setOpen] = useState(false);
   const [isRivalReady, setIsRivalReady] = useState(false);
+  const [rivalGame, setRivalGame] = useState("");
   const [history, setHistory] = useState([{
     x: null,
     y: null,
@@ -49,6 +50,22 @@ const Game = (props) => {
     let date = new Date();
     return date.getTime();
   }
+
+  useEffect(()=>{
+    nspRooms.emit("join_game", user, props.location.state);
+  },[])
+
+  useEffect(()=>{
+    nspRooms.on("rival_join", user=>{
+      setRivalGame(user.profile.name);
+    })
+  },[])
+
+  useEffect(()=>{
+    nspRooms.on("old_player", name=>{
+      setRivalGame(name);
+    })
+  },[])
 
   useEffect(() => {
     // if(!nspOnlineUsers.hasListener("got_new_step")){
@@ -113,7 +130,8 @@ const Game = (props) => {
     const data = {
       content: message,
       id: 1,
-      time: getTime()
+      time: getTime(),
+      name: user.profile.name
     }
     nspRooms.emit("chat", data, String(props.location.state));
   }
@@ -183,7 +201,7 @@ const Game = (props) => {
                         Your info
                       </TableCell>
                       <TableCell>
-                        Rival info
+                        {rivalGame===""? "Chờ đối thủ" : rivalGame}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -229,7 +247,7 @@ const Game = (props) => {
                       chats.map((item) => {
                         return (
                           <TableRow>
-                            {item.content}
+                            <b>{item.name}:</b> {item.content}
                           </TableRow>
                         )
                       })
