@@ -14,7 +14,7 @@ function Square(props) {
     return (
         <button className={className} onClick={()=>{
                 handleClick();
-            }}>
+            }} style={{margin: 1}}>
             <font color={moveColor}>{value}</font>
         </button>
     );
