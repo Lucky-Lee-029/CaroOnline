@@ -105,9 +105,16 @@ function handle(io) {
       console.log(roomId);
       socket.to(roomId).emit("ready_client");
     })
-    socket.on("leave_room", (roomId)=>{
+    socket.on("leave_room", (roomId, user)=>{
       console.log("leave", roomId);
       socket.leave(roomId);
+      if(!user)
+        return;
+      if(rooms[roomId].players[0]._id === user._id){
+        rooms[roomId].players.shift();
+      }else{
+        rooms[roomId].players.pop();
+      }
       io.emit("rooms", rooms);
     })
   });

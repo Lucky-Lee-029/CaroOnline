@@ -148,7 +148,8 @@ const Game = (props) => {
     nspRooms.emit("ready", String(props.location.state));
   }
   const handleLeave = ()=>{
-    nspRooms.emit("leave_room", String(props.location.state));
+    nspRooms.emit("leave_room", String(props.location.state), user);
+    history.push('/');
   }
   const moves = [];
   const isPlayerX = true;
@@ -248,6 +249,7 @@ const Game = (props) => {
               </CardContent>
             </Card>
             <Button
+              onClick = {handleLeave}
               style={{marginTop: 10}}
               variant="contained"
               color="primary"

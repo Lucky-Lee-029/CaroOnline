@@ -1,18 +1,19 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import Button from '@material-ui/core/Button';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import { useHistory } from 'react-router';
 import { nspRooms } from '../../socket';
-
+import UserCtx from '../../context/User';
 function WinDialog(props) {
-  const { winner, open, cup, room} = props;
+  const { winner, open, cup, room, socket } = props;
   const history = useHistory();
+  const [user, setUser] = useContext(UserCtx);
   const handlePlayAgain =()=>{
 
   };
   const handleOut = ()=>{
-      nspRooms.emit("leave_room", room);
+      nspRooms.emit("leave_room", room, user);
       history.push('/');
   }
   return (
