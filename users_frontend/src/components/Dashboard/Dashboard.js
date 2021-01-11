@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from "react";
+import React, { Profiler, useContext, useEffect, useState } from "react";
 import { Route, Switch, useHistory } from 'react-router-dom';
 import SearchAppBar from "../Bar/Bar";
 import { Grid, Typography } from '@material-ui/core';
@@ -26,19 +26,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-function About() {
-  return (
-    <div>about</div>
-  );
-}
-
-function Profile() {
-  return (
-    <div>profile</div>
-  );
-}
-
+import Chart from '../Chart/Chart';
+import Profile from '../Profile/Profile';
+import Game from '../Game/Game';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -156,7 +146,7 @@ function Dashboard() {
     }
   }, [history, user]);
 
-  
+
 
   useEffect(() => {
     nspOnlineUsers.on("list_users", (users) => {
@@ -267,25 +257,30 @@ function Dashboard() {
         </Dialog>
         : null}
       <SearchAppBar />
-      <Switch>
-        <Route path='about' component={About} />
-        <Route path='profile' component={Profile} />
-      </Switch>
       <Grid container className={classes.root}>
         <Grid item xs={10}>
-          <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
-            <QuickJoinRoomBtn user={user} handleJoinRoom={()=>{}}/>
-            <CreateRoomDialog />
-          </Grid>
-          <Grid container item xs={12} spacing={2}>
-            {
-              listRooms.map(room => (
-                <Grid item xs={12} sm={4} key={room[0]}>
-                  <GridItem roomInfo={room} />
+          <Switch>
+            <Route exact path='/' render={() =>
+              <React.Fragment>
+                <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
+                  <QuickJoinRoomBtn user={user} handleJoinRoom={() => { }} />
+                  <CreateRoomDialog />
                 </Grid>
-              ))
-            }
-          </Grid>
+                <Grid container item xs={12} spacing={2}>
+                  {
+                    listRooms.map(room => (
+                      <Grid item xs={12} sm={4} key={room[0]}>
+                        <GridItem roomInfo={room} />
+                      </Grid>
+                    ))
+                  }
+                </Grid>
+              </React.Fragment>
+            } />
+            <Route exact path='/profile' component={Profile} />
+            <Route exact path="/chart" component={Chart} />
+            <Route exact path="/game" component={Game} />
+          </Switch>
         </Grid>
         <Grid item xs={2}>
           <List

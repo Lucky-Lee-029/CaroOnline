@@ -59,10 +59,7 @@ function App() {
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/signup" component={SignUp} />
-          <Route exact path="/" component={DashBoard} />
-          <Route path="/chart" component={Chart} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/game" component={Game} />
+          <Route path="/" component={DashBoard} />
           <Route path="/review" component={ReviewGame} />
         </Switch>
       </BrowserRouter>
