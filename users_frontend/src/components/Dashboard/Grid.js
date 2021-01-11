@@ -76,6 +76,7 @@ const GridItem = ({ roomInfo }) => {
       pathname: '/game',
       state: roomId,
       time: time,
+      cup: roomInfo[1].cups
     });
   };
 
@@ -199,6 +200,9 @@ const GridItem = ({ roomInfo }) => {
           </Typography>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
           {roomInfo[1].turn}s
+          </Typography>
+          <Typography className={classes.title} color="textSecondary" gutterBottom>
+          Cups: {roomInfo[1].cups}
           </Typography>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
           {/* {roomInfo[1].status} */}
