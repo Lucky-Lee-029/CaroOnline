@@ -9,8 +9,8 @@ const GameSchema = new mongoose.Schema({
       time: {
         type: Date
       },
-      user: {
-        type: mongoose.SchemaTypes.ObjectId
+      username: {
+        type: String
       }
     }
   ],
