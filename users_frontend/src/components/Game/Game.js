@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import Board from './Board';
 import Timer from './Timer';
+import WinDialog from './Dialog';
 
 import Config from '../../constants/configs';
 import Status from './Status';
@@ -34,6 +35,7 @@ const Game = (props) => {
   const [isStart, setIsStart] = useState(false);
   const [isYourTurn, setIsYourTurn] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [open, setOpen] = useState(false);
   const [isRivalReady, setIsRivalReady] = useState(false);
   const [history, setHistory] = useState([{
     x: null,
@@ -74,8 +76,8 @@ const Game = (props) => {
   }, [])
 
   useEffect(() => {
-    nspRooms.on("got_winner", data => {
-      setWinner(data);
+    nspRooms.on("got_winner", () => {
+        setOpen(true);
     })
   }, []);
 
@@ -97,6 +99,13 @@ const Game = (props) => {
     }
   }, [isReady, isRivalReady])
 
+  useEffect(()=>{
+    nspRooms.on("lose",()=>{
+      setOpen(true);
+      setWinner("rival");
+    })
+  },[]);
+
   const handleChatChange = (e) => {
     setMessage(e.target.value);
   }
@@ -113,6 +122,7 @@ const Game = (props) => {
     if (!isYourTurn) {
       let currentUser = (history.length % 2 === 0) ? Config.xPlayer : Config.oPlayer;
       nspRooms.emit("win_game", currentUser, String(props.location.state));
+      setWinner("you");
       const model = getModel();
       console.log(model);
     }
@@ -137,10 +147,19 @@ const Game = (props) => {
     }
     nspRooms.emit("ready", String(props.location.state));
   }
+  const handleLeave = ()=>{
+    nspRooms.emit("leave_room", String(props.location.state));
+  }
   const moves = [];
   const isPlayerX = true;
   return (
     <div className="App">
+      <WinDialog 
+        open={open} 
+        winner={winner} 
+        cup={props.location.cup} 
+        room={props.location.state}>
+      </WinDialog>
       <CssBaseline />
       <header className="App-header">
         <Status messages={winner ? ("Winner: " + winner) : (isYourTurn ? "Your turn" : "Waiting for players")} />
@@ -414,6 +433,7 @@ const Game = (props) => {
       console.log("-" + row + ", " + col + "," + ", " + currentUser + ", " + step);
       const model = getModel();
       console.log(model);
+      setWinner("you");
       // setWinCells(checkWin(row, col, currentUser, step));
     }
     // set new step

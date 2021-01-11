@@ -101,7 +101,8 @@ export default function CreateRoomDialog() {
         history.push({
           pathname: '/game',
           state: stateId,
-          time: turn
+          time: turn,
+          cup: val,
         });
     })
   })

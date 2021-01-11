@@ -36,6 +36,7 @@ const QuickJoinRoomBtn = (props) => {
         pathname: '/game',
         state: flashRoom,
         time: 20,
+        cup: 10
       });
     }
   }
@@ -45,7 +46,8 @@ const QuickJoinRoomBtn = (props) => {
         history.push({
           pathname: '/game',
           state: stateId,
-          time: 20
+          time: 20,
+          cup: 10
         });
     })
   },[])

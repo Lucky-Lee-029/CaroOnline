@@ -76,13 +76,13 @@ const GridItem = ({ roomInfo }) => {
       pathname: '/game',
       state: roomId,
       time: time,
+      cup: roomInfo[1].cups
     });
   };
 
-
-
   return (
-    roomInfo[1].status !== "Playing" ?
+    roomInfo[1].status !== "Full" && roomInfo[1].status !== "Playing" ?
+
       <Grid item xs={12}>
         <Card className={classes.root} variant="outlined">
           <CardContent>
@@ -95,8 +95,6 @@ const GridItem = ({ roomInfo }) => {
             <Typography className={classes.title} color="textSecondary" gutterBottom>
             {roomInfo[1].status}
             </Typography>
-            <Typography variant="h5" component="h2">
-            </Typography>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
               {(roomInfo[1].isPrivate)? "Private" : "Public"}
             </Typography>
@@ -106,13 +104,18 @@ const GridItem = ({ roomInfo }) => {
               size="small" variant="contained" color="primary"
               onClick={() => handleJoinRoom(roomInfo[0], roomInfo[1].turn)} >
               Join
-                        </Button>
+              </Button>
+              <Button
+              size="small" variant="contained" color="primary"
+              >
+              View
+              </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
               <DialogTitle id="form-dialog-title">Notification</DialogTitle>
               <DialogContent>
                 <DialogContentText>
                   This is private room, please enter password
-                                </DialogContentText>
+                </DialogContentText>
                 <TextField
                   autoFocus
                   margin="dense"
@@ -125,10 +128,64 @@ const GridItem = ({ roomInfo }) => {
               <DialogActions>
                 <Button onClick={handleClose} color="primary">
                   Cancel
-                                </Button>
+                </Button>
                 <Button onClick={handleClose} color="primary">
                   Enter
-                                </Button>
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </CardActions>
+        </Card>
+      </Grid>
+      :
+        (roomInfo[1].status === "Full" ?
+        <Grid item xs={12}>
+        <Card className={classes.root} variant="outlined">
+          <CardContent>
+            <Typography className={classes.pos} color='initial'>
+              <strong> Room ID: {roomInfo[0]} </strong>
+            </Typography>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+            {roomInfo[1].turn}s
+            </Typography>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+            {roomInfo[1].status}/Full
+            </Typography>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+              {(roomInfo[1].isPrivate)? "Private" : "Public"}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Button
+              size="small" disabled variant="contained" color="primary" >
+              Join
+            </Button>
+            <Button
+              size="small" variant="contained" color="primary" >
+              View
+            </Button>
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+              <DialogTitle id="form-dialog-title">Notification</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  This is private room, please enter password
+                </DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="passwordRoom"
+                  label="Password"
+                  type="passwordRoom"
+                  fullWidth
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleClose} color="primary">
+                  Enter
+                </Button>
               </DialogActions>
             </Dialog>
           </CardActions>
@@ -136,50 +193,61 @@ const GridItem = ({ roomInfo }) => {
       </Grid>
       :
       <Grid item xs={12}>
-        <Card className={classes.root} variant="outlined">
-          <CardContent>
-            <Typography className={classes.pos} color='initial'>
-              <strong> Room ID: {roomInfo[0]} </strong>
-            </Typography>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
-              Gaming ...
-                        </Typography>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
-              {(roomInfo[1].isPrivate)? "Private" : "Public"}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button
-              size="small" variant="contained" color="primary" >
-              Watch
-            </Button>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Notification</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  This is private room, please enter password
-                                </DialogContentText>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  id="passwordRoom"
-                  label="Password"
-                  type="passwordRoom"
-                  fullWidth
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                  Cancel
-                                </Button>
-                <Button onClick={handleClose} color="primary">
-                  Enter
-                                </Button>
-              </DialogActions>
-            </Dialog>
-          </CardActions>
-        </Card>
-      </Grid>
+      <Card className={classes.root} variant="outlined">
+        <CardContent>
+          <Typography className={classes.pos} color='initial'>
+            <strong> Room ID: {roomInfo[0]} </strong>
+          </Typography>
+          <Typography className={classes.title} color="textSecondary" gutterBottom>
+          {roomInfo[1].turn}s
+          </Typography>
+          <Typography className={classes.title} color="textSecondary" gutterBottom>
+          Cups: {roomInfo[1].cups}
+          </Typography>
+          <Typography className={classes.title} color="textSecondary" gutterBottom>
+          {/* {roomInfo[1].status} */}
+            Playing
+          </Typography>
+          <Typography className={classes.title} color="textSecondary" gutterBottom>
+            {(roomInfo[1].isPrivate)? "Private" : "Public"}
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button
+            size="small" disabled variant="contained" color="primary" >
+            Join
+          </Button>
+          <Button
+            size="small" variant="contained" color="primary" >
+            View
+          </Button>
+          <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Notification</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                This is private room, please enter password
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="passwordRoom"
+                label="Password"
+                type="passwordRoom"
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleClose} color="primary">
+                Enter
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </CardActions>
+      </Card>
+    </Grid>)
   )
 };
 export default withRouter(GridItem);

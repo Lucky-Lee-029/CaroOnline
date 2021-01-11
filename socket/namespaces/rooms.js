@@ -91,7 +91,9 @@ function handle(io) {
     socket.on("win_game", (data, roomId)=>{
       console.log(rooms[roomId]);
       console.log("Win game: " + data);
-      io.to(roomId).emit("got_winner", data);
+      socket.emit("got_winner");
+      socket.to(roomId).emit("lose");
+      // io.to(roomId).emit("got_winner", data);
     });
     socket.on("chat", (data, roomId)=>{
       console.log(data.content);
@@ -103,7 +105,11 @@ function handle(io) {
       console.log(roomId);
       socket.to(roomId).emit("ready_client");
     })
-
+    socket.on("leave_room", (roomId)=>{
+      console.log("leave", roomId);
+      socket.leave(roomId);
+      io.emit("rooms", rooms);
+    })
   });
 }
 

@@ -290,3 +290,7 @@
   gridItem{
     height: 50px !important;
   }
+  .dialog{
+    min-width: 300px;
+    min-height: 300px;
+  }
