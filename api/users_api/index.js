@@ -44,6 +44,18 @@ router.route("/user/verify_email")
   .put()
   .delete();
 
+router.route("/user/forgot_password/:token")
+  .get()
+  .post(userCtrl.changePassword)
+  .put()
+  .delete();
+
+router.route("/user/forgot_password")
+  .get()
+  .post(userCtrl.forgotPassword)
+  .put()
+  .delete();
+
 router.route("/game")
   .get(auth, gameCtrl.getGame)
   .post(auth, gameCtrl.storeGame)

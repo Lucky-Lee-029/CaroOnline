@@ -83,8 +83,6 @@ function Login(props) {
 
   const handleSubmitLogin = async (event) => {
     event.preventDefault();
-    console.log("Name: " + username);
-    console.log("pass: " + password);
     fetchData('http://localhost:8000/users_api/auth', {
       username: username,
       password: password
@@ -152,7 +150,7 @@ function Login(props) {
                     </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/forgot_password" variant="body2">
                     Forgot password?
                     </Link>
                 </Grid>
