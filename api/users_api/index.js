@@ -32,9 +32,21 @@ router.route("/user")
   .put()
   .delete();
 
+router.route("/user/verify_email/:token")
+  .get()
+  .post()
+  .put(userCtrl.verifyEmail)
+  .delete();
+
+router.route("/user/verify_email")
+  .get()
+  .post(userCtrl.sendEmailToVerify)
+  .put()
+  .delete();
+
 router.route("/game")
-  .get(gameCtrl.getGame)
-  .post(gameCtrl.storeGame)
+  .get(auth, gameCtrl.getGame)
+  .post(auth, gameCtrl.storeGame)
   .put()
   .delete();
 
