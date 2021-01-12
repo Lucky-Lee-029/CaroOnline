@@ -12,12 +12,12 @@ async function updateCup(req, res) {
       msg: "Update user.cup successfullly"
     });
   } catch (err) {
-  res.status(500).json({
-    msg: "Server error"
-  });
-}
+    res.status(500).json({
+      msg: "Server error"
+    });
+  }
 }
 
 module.exports = {
-  updateCup
+  updateCup,
 }

@@ -67,7 +67,6 @@ export default function ForgotPassword(props) {
           });
         }
       } catch (err) {
-        console.log(err.reponse);
         setAlert({
           color: 'error',
           text: err.response.data.msg
