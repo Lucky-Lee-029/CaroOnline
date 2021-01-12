@@ -66,7 +66,7 @@ router.route("/game")
 router.route("/cup/:id")
   .get()
   .post()
-  .put(cupCtrl.updateCup)
+  .put(auth, cupCtrl.updateCup)
   .delete();
 
 router.route("/ranking/:id")
@@ -76,7 +76,7 @@ router.route("/ranking/:id")
    .delete();
 
 router.route("/win_rate/:id")
-   .get(winRateCtrl.getWinRate)
+   .get(auth, winRateCtrl.getWinRate)
    .post()
    .put()
    .delete();
