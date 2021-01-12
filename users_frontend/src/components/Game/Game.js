@@ -39,6 +39,7 @@ const Game = (props) => {
   const [isRivalReady, setIsRivalReady] = useState(false);
   const [rivalGame, setRivalGame] = useState("");
   const [history, setHistory] = useState([{
+    time: 0,
     x: null,
     y: null,
     squares: Array(Config.brdSize).fill(null).map(() => {
@@ -57,13 +58,13 @@ const Game = (props) => {
 
   useEffect(()=>{
     nspRooms.on("rival_join", user=>{
-      setRivalGame(user.profile.name);
+      setRivalGame(user);
     })
   },[])
 
   useEffect(()=>{
-    nspRooms.on("old_player", name=>{
-      setRivalGame(name);
+    nspRooms.on("old_player", user=>{
+      setRivalGame(user);
     })
   },[])
 
@@ -94,6 +95,7 @@ const Game = (props) => {
 
   useEffect(() => {
     nspRooms.on("got_winner", () => {
+        updateCup(-props.location.cup);
         setOpen(true);
     })
   }, []);
@@ -118,6 +120,7 @@ const Game = (props) => {
 
   useEffect(()=>{
     nspRooms.on("lose",()=>{
+      updateCup(-props.location.cup);
       setOpen(true);
       setWinner("rival");
     })
@@ -146,17 +149,29 @@ const Game = (props) => {
     }
   }
 
+
+  const updateCup = async (cup)=>{
+    console.log("Update: ", cup);
+    let api = `http://localhost:8000/users_api/cup/` + user.profile._id;
+    await axios.post(api, cup);
+  }
+
+  const saveGame = async (model)=>{
+    await axios.post("http://localhost:8000/users_api/game", model);
+  }
+
   // lưu model gửi lên db
   const getModel = () => {
     const model = {};
-    model.cup = 10;
+    model.cup = props.location.cup;
     model.history = history;
     model.chats = chats;
-    model.winner = 12;
-    model.loser = 13;
-    model.timeend = getTime();
+    model.winner = user._id;
+    model.loser = rivalGame._id;
+    model.timeEnd = getTime();
     return model;
   }
+
 
   const handelReady = () => {
     setIsReady(true);
@@ -201,7 +216,7 @@ const Game = (props) => {
                         Your info
                       </TableCell>
                       <TableCell>
-                        {rivalGame===""? "Chờ đối thủ" : rivalGame}
+                        {rivalGame===""? "Chờ đối thủ" : rivalGame.profile.name}
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -452,8 +467,8 @@ const Game = (props) => {
       nspRooms.emit("win_game", currentUser, String(props.location.state));
       console.log("-" + row + ", " + col + "," + ", " + currentUser + ", " + step);
       const model = getModel();
-      console.log(model);
       setWinner("you");
+      saveGame(model);
       // setWinCells(checkWin(row, col, currentUser, step));
     }
     // set new step

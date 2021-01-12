@@ -4,11 +4,15 @@ const Game = require("../../models/Game");
 async function storeGame(req, res) {
   try {
     // Store game
+    console.log("Save game");
+    console.log(req.body);
     const newGame = new Game(req.body);
     await newGame.save();
 
     res.status(201).json({ newGame });
   } catch (err) {
+    console.log(false);
+    console.log(err);
     res.status(500).json({
       msg: "Server error"
     });

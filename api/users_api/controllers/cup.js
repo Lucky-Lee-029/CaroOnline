@@ -3,7 +3,9 @@ const User = require("../../models/User");
 
 async function updateCup(req, res) {
   try {
+    
     const { cup } = await req.body;
+    
     await User.findByIdAndUpdate(req.params.id, {
       $inc: { cup }
     });
@@ -11,8 +13,11 @@ async function updateCup(req, res) {
     res.json({
       msg: "Update user.cup successfullly"
     });
+    console.log(cup);
   } catch (err) {
+    console.log("error");
   res.status(500).json({
+    
     msg: "Server error"
   });
 }

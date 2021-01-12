@@ -122,7 +122,7 @@ function handle(io) {
       socket.to(room).emit("rival_join", user);
       console.log("play: " + rooms[room].players.length)
       if(rooms[room].players.length === 2){
-          socket.emit("old_player", rooms[room].players[0].profile.name);
+          socket.emit("old_player", rooms[room].players[0]);
       }
     })
   });
