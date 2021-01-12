@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -36,36 +37,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ForgotPassword() {
+export default function ForgotPassword(props) {
   const classes = useStyles();
-  const [btnText, setBtnText] = useState('SEND CODE');
-  const [colorText, setColorText] = useState('primary');
+  const history = useHistory();
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [alert, setAlert] = useState();
 
-  const onEmailChange = e => setEmail(e.target.value);
-
-  const handleSendCode = () => {
-    setBtnText('RESEND CODE');
-    setColorText('secondary')
-  };
+  const onPasswordChange = e => setPassword(e.target.value);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setOpen(true);
+
+    console.log(password);
 
     // Call api
     (async () => {
       try {
-        const res = await axios.post('http://localhost:8000/users_api/user/forgot_password', {
-          email
+        const res = await axios.post(`http://localhost:8000/users_api/user/forgot_password/${props.match.params.token}`, {
+          password
         });
         const obj = await res.data;
         if (obj) {
-          setAlert({
-            color: 'success',
-            text: obj.msg
+          history.replace({
+            pathname: '/login',
+            state: {
+              success: obj.msg
+            }
           });
         }
       } catch (err) {
@@ -77,10 +75,6 @@ export default function ForgotPassword() {
     })();
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -89,7 +83,7 @@ export default function ForgotPassword() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          FORGOT PASSWORD
+          NEW PASSWORD
             </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -98,12 +92,13 @@ export default function ForgotPassword() {
                 variant="outlined"
                 required
                 fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
+                type="password"
+                id="password"
+                label="New Password"
+                name="password"
+                autoComplete="password"
                 autoFocus
-                onChange={onEmailChange}
+                onChange={onPasswordChange}
               />
             </Grid>
           </Grid>
@@ -115,7 +110,7 @@ export default function ForgotPassword() {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Verify
+            Change
             </Button>
           {(alert) ?
             <Alert fullWidth severity={alert.color}>{alert.text}</Alert> : null}

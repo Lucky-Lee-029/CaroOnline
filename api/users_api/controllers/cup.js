@@ -2,8 +2,8 @@
 const User = require("../../models/User");
 
 async function updateCup(req, res) {
+  cosole.log("updata cup");
   try {
-    
     const { cup } = await req.body;
     
     await User.findByIdAndUpdate(req.params.id, {
@@ -15,14 +15,13 @@ async function updateCup(req, res) {
     });
     console.log(cup);
   } catch (err) {
-    console.log("error");
-  res.status(500).json({
-    
-    msg: "Server error"
-  });
-}
+    console.log("update cup fail");
+    res.status(500).json({
+      msg: "Server error"
+    });
+  }
 }
 
 module.exports = {
-  updateCup
+  updateCup,
 }

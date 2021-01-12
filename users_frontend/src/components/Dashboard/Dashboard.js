@@ -15,6 +15,7 @@ import {
   ListItemAvatar,
   ListItemText,
   ListSubheader,
+  TextField,
   Paper,
   makeStyles,
   withStyles
@@ -29,6 +30,70 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Chart from '../Chart/Chart';
 import Profile from '../Profile/Profile';
 import Game from '../Game/Game';
+import Alert from '@material-ui/lab/Alert';
+
+function VerifyEmail() {
+  const [user, setUser] = useContext(UserCtx);
+  const [status, setStatus] = useState("Send");
+  const [color, setColor] = useState();
+  const [alert, setAlert] = useState();
+
+  const handleClickButton = () => {
+    setStatus("Resend");
+    setColor("primary");
+
+    // Call api
+    (async () => {
+      try {
+        const res = await axios.post('http://localhost:8000/users_api/user/verify_email', {
+          userId: user._id,
+          email: user.profile.email
+        });
+        const obj = await res.data;
+        setAlert({
+          status: "success",
+          msg: obj.msg
+        });
+      } catch (err) {
+        setAlert({
+          status: "error",
+          msg: "Can not send email"
+        });
+      }
+    })();
+  }
+
+  if (user) {
+    return (
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        alignItems="center"
+        justify="center"
+        style={{ minHeight: 250 }}
+      >
+        <Grid item>
+          <TextField
+            label="Email"
+            id="outlined-margin-dense"
+            defaultValue={user.profile.email}
+            margin="dense"
+            variant="outlined"
+            disabled
+          />
+        </Grid>
+        <Grid item>
+          <Button variant="contained" onClick={handleClickButton} color={color}>{status}</Button>
+        </Grid>
+        <Grid item xs={12} />
+        <Grid item xs={3}>
+          {(alert) ? <Alert severity={alert.status}>{alert.msg}</Alert> : null}
+        </Grid>
+      </Grid>
+    );
+  } else return null;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -280,6 +345,7 @@ function Dashboard() {
             <Route exact path='/profile' component={Profile} />
             <Route exact path="/chart" component={Chart} />
             <Route exact path="/game" component={Game} />
+            <Route exact path='/verify_email' component={VerifyEmail} />
           </Switch>
         </Grid>
         <Grid item xs={2}>

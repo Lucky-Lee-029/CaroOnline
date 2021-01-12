@@ -45,7 +45,8 @@ const UserSchema = new mongoose.Schema({
   },
   cup: {
     type: Number,
-    default: 0
+    min: 0,
+    default: 100
   },
   ranking: {
     type: String,

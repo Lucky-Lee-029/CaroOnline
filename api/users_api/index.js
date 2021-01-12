@@ -7,6 +7,7 @@ const authCtrl = require("./controllers/auth");
 const userCtrl = require("./controllers/user");
 const gameCtrl = require("./controllers/game");
 const cupCtrl = require("./controllers/cup");
+const winRateCtrl = require("./controllers/win_rate");
 
 router.route("/auth")
   .get(auth, authCtrl.verifyToken)
@@ -32,9 +33,33 @@ router.route("/user")
   .put()
   .delete();
 
+router.route("/user/verify_email/:token")
+  .get()
+  .post()
+  .put(userCtrl.verifyEmail)
+  .delete();
+
+router.route("/user/verify_email")
+  .get()
+  .post(userCtrl.sendEmailToVerify)
+  .put()
+  .delete();
+
+router.route("/user/forgot_password/:token")
+  .get()
+  .post(userCtrl.changePassword)
+  .put()
+  .delete();
+
+router.route("/user/forgot_password")
+  .get()
+  .post(userCtrl.forgotPassword)
+  .put()
+  .delete();
+
 router.route("/game")
-  .get(gameCtrl.getGame)
-  .post(gameCtrl.storeGame)
+  .get(auth, gameCtrl.getGame)
+  .post(auth, gameCtrl.storeGame)
   .put()
   .delete();
 
@@ -46,6 +71,12 @@ router.route("/cup/:id")
 
 router.route("/ranking/:id")
    .get()
+   .post()
+   .put()
+   .delete();
+
+router.route("/win_rate/:id")
+   .get(winRateCtrl.getWinRate)
    .post()
    .put()
    .delete();

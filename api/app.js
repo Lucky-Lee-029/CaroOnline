@@ -10,7 +10,8 @@ require("dotenv").config(); // Environment variables
     const opts = {
       useCreateIndex: true,
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false,
     };
     await mongoose.connect(dbUrl, opts);
     console.log("connected database");

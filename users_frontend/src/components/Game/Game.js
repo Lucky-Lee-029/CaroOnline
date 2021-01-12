@@ -103,7 +103,6 @@ const Game = (props) => {
   useEffect(() => {
     setWinCells(checkWin(currentSquare.x, currentSquare.y, winner, step));
     console.log("-" + currentSquare.x + ", " + currentSquare.y + "," + ", " + winner + ", " + step);
-    console.log(winCells);
   }, [winner]);
 
   useEffect(() => {
@@ -467,6 +466,7 @@ const Game = (props) => {
       nspRooms.emit("win_game", currentUser, String(props.location.state));
       console.log("-" + row + ", " + col + "," + ", " + currentUser + ", " + step);
       const model = getModel();
+      console.log(model);
       setWinner("you");
       saveGame(model);
       // setWinCells(checkWin(row, col, currentUser, step));

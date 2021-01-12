@@ -157,6 +157,13 @@ const rows = [
         result: 'Draw',
         status: 'Saved'
     },
+    {
+      id: 9,
+      player1: 'test',
+      player2: 'Gia Lợi',
+      result: 'Draw',
+      status: 'Unsaved'
+  },
   ];
 
 const selections = [
@@ -197,6 +204,7 @@ export default function Matches() {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [selection, setSelection] = React.useState('All');
+    const [searchValue, setSearchValue] = React. useState("");
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -211,10 +219,24 @@ export default function Matches() {
 
     const handleChangeSelection = (event) => {
       setSelection(event.target.value);
-      setSelectionItems(
-          rows.filter((item) => {
-              return item.status === selection;
-          })
+    };
+
+    function Filter (rows) {
+      if (selection === 'All')
+        return rows;
+      else 
+        return rows.filter(
+            (row) => (row.status).includes(selection)
+        );
+    };
+
+    const handleSearch = (event) => {
+      setSearchValue(event.target.value);
+    };
+
+    function Search (rows) {
+      return rows.filter(
+        (row) => (row.player1).toLowerCase().indexOf(searchValue) > -1 || (row.player2).toLowerCase().indexOf(searchValue) > -1
       );
     };
   return (
@@ -240,6 +262,8 @@ export default function Matches() {
                 }}
                 placeholder="Search"
                 variant="outlined"
+                value = {searchValue}
+                onChange = {handleSearch}
               />
             </Box>
           </CardContent>
@@ -273,8 +297,8 @@ export default function Matches() {
         </TableHead>
         <TableBody>
             {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
+            ? Filter(rows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : Filter(rows)
           ).map((row) => (
             <TableRow key={row.id}>
               <TableCell align="center" component="th">
