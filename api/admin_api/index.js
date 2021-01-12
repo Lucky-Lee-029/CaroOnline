@@ -15,11 +15,7 @@ if (process.env.NODE_ENV != "production") {
   router.post("/", async (req, res) => {
     console.log("OK");
     try {
-      // const { username, password } = req.body;
-      // console.log(username);
-      // console.log(req.body);
-      username="philong";
-      password="123456";
+      const { username, password } = req.body;
       // Hash password
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
