@@ -89,7 +89,7 @@ export default function ForgotPassword() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          FORGOT PASSWORD
+          QUÊN MẬT KHẨU
             </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -99,7 +99,7 @@ export default function ForgotPassword() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -115,7 +115,7 @@ export default function ForgotPassword() {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Verify
+            Xác thực
             </Button>
           {(alert) ?
             <Alert fullWidth severity={alert.color}>{alert.text}</Alert> : null}

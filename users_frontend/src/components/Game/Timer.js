@@ -14,7 +14,7 @@ function Timer (props){
     },[countDown])
     return(
         <TableCell>
-            Time: {countDown}
+            Thời gian còn: {countDown}
         </TableCell>
     )
 }

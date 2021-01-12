@@ -27,8 +27,8 @@ function WinDialog(props) {
               : `Bạn đã thua! \n Bạn bị trừ ${cup} cup`}
         </DialogTitle>
         <p>Số cúp: {winner==="you" ? (user.cup + cup) : (user.cup - cup)}</p>
-        <Button variant="contained" color="primary" onClick={handlePlayAgain}>Choi Lai</Button>
-        <Button variant="contained" color="secondary" onClick={handleOut}>Thoat</Button>
+        <Button variant="contained" color="primary" onClick={handlePlayAgain}>Chơi lại</Button>
+        <Button variant="contained" color="secondary" onClick={handleOut}>Thoát</Button>
     </Dialog>
   );
 }

@@ -149,15 +149,15 @@ export default function RecentMatch() {
   };
   return (
     <React.Fragment>
-      <Title>Recent Matches</Title>
+      <Title>Trận đấu gần đây</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Opponent</TableCell>
-            <TableCell>Result</TableCell>
-            <TableCell>Trophy</TableCell>
-            <TableCell align="right">Watch again</TableCell>
+            <TableCell>Thời gian</TableCell>
+            <TableCell>Đối thủ</TableCell>
+            <TableCell>Kết quả</TableCell>
+            <TableCell>Số cúp</TableCell>
+            <TableCell align="right">Xem lại</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -172,7 +172,7 @@ export default function RecentMatch() {
               <TableCell>{row.cup}</TableCell>
               <TableCell align="right">
               <Button variant="contained" color="primary" onClick={()=>handleViewMatch(row._id)}>
-                Watch
+                Xem lại
               </Button>
               </TableCell> 
             </TableRow>

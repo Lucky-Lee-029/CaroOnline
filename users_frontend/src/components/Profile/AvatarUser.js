@@ -32,11 +32,11 @@ export default function AvatarUser() {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title className={classes.title}>Avatar</Title>
+      <Title className={classes.title}>Ảnh đại diện</Title>
       <Avatar className = {classes.cover} alt="Avatar 1" src={AvaPic} />
       <div className={classes.marginAuto}>
         <Button color="primary" onClick={preventDefault}>
-          Change Avatar
+          Đổi ảnh
         </Button>
       </div>
     </React.Fragment>

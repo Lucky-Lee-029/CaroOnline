@@ -31,20 +31,20 @@ export default function Information() {
   console.log("user", user);
   return (
     <React.Fragment>
-      <Title>Hồ sơ của tôi</Title>
+      <Title>Thông tin của tôi</Title>
       <Grid container>
         <Grid item xs={12} sm ={6}>
           <Typography component="p" variant="h4">
             {user==null? "Tên:" : user.profile.name}
           </Typography>
           <Typography color="textSecondary" className={classes.depositContext}>
-            Join: {user==null? "10-10-2020" : user.createdAt.slice(0,10)}
+            Tham gia vào ngày: {user==null? "10-10-2020" : user.createdAt.slice(0,10)}
           </Typography>
           <Typography color="textSecondary" className={classes.depositContext}>
-            Number of matches participated: 1000
+            Số trận đấu đã tham gia: 1000
           </Typography>
           <Typography color="textSecondary" className={classes.depositContext}>
-            Ratio of winning: 90% 
+            Tỉ lệ thắng: 90% 
           </Typography>
         </Grid>
         <Grid item xs={12} sm ={6}>
@@ -54,11 +54,11 @@ export default function Information() {
           </Typography>
         </Grid>
       </Grid>
-      <div>
+      {/* <div>
         <Button color="primary" onClick={preventDefault}>
           Edit 
         </Button>
-      </div>
+      </div> */}
     </React.Fragment>
   );
 }

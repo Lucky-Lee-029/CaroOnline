@@ -186,10 +186,10 @@ const ReviewGame=(props)=>{
                                     <TableBody>
                                         <TableRow>
                                             <TableCell>
-                                                Winner: {winner}
+                                                Người chơi thắng: {winner}
                                             </TableCell>
                                             <TableCell>
-                                                Loser: {loser}
+                                                Người chơi thua: {loser}
                                             </TableCell>
                                         </TableRow>
                                     </TableBody>

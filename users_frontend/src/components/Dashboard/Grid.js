@@ -87,7 +87,7 @@ const GridItem = ({ roomInfo }) => {
         <Card className={classes.root} variant="outlined">
           <CardContent>
             <Typography className={classes.pos} color='initial'>
-              <strong> Room ID: {roomInfo[0]} </strong>
+              <strong> Mã phòng: {roomInfo[0]} </strong>
             </Typography>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
             {roomInfo[1].turn}s
@@ -103,18 +103,18 @@ const GridItem = ({ roomInfo }) => {
             <Button
               size="small" variant="contained" color="primary"
               onClick={() => handleJoinRoom(roomInfo[0], roomInfo[1].turn)} >
-              Join
+              Tham gia
               </Button>
               <Button
               size="small" variant="contained" color="primary"
               >
-              View
+              Xem
               </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Notification</DialogTitle>
+              <DialogTitle id="form-dialog-title">Thông báo</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  This is private room, please enter password
+                  Đây là phòng riêng tư! Mời nhập mật khẩu
                 </DialogContentText>
                 <TextField
                   autoFocus
@@ -127,10 +127,10 @@ const GridItem = ({ roomInfo }) => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                  Cancel
+                  Thoát
                 </Button>
                 <Button onClick={handleClose} color="primary">
-                  Enter
+                  Nhập
                 </Button>
               </DialogActions>
             </Dialog>
@@ -143,13 +143,13 @@ const GridItem = ({ roomInfo }) => {
         <Card className={classes.root} variant="outlined">
           <CardContent>
             <Typography className={classes.pos} color='initial'>
-              <strong> Room ID: {roomInfo[0]} </strong>
+              <strong> Mã phòng: {roomInfo[0]} </strong>
             </Typography>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
             {roomInfo[1].turn}s
             </Typography>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
-            {roomInfo[1].status}/Full
+            {roomInfo[1].status}
             </Typography>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
               {(roomInfo[1].isPrivate)? "Private" : "Public"}
@@ -158,17 +158,17 @@ const GridItem = ({ roomInfo }) => {
           <CardActions>
             <Button
               size="small" disabled variant="contained" color="primary" >
-              Join
+              Tham gia
             </Button>
             <Button
               size="small" variant="contained" color="primary" >
-              View
+              Xem
             </Button>
             <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Notification</DialogTitle>
+              <DialogTitle id="form-dialog-title">Thông báo</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                  This is private room, please enter password
+                  Đây là phòng riêng tư! Mời nhập mật khẩu
                 </DialogContentText>
                 <TextField
                   autoFocus
@@ -181,10 +181,10 @@ const GridItem = ({ roomInfo }) => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                  Cancel
+                  Thoát
                 </Button>
                 <Button onClick={handleClose} color="primary">
-                  Enter
+                  Nhập
                 </Button>
               </DialogActions>
             </Dialog>
@@ -196,17 +196,17 @@ const GridItem = ({ roomInfo }) => {
       <Card className={classes.root} variant="outlined">
         <CardContent>
           <Typography className={classes.pos} color='initial'>
-            <strong> Room ID: {roomInfo[0]} </strong>
+            <strong> Mã phòng {roomInfo[0]} </strong>
           </Typography>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
           {roomInfo[1].turn}s
           </Typography>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
-          Cups: {roomInfo[1].cups}
+          Cúp {roomInfo[1].cups}
           </Typography>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
           {/* {roomInfo[1].status} */}
-            Playing
+            Đang chơi
           </Typography>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
             {(roomInfo[1].isPrivate)? "Private" : "Public"}
@@ -215,33 +215,33 @@ const GridItem = ({ roomInfo }) => {
         <CardActions>
           <Button
             size="small" disabled variant="contained" color="primary" >
-            Join
+            Tham gia
           </Button>
           <Button
             size="small" variant="contained" color="primary" >
-            View
+            Xem
           </Button>
           <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Notification</DialogTitle>
+            <DialogTitle id="form-dialog-title">Thông báo</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                This is private room, please enter password
+                Đây là phòng riêng tư! Mời nhập mật khẩu
               </DialogContentText>
               <TextField
                 autoFocus
                 margin="dense"
                 id="passwordRoom"
-                label="Password"
+                label="Mật khẩu"
                 type="passwordRoom"
                 fullWidth
               />
             </DialogContent>
             <DialogActions>
               <Button onClick={handleClose} color="primary">
-                Cancel
+                Thoát
               </Button>
               <Button onClick={handleClose} color="primary">
-                Enter
+                Nhập
               </Button>
             </DialogActions>
           </Dialog>

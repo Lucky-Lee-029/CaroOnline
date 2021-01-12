@@ -27,13 +27,13 @@ export const mainListItems = (
       <ListItemIcon>
          <BookmarksIcon/>
       </ListItemIcon>
-      <ListItemText primary="Matches" />
+      <ListItemText primary="Danh sách trận đấu" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="User Account" />
+      <ListItemText primary="Danh sách người chơi" />
     </ListItem>
 
   </div>

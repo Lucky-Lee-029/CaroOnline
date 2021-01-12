@@ -297,8 +297,8 @@ export default function Matches() {
         </TableHead>
         <TableBody>
             {(rowsPerPage > 0
-            ? Filter(rows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : Filter(rows)
+            ? Search(Filter(rows)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : Search(Filter(rows))
           ).map((row) => (
             <TableRow key={row.id}>
               <TableCell align="center" component="th">
