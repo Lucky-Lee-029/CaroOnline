@@ -112,7 +112,7 @@ const useRowStyles = makeStyles({
 
 const rows = [
     {
-        username: 'Gia Lợi',
+        name: 'Gia Lợi',
         rank: 1,
         trophy: 30,
         status: 'Non-Blocked', 
@@ -125,7 +125,7 @@ const rows = [
         },
       },
       {
-        username: 'Phi Long',
+        name: 'Phi Long',
         rank: 2,
         trophy: 27,
         status: 'Non-Blocked', 
@@ -138,7 +138,7 @@ const rows = [
         },
       },
       {
-        username: 'Hải Lê',
+        name: 'Hải Lê',
         rank: 3,
         trophy: 20,
         status: 'Non-Blocked', 
@@ -151,7 +151,7 @@ const rows = [
         },
       },
       {
-        username: 'IU',
+        name: 'IU',
         rank: 8,
         trophy: 1,
         status: 'Blocked', 
@@ -164,7 +164,7 @@ const rows = [
         },
       },
       {
-        username: 'BlackPink',
+        name: 'BlackPink',
         rank: 4,
         trophy: 15,
         status: 'Non-Blocked', 
@@ -177,13 +177,13 @@ const rows = [
         },
       },
       {
-        username: 'Bulb',
+        name: 'Bulb',
         rank: 8,
         trophy: 7,
         status: 'Non-Blocked', 
         detail: 
         {
-            email: 'bp@gmail.com',
+            email: 'test@gmail.com',
             dateJoin: '2020-12-15',
             numberMatch: 100,
             ratioWinning: 60,      
@@ -207,7 +207,7 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell align="center" component="th" scope="row">
-          {row.username}
+          {row.name}
         </TableCell>
         <TableCell align="center">{row.rank}</TableCell>
         <TableCell align="center">{row.trophy}</TableCell>
@@ -224,7 +224,7 @@ function Row(props) {
                 <strong>Details User Information</strong>
               </Typography>
                 <ul>
-                    <li>Emai: {row.detail.email}</li>
+                    <li>Email: {row.detail.email}</li>
                     <li>Date Join: {row.detail.dateJoin}</li>
                     <li>Number of matches participated: {row.detail.numberMatch}</li>
                     <li>Ratio of winning: {row.detail.ratioWinning} %</li>
@@ -239,7 +239,7 @@ function Row(props) {
 
 Row.propTypes = {
   row: PropTypes.shape({
-    username: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     rank: PropTypes.number.isRequired,
     trophy: PropTypes.number.isRequired,
     status: PropTypes.string.isRequired,
@@ -260,10 +260,13 @@ const useStylesSearch = makeStyles((theme) => ({
     }
   }));
 
+
+
 export default function UserAccount() {
     const classSearch = useStylesSearch();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [searchValue, setSearchValue] = React. useState("");
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -275,6 +278,17 @@ export default function UserAccount() {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    const handleSearch = (event) => {
+      setSearchValue(event.target.value);
+    };
+
+    function Search (rows) {
+      return rows.filter(
+        (row) => (row.name).toLowerCase().indexOf(searchValue) > -1 || (row.detail.email).toLowerCase().indexOf(searchValue) > -1
+      );
+    };
+
   return (
     <Container>
     {/* Search tool */}
@@ -298,6 +312,8 @@ export default function UserAccount() {
                 }}
                 placeholder="Search user"
                 variant="outlined"
+                value = {searchValue}
+                onChange = {handleSearch}
               />
             </Box>
           </CardContent>
@@ -308,7 +324,7 @@ export default function UserAccount() {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell align="center"><strong>User Name</strong></TableCell>
+            <TableCell align="center"><strong>Name</strong></TableCell>
             <TableCell align="center"><strong>Rank</strong></TableCell>
             <TableCell align="center"><strong>Trophy</strong></TableCell>
             <TableCell align="center"><strong>Status</strong></TableCell>
@@ -317,10 +333,10 @@ export default function UserAccount() {
         </TableHead>
         <TableBody>
             {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
+            ? Search(rows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : Search(rows)
           ).map((row) => (
-            <Row key={row.username} row={row} />
+            <Row key={row.name} row={row} />
           ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
