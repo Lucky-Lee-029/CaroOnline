@@ -57,6 +57,8 @@ sq4[1][4]="0";
 const ReviewGame=(props)=>{
     const classes = useStyles();
     const [step, setStep] = useState(0);
+    const [winner, setWinner] = useState("");
+    const [loser, setLoser] = useState("");
     const [stepchat, setStepchat] = useState(0);
     const [history, setHistory] = useState([
         {
@@ -122,7 +124,26 @@ const ReviewGame=(props)=>{
             squares: sq3
         }
     ])
-    const [chats, setChats] = useState([{content: "A"},{content: "A"},{content: "A"},{content: "A"},{content: "A"},{content: "A"}]);
+    const [match, setMatch] = useState(props.location.state);
+    const [chats, setChats] = useState([{content: "AAAAAA"}]);
+
+    useEffect(()=>{
+        if(!match){
+            return;
+        }
+        axios.get(`http://localhost:8000/users_api/game?id=${match}`,{
+            headers: {
+                Authorization: localStorage.getItem('token'),
+            }
+        })
+        .then(res => {
+            const allHistory = res.data.games[0];
+            console.log(allHistory);
+            setChats(allHistory.chats);
+            setHistory(allHistory.history);
+        })
+        .catch(error => console.log(error));
+    },[match])
     return(
         <div className="App"> 
             <header className="App-header">
@@ -145,7 +166,7 @@ const ReviewGame=(props)=>{
                                 {
                                     history.map((items,index)=>{
                                         return(
-                                        <ListItem>
+                                        <ListItem key={index}>
                                         <Button className="btnStep" variant="contained" color={index===step?"primary":""} onClick={()=>handleChangeStep(index)}>
                                             #{index}: Player {index%2===0?"X":"O"} at {items.x},{items.y}
                                         </Button>
@@ -165,10 +186,10 @@ const ReviewGame=(props)=>{
                                     <TableBody>
                                         <TableRow>
                                             <TableCell>
-                                                Player 1: X
+                                                Winner: {winner}
                                             </TableCell>
                                             <TableCell>
-                                                Player 2: O
+                                                Loser: {loser}
                                             </TableCell>
                                         </TableRow>
                                     </TableBody>
@@ -203,7 +224,16 @@ const ReviewGame=(props)=>{
     }
     function handleChangeStep(step){
         setStep(step);
-        setStepchat(step*2);
+        let timeStep = history[step].time;
+        setStepchat(findStepChat(timeStep));
+    }
+    function findStepChat(timeStep){
+        for(let i=0; i< chats.length;i++){
+            if(chats[i].time > timeStep){
+                return i-1;
+            }
+        }
+        return chats.length -1;
     }
 }
 export default ReviewGame;

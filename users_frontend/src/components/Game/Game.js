@@ -95,7 +95,7 @@ const Game = (props) => {
 
   useEffect(() => {
     nspRooms.on("got_winner", () => {
-        updateCup(-props.location.cup);
+      
         setOpen(true);
     })
   }, []);
@@ -119,9 +119,10 @@ const Game = (props) => {
 
   useEffect(()=>{
     nspRooms.on("lose",()=>{
-      updateCup(-props.location.cup);
       setOpen(true);
       setWinner("rival");
+      updateCup(-props.location.cup);
+      console.log("cup", props.location.cup)
     })
   },[]);
 
@@ -143,6 +144,7 @@ const Game = (props) => {
       let currentUser = (history.length % 2 === 0) ? Config.xPlayer : Config.oPlayer;
       nspRooms.emit("win_game", currentUser, String(props.location.state));
       setWinner("you");
+      updateCup(props.location.cup)
       const model = getModel();
       console.log(model);
     }
@@ -151,8 +153,14 @@ const Game = (props) => {
 
   const updateCup = async (cup)=>{
     console.log("Update: ", cup);
+    let model ={};
+    model.cup = cup;
     let api = `http://localhost:8000/users_api/cup/` + user.profile._id;
-    await axios.post(api, cup);
+    await axios.put(api, model, {
+      headers: {
+        Authorization: localStorage.getItem('token')
+      }
+    });
   }
 
   const saveGame = async (model)=>{
@@ -434,7 +442,6 @@ const Game = (props) => {
 
     return null;
   }
-
   function userClick(row, col) {
     // prevent click in rival turn
     if (!isYourTurn) {
@@ -472,6 +479,7 @@ const Game = (props) => {
       const model = getModel();
       console.log(model);
       setWinner("you");
+      updateCup(props.location.cup);
       saveGame(model);
       // setWinCells(checkWin(row, col, currentUser, step));
     }
@@ -491,7 +499,6 @@ const Game = (props) => {
     let newState = data;
     console.log("current user: " + currentUser);
     newState.squares[data.x][data.y] = currentUser;
-    const newHis = currentHis.concat(newState);
     setHistory(currentHis => {
       return currentHis.concat(newState);
     });

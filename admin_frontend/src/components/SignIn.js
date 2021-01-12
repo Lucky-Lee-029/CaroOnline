@@ -56,7 +56,8 @@ const SignIn = (props) => {
     e.preventDefault();
     (async () => {
       try {
-        const res = await axios.post(process.env.REACT_APP_API_URL + "auth/", user)
+        const res = await axios.post("http://localhost:8000/admin_api/auth/", user)
+        console.log(res)
         if (res.data.success) {
           localStorage.setItem("access_token", res.data.token);
           setUserCtx({
@@ -67,6 +68,7 @@ const SignIn = (props) => {
           props.history.replace("/");
         }
       } catch (err) {
+        console.log("err", err.message);
         setAlert({
           ...alert,
           visible: true,

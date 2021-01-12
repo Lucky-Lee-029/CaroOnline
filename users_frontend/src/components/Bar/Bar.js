@@ -100,6 +100,9 @@ export default function SearchAppBar() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+    history.push({
+      pathname: '/profile',
+    });
   };
 
   const handleLogout = () => {

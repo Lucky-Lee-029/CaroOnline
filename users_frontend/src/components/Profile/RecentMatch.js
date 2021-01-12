@@ -1,4 +1,6 @@
-import React from 'react';
+import React, {useState, useEffect, useContext} from 'react';
+import axios from 'axios';
+import UserCtx from '../../context/User';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -15,6 +17,7 @@ import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import Title from './Title';
 import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router';
 
 // Generate Match Data
 function createData(id, date, opponent, result, trophy) {
@@ -23,16 +26,6 @@ function createData(id, date, opponent, result, trophy) {
 
 const rows = [
   createData(1, '16 Dec, 2020', 'BlackPink', 'Win', 312),
-  createData(2, '16 Dec, 2020', 'BlackPink', 'Win', 312),
-  createData(3, '16 Dec, 2020', 'BlackPink', 'Win', 312),
-  createData(4, '16 Dec, 2020', 'BlackPink', 'Win', 312),
-  createData(5, '16 Dec, 2020', 'BlackPink', 'Win', 312),
-  createData(6, '17 Dec, 2020', 'IU', 'Win', 315),
-  createData(7, '17 Dec, 2020', 'IU', 'Win', 315),
-  createData(8, '17 Dec, 2020', 'IU', 'Win', 315),
-  createData(9, '17 Dec, 2020', 'IU', 'Win', 315),
-  createData(10, '17 Dec, 2020', 'IU', 'Win', 315),
-  createData(11, '17 Dec, 2020', 'IU', 'Win', 315),
 ];
 
 function preventDefault(event) {
@@ -57,6 +50,7 @@ function TablePaginationActions(props) {
   const classes = useStyles1();
   const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
+
 
   const handleFirstPageButtonClick = (event) => {
     onChangePage(event, 0);
@@ -114,10 +108,12 @@ TablePaginationActions.propTypes = {
 
 
 export default function RecentMatch() {
+  const [user, setUser] = useContext(UserCtx);
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [matchs, setMatchs] = useState(rows);
+  const history = useHistory();
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const handleChangePage = (event, newPage) => {
@@ -127,6 +123,29 @@ export default function RecentMatch() {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  useEffect(()=>{
+    if(!user){
+      return;
+    }
+    axios.get(`http://localhost:8000/users_api/game?userId=${user._id}`,{
+        headers: {
+            Authorization: localStorage.getItem('token'),
+        }
+    })
+    .then(res => {
+        const allHistory = res.data.games;
+        console.log(allHistory);
+        setMatchs(allHistory);
+    })
+    .catch(error => console.log(error));
+  },[user]);
+  const handleViewMatch = (id)=>{
+    history.push({
+      pathname: '/review',
+      state: id,
+    });
   };
   return (
     <React.Fragment>
@@ -143,16 +162,16 @@ export default function RecentMatch() {
         </TableHead>
         <TableBody>
         {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
+            ? matchs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : matchs
           ).map((row) => (
             <TableRow key={row.id}>
               <TableCell>{row.date}</TableCell>
               <TableCell>{row.opponent}</TableCell>
               <TableCell>{row.result}</TableCell>
-              <TableCell>{row.trophy}</TableCell>
+              <TableCell>{row.cup}</TableCell>
               <TableCell align="right">
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={()=>handleViewMatch(row._id)}>
                 Watch
               </Button>
               </TableCell> 
@@ -169,7 +188,7 @@ export default function RecentMatch() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={3}
-              count={rows.length}
+              count={matchs.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{

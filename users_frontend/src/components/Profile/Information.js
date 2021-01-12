@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Button from '@material-ui/core/Button';
+import UserCtx from '../../context/User';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Title from './Title';
@@ -26,16 +27,18 @@ cover: {
 
 export default function Information() {
   const classes = useStyles();
+  const [user, setUser] = useContext(UserCtx);
+  console.log("user", user);
   return (
     <React.Fragment>
-      <Title>My Profile</Title>
+      <Title>Hồ sơ của tôi</Title>
       <Grid container>
         <Grid item xs={12} sm ={6}>
           <Typography component="p" variant="h4">
-            Bulb Will
+            {user==null? "Tên:" : user.profile.name}
           </Typography>
           <Typography color="textSecondary" className={classes.depositContext}>
-            Join 15 December, 2020
+            Join: {user==null? "10-10-2020" : user.createdAt.slice(0,10)}
           </Typography>
           <Typography color="textSecondary" className={classes.depositContext}>
             Number of matches participated: 1000
@@ -47,7 +50,7 @@ export default function Information() {
         <Grid item xs={12} sm ={6}>
           <Avatar className = {classes.cover} alt="Trophy" src={Trophy} />
           <Typography variant="h4" align="center" color="textSecondary" className={classes.depositContext}>
-            450
+            {user==null? "100" : user.cup}
           </Typography>
         </Grid>
       </Grid>
