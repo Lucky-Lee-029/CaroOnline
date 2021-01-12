@@ -109,7 +109,7 @@ async function sendEmailToVerify(req, res) {
       subject: "Verify email",
       html:
         `
-        Verify your email: <a target="_blank" href="http://localhost:3000/forgot_password/${token}">Link here</a>
+        Verify your email: <a target="_blank" href="http://localhost:3000/verify_email/${token}">Link here</a>
       `
     });
     res.json({
