@@ -216,7 +216,7 @@ function Row(props) {
         <TableCell align="center">{row.cup}</TableCell>
         <TableCell align="center">{(row.active)?"Non-Blocked":"Blocked"}</TableCell>
         <TableCell align="center">
-            <BlockedBtn idUser = {row._id} status = {(row.active)?"Non-Blocked":"Blocked"}/>
+            <BlockedBtn idUser = {row._id} status = {(row.active)?{active: true, text:"Non-Blocked"}:{active: false, text:"Blocked"}}/>
         </TableCell>
       </TableRow>
       <TableRow>
