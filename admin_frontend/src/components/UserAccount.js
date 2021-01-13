@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -33,6 +34,7 @@ import {
   } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import BlockedBtn from './BlockedBtn';
+import Axios from 'axios';
 
 //Pagination
 const useStyles1 = makeStyles((theme) => ({
@@ -108,6 +110,7 @@ const useRowStyles = makeStyles({
     },
   },
 });
+
 
 
 const rows = [
@@ -195,7 +198,7 @@ const rows = [
   
 function Row(props) {
   const { row } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const classes = useRowStyles();
 
   return (
@@ -207,13 +210,13 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell align="center" component="th" scope="row">
-          {row.name}
+          {row.profile.name}
         </TableCell>
-        <TableCell align="center">{row.rank}</TableCell>
-        <TableCell align="center">{row.trophy}</TableCell>
-        <TableCell align="center">{row.status}</TableCell>
+        <TableCell align="center">{row.ranking}</TableCell>
+        <TableCell align="center">{row.cup}</TableCell>
+        <TableCell align="center">{(row.active)?"Non-Blocked":"Blocked"}</TableCell>
         <TableCell align="center">
-            <BlockedBtn status = {row.status}/>
+            <BlockedBtn idUser = {row._id} status = {(row.active)?"Non-Blocked":"Blocked"}/>
         </TableCell>
       </TableRow>
       <TableRow>
@@ -224,10 +227,12 @@ function Row(props) {
                 <strong>Thông tin chi tiết</strong>
               </Typography>
                 <ul>
-                    <li>Email: {row.detail.email}</li>
-                    <li>Ngày tham gia: {row.detail.dateJoin}</li>
-                    <li>Số trận đấu đã tham gia: {row.detail.numberMatch}</li>
-                    <li>Tỉ lệ thắng: {row.detail.ratioWinning} %</li>
+                    <li>Email: {row.profile.email}</li>
+                    <li>Ngày tham gia: {row.createdAt}</li>
+                    <li>Số trận đấu đã tham gia: 
+                      100
+                    </li>
+                    <li>Tỉ lệ thắng: 200 %</li>
                 </ul>
             </Box>
           </Collapse>
@@ -237,22 +242,22 @@ function Row(props) {
   );
 }
 
-Row.propTypes = {
-  row: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    rank: PropTypes.number.isRequired,
-    trophy: PropTypes.number.isRequired,
-    status: PropTypes.string.isRequired,
-    detail: PropTypes.objectOf(
-        PropTypes.shape({
-            email: PropTypes.string.isRequired,
-            dateJoin: PropTypes.string.isRequired,
-            numberMatch: PropTypes.number.isRequired,
-            ratioWinning: PropTypes.number.isRequired,
-        }),
-    ).isRequired,
-  }).isRequired,
-};
+// Row.propTypes = {
+//   row: PropTypes.shape({
+//     ranking: PropTypes.string.isRequired,
+//     trophy: PropTypes.number.isRequired,
+//     status: PropTypes.string.isRequired,
+//     profile: PropTypes.objectOf(
+//         PropTypes.shape({
+//             name: PropTypes.string.isRequired,
+//             email: PropTypes.string.isRequired,
+//             dateJoin: PropTypes.string.isRequired,
+//             numberMatch: PropTypes.number.isRequired,
+//             ratioWinning: PropTypes.number.isRequired,
+//         }),
+//     ).isRequired,
+//   }).isRequired,
+// };
 
 const useStylesSearch = makeStyles((theme) => ({
     margin: {
@@ -260,13 +265,69 @@ const useStylesSearch = makeStyles((theme) => ({
     }
   }));
 
-
+  const users = [
+    {
+      local: {
+        isVerified: true,
+        username: "philong",
+        password: "$2b$10$XO/5l8m1fMX09oT9lA0MGOjGrQuVfooMGYmiLME6jg1wKhMPP9Ui6"
+      },
+      type: "local",
+      createdAt: "2021-01-12T11:06:13.945Z",
+      active: true,
+      cup: 100,
+      ranking: "none",
+      _id: "5ffd8e7d933b8a46d0bd1b83",
+      profile: {
+        _id: "5ffd8e7d933b8a46d0bd1b82",
+        email: "yong9xi@gmail.com",
+        name: "Danh Phi Long",
+        "__v": 0
+      },
+      "__v": 0
+    },
+    {
+      local: {
+        isVerified: false,
+        username: "bongden",
+        password: "$2b$10$S62GaxCFJN1mWq.MCHE38ezqEuBM8Y/GBxSxDoHnKlQ.WSoYE/Uue"
+      },
+      type: "local",
+      createdAt: "2021-01-12T11:07:58.599Z",
+      active: true,
+      cup: 100,
+      ranking: "none",
+      _id: "5ffd9209b891b40cdc144533",
+      profile: {
+        _id: "5ffd9209b891b40cdc144532",
+        email: "bd@gmail.com",
+        name: "Bóng Đèn",
+        __v: 0
+      },
+      "__v": 0
+    },
+  ]
 
 export default function UserAccount() {
     const classSearch = useStylesSearch();
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [searchValue, setSearchValue] = React. useState("");
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [searchValue, setSearchValue] = useState("");
+    const [listUser, setListUser] = useState([]);
+
+    useEffect(() => {
+      axios.get(`http://localhost:8000/admin_api/users`, {
+        headers: {
+          Authorization: localStorage.getItem('admin_token')
+        }
+      })
+      .then(res => res.data)
+      .then ( (result) => {
+        setListUser(result.users);
+        console.log(result.users);
+      })
+      .catch(error => console.log(error))
+    },[])
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -285,7 +346,7 @@ export default function UserAccount() {
 
     function Search (rows) {
       return rows.filter(
-        (row) => (row.name).toLowerCase().indexOf(searchValue) > -1 || (row.detail.email).toLowerCase().indexOf(searchValue) > -1
+        (row) => (row.profile.name).toLowerCase().indexOf(searchValue) > -1 || (row.profile.email).toLowerCase().indexOf(searchValue) > -1
       );
     };
 
@@ -333,10 +394,10 @@ export default function UserAccount() {
         </TableHead>
         <TableBody>
             {(rowsPerPage > 0
-            ? Search(rows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : Search(rows)
+            ? Search(listUser).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : Search(listUser)
           ).map((row) => (
-            <Row key={row.name} row={row} />
+            <Row key={row._id} row={row} />
           ))}
           {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
@@ -349,7 +410,7 @@ export default function UserAccount() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={3}
-              count={rows.length}
+              count={listUser.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{

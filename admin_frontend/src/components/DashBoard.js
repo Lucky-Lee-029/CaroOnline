@@ -109,17 +109,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ListUsers() {
-  return (
-    <div>users</div>
-  );
-}
-
-function ListMatches() {
-  return (
-    <div>matches</div>
-  );
-}
 
 function Home() {
   return (
@@ -212,7 +201,7 @@ function DashBoard() {
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             <Switch>
-              <Route exact path='/users' component={ListUsers} />
+              <Route exact path='/users' component={UserAccount} />
               <Route exact path='/matches' component={Matches} />
               <Route exact path='/' component={Home} />
             </Switch>

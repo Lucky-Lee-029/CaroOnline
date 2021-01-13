@@ -51,6 +51,12 @@ router.route("/users")
   .put()
   .delete();
 
+router.route("/block/:id")
+  .get()
+  .post()
+  .put(auth, usersCtrl.setUserStatus)
+  .delete();
+
 router.route("/user/:id")
   .get(usersCtrl.getUserDetail)
   .post()

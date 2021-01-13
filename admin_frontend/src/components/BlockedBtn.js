@@ -26,6 +26,7 @@ const BlockedBtn = (props) => {
   const [open, setOpen] = useState(false);
 
   const handleBlocked = () => {
+    console.log(props.idUser);
     setOpen(true);
     };
   const handleUnblocked = () => {
