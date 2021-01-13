@@ -34,7 +34,7 @@ import {
   } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import BlockedBtn from './BlockedBtn';
-import Axios from 'axios';
+
 
 //Pagination
 const useStyles1 = makeStyles((theme) => ({
@@ -181,48 +181,6 @@ const useStylesSearch = makeStyles((theme) => ({
     }
   }));
 
-  const users = [
-    {
-      local: {
-        isVerified: true,
-        username: "philong",
-        password: "$2b$10$XO/5l8m1fMX09oT9lA0MGOjGrQuVfooMGYmiLME6jg1wKhMPP9Ui6"
-      },
-      type: "local",
-      createdAt: "2021-01-12T11:06:13.945Z",
-      active: true,
-      cup: 100,
-      ranking: "none",
-      _id: "5ffd8e7d933b8a46d0bd1b83",
-      profile: {
-        _id: "5ffd8e7d933b8a46d0bd1b82",
-        email: "yong9xi@gmail.com",
-        name: "Danh Phi Long",
-        "__v": 0
-      },
-      "__v": 0
-    },
-    {
-      local: {
-        isVerified: false,
-        username: "bongden",
-        password: "$2b$10$S62GaxCFJN1mWq.MCHE38ezqEuBM8Y/GBxSxDoHnKlQ.WSoYE/Uue"
-      },
-      type: "local",
-      createdAt: "2021-01-12T11:07:58.599Z",
-      active: true,
-      cup: 100,
-      ranking: "none",
-      _id: "5ffd9209b891b40cdc144533",
-      profile: {
-        _id: "5ffd9209b891b40cdc144532",
-        email: "bd@gmail.com",
-        name: "Bóng Đèn",
-        __v: 0
-      },
-      "__v": 0
-    },
-  ]
 
 export default function UserAccount() {
     const classSearch = useStylesSearch();
@@ -240,7 +198,6 @@ export default function UserAccount() {
       .then(res => res.data)
       .then ( (result) => {
         setListUser(result.users);
-        console.log(result.users);
       })
       .catch(error => console.log(error))
     },[])

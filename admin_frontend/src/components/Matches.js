@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -164,20 +165,6 @@ const rows = [
   },
   ];
 
-const selections = [
-  {
-    value: 'All',
-    label: 'All',
-  },
-  {
-    value: 'Saved',
-    label: 'Saved',
-  },
-  {
-    value: 'Unsaved',
-    label: 'Unsaved',
-  },
-];
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -200,12 +187,26 @@ inputSelection : {
 export default function Matches() {
     const classes = useStyles();
     const history = useHistory();
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const [selection, setSelection] = React.useState('All');
-    const [searchValue, setSearchValue] = React. useState("");
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [searchValue, setSearchValue] = useState("");
+    const [listMatches, setListMatches] = useState([]);
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    useEffect(() => {
+      axios.get(`http://localhost:8000/admin_api/games`, {
+        headers: {
+          Authorization: localStorage.getItem('admin_token')
+        }
+      })
+      .then(res => res.data)
+      .then ( (result) => {
+        setListMatches(result.games);
+        console.log(result.games);
+      })
+      .catch(error => console.log(error))
+    },[])
+
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, listMatches.length - page * rowsPerPage);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -232,7 +233,7 @@ export default function Matches() {
     };
     function Search (rows) {
       return rows.filter(
-        (row) => (row.player1).toLowerCase().indexOf(searchValue) > -1 || (row.player2).toLowerCase().indexOf(searchValue) > -1
+        (row) => (row.winner.profile.name).toLowerCase().indexOf(searchValue) > -1 || (row.loser.profile.name).toLowerCase().indexOf(searchValue) > -1
       );
     };
   return (
@@ -269,7 +270,7 @@ export default function Matches() {
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell align="center"><strong>Mã trận</strong></TableCell>
+            {/* <TableCell align="center"><strong>Mã trận</strong></TableCell> */}
             <TableCell align="center"><strong>Người chơi 1</strong></TableCell>
             <TableCell align="center"><strong>Người chơi 2</strong></TableCell>
             <TableCell align="center"><strong>Người chơi thắng</strong></TableCell>
@@ -278,18 +279,18 @@ export default function Matches() {
         </TableHead>
         <TableBody>
             {(rowsPerPage > 0
-            ? Search(rows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : Search(rows)
+            ? Search(listMatches).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : Search(listMatches)
           ).map((row) => (
-            <TableRow key={row.id}>
-              <TableCell align="center" component="th">
+            <TableRow key={row._id}>
+              {/* <TableCell align="center" component="th">
                 {row.id}
-              </TableCell>
-              <TableCell align="center">{row.player1}</TableCell>
-              <TableCell align="center">{row.player2}</TableCell>
-              <TableCell align="center">{row.winner}</TableCell>
+              </TableCell> */}
+              <TableCell align="center">{row.winner.profile.name}</TableCell>
+              <TableCell align="center">{row.loser.profile.name}</TableCell>
+              <TableCell align="center">{row.winner.profile.name}</TableCell>
               <TableCell align="center">
-                <Button  variant="contained" color="primary" onClick={()=>{watchMatch("5ffd974b6bc9d958b71ae84c")}}>
+                <Button  variant="contained" color="primary" onClick={()=>{watchMatch(row._id)}}>
                     Xem Lịch sử   
                 </Button>
               </TableCell>
@@ -306,7 +307,7 @@ export default function Matches() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={3}
-              count={rows.length}
+              count={listMatches.length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
