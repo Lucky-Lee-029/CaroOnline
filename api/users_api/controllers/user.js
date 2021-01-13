@@ -223,7 +223,20 @@ async function changePassword(req, res) {
   }
 }
 
+async function getUsers(req, res) {
+  try {
+    const users = await User.find().sort({ cup: -1 }).populate("profile");
+    res.json({ users });
+  } catch (err) {
+    console.log(err.message);
+    res.status(500).json({
+      msg: "Server Error"
+    });
+  }
+}
+
 module.exports = {
+  getUsers,
   register,
   sendEmailToVerify,
   verifyEmail,

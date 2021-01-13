@@ -33,6 +33,13 @@ router.route("/user")
   .put()
   .delete();
 
+router.route("/users")
+  .get(auth, userCtrl.getUsers)
+  .post()
+  .put()
+  .delete();
+
+
 router.route("/user/verify_email/:token")
   .get()
   .post()

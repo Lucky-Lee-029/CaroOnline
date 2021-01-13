@@ -1,20 +1,15 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
 import StarIcon from '@material-ui/icons/StarBorder';
 import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import { makeStyles, withStyles, useTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Trophy from './Trophy.jpg'
 import Table from '@material-ui/core/Table';
@@ -53,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
       theme.palette.type === 'light' ? green[600] : theme.palette.common.white,
     color: 'white',
   },
-  subheader:{
+  subheader: {
     color: 'white',
   },
   cardChart: {
@@ -91,26 +86,6 @@ const StyledTableRow = withStyles((theme) => ({
     },
   },
 }))(TableRow);
-
-const topusers = [
-  {
-    title: 'Hạng 2',
-    username: 'Phi Long',
-    trophy: '25',
-    // description: ['10 users included', '2 GB of storage', 'Help center access', 'Email support'],
-  },
-  {
-    title: 'Hạng 1',
-    subheader: 'Pro Player',
-    username: 'Gia Lợi',
-    trophy: '30',
-  },
-  {
-    title: 'Hạng 3',
-    username: 'Hải Lê',
-    trophy: '21',
-  },
-];
 
 function createData(id, rank, username, ratio, trophy) {
   return { id, rank, username, ratio, trophy };
@@ -206,6 +181,26 @@ export default function Chart() {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [users, setUsers] = useState();
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await axios('http://localhost:8000/users_api/users', {
+          headers: {
+            Authorization: localStorage.getItem("token")
+          }
+        });
+        const obj = await res.data;
+        if (obj) {
+          setUsers(obj.users);
+        }
+      } catch (err) {
+        setUsers(null);
+      }
+    })();
+  }, [setUsers]);
+
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
@@ -220,8 +215,9 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <CssBaseline />
-      {/* Hero unit */}
+      {(users) ?
+      <>
+        <CssBaseline />
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         <Typography component="h2" variant="h2" align="center" color="textPrimary" gutterBottom>
           BẢNG XẾP HẠNG
@@ -230,57 +226,96 @@ export default function Chart() {
           Top những người chơi tại Caro Online
         </Typography>
       </Container>
-      {/* End hero unit */}
       <Container maxWidth="md" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
-          {topusers.map((user) => (
-            // Enterprise card is full width at sm breakpoint
-            <Grid item key={user.title} xs={12} sm={user.title === 'Hạng 3' ? 12 : 6} md={4}>
-              <Card>
-                <CardHeader
-                  title={user.title}
-                  titleTypographyProps={{ align: 'center' }}
-                  subheaderTypographyProps={{ align: 'center' }}
-                  action={user.title === 'Hạng 1' ? <StarIcon /> : null}
-                  className={classes.cardHeader}>
-                  </CardHeader>
-                <CardContent>
+        <Grid container spacing={3} alignItems="flex-end">
+          <Grid item xs={12} sm={6} md={4}>
+            <Card>
+              <CardHeader
+                title="Hạng 2"
+                titleTypographyProps={{ align: 'center' }}
+                subheaderTypographyProps={{ align: 'center' }}
+
+                className={classes.cardHeader}>
+              </CardHeader>
+              <CardContent>
                 <Typography align="center" component="h2" variant="h4" color="textPrimary">
-                      {user.username}
-                    </Typography>
-                  <div className={classes.cardChart}>
-                    <Typography component="h2" variant="h3" color="textPrimary">
-                      {user.trophy}
-                    </Typography>
-                    <Avatar className = {classes.cover} alt="Trophy" src={Trophy} />
-                  </div>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
+                  {users[1].profile.name}
+                </Typography>
+                <div className={classes.cardChart}>
+                  <Typography component="h2" variant="h3" color="textPrimary">
+                    {users[1].cup}
+                  </Typography>
+                  <Avatar className={classes.cover} alt="Trophy" src={Trophy} />
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={4}>
+            <Card>
+              <CardHeader
+                title="Hạng 1"
+                titleTypographyProps={{ align: 'center' }}
+                subheaderTypographyProps={{ align: 'center' }}
+                action={<StarIcon />}
+                className={classes.cardHeader}>
+              </CardHeader>
+              <CardContent>
+                <Typography align="center" component="h2" variant="h4" color="textPrimary">
+                  {users[0].profile.name}
+                </Typography>
+                <div className={classes.cardChart}>
+                  <Typography component="h2" variant="h3" color="textPrimary">
+                    {users[0].cup}
+                  </Typography>
+                  <Avatar className={classes.cover} alt="Trophy" src={Trophy} />
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} sm={12} md={4}>
+            <Card>
+              <CardHeader
+                title="Hạng 3"
+                titleTypographyProps={{ align: 'center' }}
+                subheaderTypographyProps={{ align: 'center' }}
+                className={classes.cardHeader}>
+              </CardHeader>
+              <CardContent>
+                <Typography align="center" component="h2" variant="h4" color="textPrimary">
+                  {users[2].profile.name}
+                </Typography>
+                <div className={classes.cardChart}>
+                  <Typography component="h2" variant="h3" color="textPrimary">
+                    {users[2].cup}
+                  </Typography>
+                  <Avatar className={classes.cover} alt="Trophy" src={Trophy} />
+                </div>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-        <TableContainer className = {classes.tableContainer} component={Paper}>
+        <TableContainer className={classes.tableContainer} component={Paper}>
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
                 <StyledTableCell align="center">Hạng</StyledTableCell>
                 <StyledTableCell align="center">Tên</StyledTableCell>
-                <StyledTableCell align="center">Tỉ lệ thắng</StyledTableCell>
                 <StyledTableCell align="center">Số cúp</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-                {(rowsPerPage > 0
-                ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                : rows
-                ).map((row) => (
-                <StyledTableRow key={row.name}>
+              {(rowsPerPage > 0
+                ? Array.from(users).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                : Array.from(users)
+              ).map((row) => (
+                <StyledTableRow key={row._id}>
                   <StyledTableCell align="center" component="th" scope="row">
                     {row.rank}
                   </StyledTableCell>
-                  <StyledTableCell align="center">{row.username}</StyledTableCell>
-                  <StyledTableCell align="center">{row.ratio}</StyledTableCell>
-                  <StyledTableCell align="center">{row.trophy} </StyledTableCell>
+                  <StyledTableCell align="center">{row.profile.name}</StyledTableCell>
+                  <StyledTableCell align="center">{row.cup} </StyledTableCell>
                 </StyledTableRow>
               ))}
               {emptyRows > 0 && (
@@ -290,26 +325,28 @@ export default function Chart() {
               )}
             </TableBody>
             <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                  colSpan={3}
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  SelectProps={{
+                    inputProps: { 'aria-label': 'rows per page' },
+                    native: true,
+                  }}
+                  onChangePage={handleChangePage}
+                  onChangeRowsPerPage={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
           </Table>
-    </TableContainer>
+        </TableContainer>
       </Container>
+      </>
+      : null}
     </React.Fragment>
   );
 }
