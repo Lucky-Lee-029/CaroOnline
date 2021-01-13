@@ -72,24 +72,14 @@ export default function Dashboard() {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            {/* Information */}
             <Grid item xs={12}>
               <Paper>
                 <Information />
               </Paper>
             </Grid>
-            {/* Avatar */}
-            {/* <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <AvatarUser />
-              </Paper>
-            </Grid> */}
-            {/* Recent Matches */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
                 <RecentMatch />
