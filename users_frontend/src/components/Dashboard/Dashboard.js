@@ -233,9 +233,9 @@ function Dashboard() {
   const renderListItems = (items) => {
     if (items) {
       return Array.from(items).map((item) => {
-        //if (user._id === item[0]) {
-        //  return;
-        //}
+        if (user._id === item[0]) {
+          return;
+        }
 
         return (
           <ListItem key={item[0]} button onClick={() => handleClickOpen(item[1].user)}>
