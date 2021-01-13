@@ -141,7 +141,6 @@ export default function RecentMatch() {
     })
     .then(res => {
         const allHistory = res.data.games;
-        console.log(allHistory);
         setMatchs(allHistory);
     })
     .catch(error => console.log(error));

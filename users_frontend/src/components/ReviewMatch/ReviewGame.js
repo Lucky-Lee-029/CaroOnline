@@ -140,7 +140,6 @@ const ReviewGame=(props)=>{
         })
         .then(res => {
             const allHistory = res.data.games[0];
-            console.log(allHistory);
             setWinner(allHistory.winner.profile.name);
             setLoser(allHistory.loser.profile.name);
             setChats(allHistory.chats);

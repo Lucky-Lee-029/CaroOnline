@@ -55,7 +55,7 @@ function handle(io) {
     });
 
     socket.on("join", ({ roomId, user }) => {
-      console.log("join room");
+      console.log("join room", roomId);
       const roomsJoined = socket.adapter.sids.get(socket.id);
       if (roomsJoined > 1) {
         socket.emit("err_join_room", "Can not join room");
@@ -68,6 +68,18 @@ function handle(io) {
         rooms[roomId].status = "Full";
         socket.emit("join_room_success", rooms[roomId]);
         io.emit("rooms", rooms);
+      }
+    });
+
+    // Tim phong
+    socket.on("find_room", roomId => {
+      console.log("Find room: " + roomId);
+      if(!rooms[roomId]){
+        console.log("Khong co phong")
+        socket.emit("room_not_exists");
+      }else{
+        console.log("Tim thay phong");
+        socket.emit("room_exists", rooms[roomId], roomId);
       }
     });
 
@@ -130,6 +142,7 @@ function handle(io) {
     })
     socket.on("join_game", (user, room) => {
       console.log("join: " + room);
+      console.log(room);
       socket.to(room).emit("rival_join", user);
       console.log("play: " + rooms[room].players.length)
       if (rooms[room].players.length === 2) {

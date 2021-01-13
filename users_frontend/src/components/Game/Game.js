@@ -187,6 +187,9 @@ const Game = (props) => {
 
 
   const handelReady = () => {
+    if(rivalGame===""){
+      return;
+    }
     setIsReady(true);
     if (!isRivalReady) {
       setIsYourTurn(true);
@@ -270,7 +273,7 @@ const Game = (props) => {
                   <TableBody>
                     <TableRow>
                       Nhắn tin
-                                        </TableRow>
+                    </TableRow>
                     {
                       chats.map((item) => {
                         return (
