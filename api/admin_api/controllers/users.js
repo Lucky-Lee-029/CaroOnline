@@ -3,7 +3,7 @@ const User = require("../../models/User");
 
 async function getUsers(req, res) {
   try {
-    const users = await User.find().populate("profile");
+    const users = await User.find().sort({ cup: -1 }).populate("profile");
     res.json({ users });
   } catch (err) {
     res.status(500).json({
