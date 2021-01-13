@@ -30,7 +30,7 @@ function handle(io) {
         socket.emit("err_create_room", "Can not create room");
       } else {
         const room = genRoom(user, roomInfo);
-        console.log("Id: ",room);
+        console.log("Id: ", room);
         socket.join(room);
         socket.emit("create_room_success", room);
         io.emit("rooms", rooms);
@@ -43,7 +43,7 @@ function handle(io) {
         socket.emit("err_create_room", "Can not create room");
       } else {
         const room = genRoom(user, roomInfo);
-        console.log("Id: ",room);
+        console.log("Id: ", room);
         socket.join(room);
         socket.emit("create_room_success", room);
         io.emit("quick_join", room);
@@ -84,45 +84,56 @@ function handle(io) {
       console.log("rooms, a client disconnect: ", socket.id);
     });
 
-    socket.on("play_new_step", (data, roomId)=>{
-      console.log("Get new step: " + data.x +" , " + data.y);
+    socket.on("play_new_step", (data, roomId) => {
+      console.log("Get new step: " + data.x + " , " + data.y);
       socket.to(roomId).emit("got_new_step", data);
     });
-    socket.on("win_game", (data, roomId)=>{
+    socket.on("win_game", (data, roomId) => {
       console.log(rooms[roomId]);
       console.log("Win game: " + data);
       socket.emit("got_winner");
       socket.to(roomId).emit("lose");
       // io.to(roomId).emit("got_winner", data);
     });
-    socket.on("chat", (data, roomId)=>{
+    socket.on("chat", (data, roomId) => {
       console.log(data.name);
       console.log(roomId);
       io.to(roomId).emit("new_chat", data);
     })
-    socket.on("ready", (roomId)=>{
+    socket.on("ready", (roomId) => {
       console.log("Player ready!");
       console.log(roomId);
       socket.to(roomId).emit("ready_client");
     })
-    socket.on("leave_room", (roomId, user)=>{
+    socket.on("leave_room", (roomId, user) => {
       console.log("leave", user.profile);
       socket.leave(roomId);
-      if(!user)
+      if (!user)
         return;
-      if(rooms[roomId].players[0]._id === user._id){
+      if (rooms[roomId].players[0]._id === user._id) {
         rooms[roomId].players.shift();
-      }else{
+      } else {
         rooms[roomId].players.pop();
       }
+
+      if (rooms[roomId].players.size < 1) {
+        // Do nothing
+      } else if (rooms[roomId].players.size < 2) {
+        delete rooms[roomId];
+      } else {
+        rooms[roomId].status = "Waiting";
+      }
+      console.log(roomId);
+      console.log(rooms[roomId]);
+      console.log("dajjsdhashdakj ", rooms);
       io.emit("rooms", rooms);
     })
-    socket.on("join_game", (user, room) =>{
+    socket.on("join_game", (user, room) => {
       console.log("join: " + room);
       socket.to(room).emit("rival_join", user);
       console.log("play: " + rooms[room].players.length)
-      if(rooms[room].players.length === 2){
-          socket.emit("old_player", rooms[room].players[0]);
+      if (rooms[room].players.length === 2) {
+        socket.emit("old_player", rooms[room].players[0]);
       }
     })
   });
