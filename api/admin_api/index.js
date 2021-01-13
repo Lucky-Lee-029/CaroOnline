@@ -46,7 +46,7 @@ router.route("/auth")
   .delete();
 
 router.route("/users")
-  .get(usersCtrl.getUsers)
+  .get(auth, usersCtrl.getUsers)
   .post()
   .put()
   .delete();
