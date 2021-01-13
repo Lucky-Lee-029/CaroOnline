@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { withRouter } from "react-router";
+import { useHistory, withRouter } from "react-router";
 
 import './css/game.css';
 import axios from 'axios';
@@ -24,6 +24,7 @@ import { CssBaseline, useRadioGroup } from '@material-ui/core';
 import { ExitToApp } from '@material-ui/icons';
 
 const Game = (props) => {
+  const _history = useHistory();
   const [chats, setChats] = useState([]);
   const [message, setMessage] = useState("");
   const [user, setUser] = useContext(UserCtx);
@@ -54,21 +55,21 @@ const Game = (props) => {
     return date.getTime();
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     nspRooms.emit("join_game", user, props.location.state);
-  },[])
+  }, [])
 
-  useEffect(()=>{
-    nspRooms.on("rival_join", user=>{
+  useEffect(() => {
+    nspRooms.on("rival_join", user => {
       setRivalGame(user);
     })
-  },[])
+  }, [])
 
-  useEffect(()=>{
-    nspRooms.on("old_player", user=>{
+  useEffect(() => {
+    nspRooms.on("old_player", user => {
       setRivalGame(user);
     })
-  },[])
+  }, [])
 
   useEffect(() => {
     // if(!nspOnlineUsers.hasListener("got_new_step")){
@@ -97,8 +98,8 @@ const Game = (props) => {
 
   useEffect(() => {
     nspRooms.on("got_winner", () => {
-      
-        setOpen(true);
+
+      setOpen(true);
     })
   }, []);
 
@@ -119,14 +120,14 @@ const Game = (props) => {
     }
   }, [isReady, isRivalReady])
 
-  useEffect(()=>{
-    nspRooms.on("lose",()=>{
+  useEffect(() => {
+    nspRooms.on("lose", () => {
       setOpen(true);
       setWinner("rival");
       updateCup(-props.location.cup);
       console.log("cup", props.location.cup)
     })
-  },[]);
+  }, []);
 
   const handleChatChange = (e) => {
     setMessage(e.target.value);
@@ -153,9 +154,9 @@ const Game = (props) => {
   }
 
 
-  const updateCup = async (cup)=>{
+  const updateCup = async (cup) => {
     console.log("Update: ", cup);
-    let model ={};
+    let model = {};
     model.cup = cup;
     let api = `http://localhost:8000/users_api/cup/` + user.profile._id;
     await axios.put(api, model, {
@@ -165,7 +166,7 @@ const Game = (props) => {
     });
   }
 
-  const saveGame = async (model)=>{
+  const saveGame = async (model) => {
     await axios.post("http://localhost:8000/users_api/game", model, {
       headers: {
         Authorization: localStorage.getItem('token')
@@ -187,24 +188,27 @@ const Game = (props) => {
 
 
   const handelReady = () => {
+    if(rivalGame===""){
+      return;
+    }
     setIsReady(true);
     if (!isRivalReady) {
       setIsYourTurn(true);
     }
     nspRooms.emit("ready", String(props.location.state));
   }
-  const handleLeave = ()=>{
+  const handleLeave = () => {
     nspRooms.emit("leave_room", String(props.location.state), user);
-    history.push('/');
+    _history.push('/');
   }
   const moves = [];
   const isPlayerX = true;
   return (
     <div className="App">
-      <WinDialog 
-        open={open} 
-        winner={winner} 
-        cup={props.location.cup} 
+      <WinDialog
+        open={open}
+        winner={winner}
+        cup={props.location.cup}
         room={props.location.state}>
       </WinDialog>
       <CssBaseline />
@@ -229,17 +233,17 @@ const Game = (props) => {
                         Thông tin của bạn
                       </TableCell>
                       <TableCell>
-                        {rivalGame===""? "Chờ đối thủ" : rivalGame.profile.name}
+                        {rivalGame === "" ? "Chờ đối thủ" : rivalGame.profile.name}
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <div style={{marginTop: 20}}>
-                      {
-                        !isStart ? (
-                          isReady ? (<Button className="isreadybtn">Chờ đối thủ</Button>) :
-                            (<Button className="isreadybtn"  variant="contained" color="primary" onClick={handelReady}>Sẵn sàng</Button>)
-                        ) : (null)
-                      }
+                      <div style={{ marginTop: 20 }}>
+                        {
+                          !isStart ? (
+                            isReady ? (<Button className="isreadybtn">Chờ đối thủ</Button>) :
+                              (<Button className="isreadybtn" variant="contained" color="primary" onClick={handelReady}>Sẵn sàng</Button>)
+                          ) : (null)
+                        }
                       </div>
                     </TableRow>
                     <TableRow>
@@ -295,8 +299,8 @@ const Game = (props) => {
               </CardContent>
             </Card>
             <Button
-              onClick = {handleLeave}
-              style={{marginTop: 10}}
+              onClick={handleLeave}
+              style={{ marginTop: 10 }}
               variant="contained"
               color="primary"
               endIcon={<ExitToApp />}
