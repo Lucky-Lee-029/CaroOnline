@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Config from './configs';
-import './css/game.css'
+import './css/game.css';
 
 function Square(props) {
     const {value} = props;

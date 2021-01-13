@@ -88,7 +88,7 @@ const ReviewGame=(props)=>{
             setHistory(allHistory.history);
         })
         .catch(error => console.log(error));
-    },[])
+    },[match])
 
     return(
         <div className="App"> 
