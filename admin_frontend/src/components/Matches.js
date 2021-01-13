@@ -287,12 +287,12 @@ export default function Matches() {
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell align="center"><strong>ID</strong></TableCell>
-            <TableCell align="center"><strong>Player 1</strong></TableCell>
-            <TableCell align="center"><strong>Player 2</strong></TableCell>
-            <TableCell align="center"><strong>Result</strong></TableCell>
-            <TableCell align="center"><strong>Status</strong></TableCell>
-            <TableCell align="center"><strong>Option</strong></TableCell>
+            <TableCell align="center"><strong>Mã trận</strong></TableCell>
+            <TableCell align="center"><strong>Người chơi 1</strong></TableCell>
+            <TableCell align="center"><strong>Người chơi 2</strong></TableCell>
+            <TableCell align="center"><strong>Kết quả</strong></TableCell>
+            <TableCell align="center"><strong>Trạng thái</strong></TableCell>
+            <TableCell align="center"><strong>Lựa chọn</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -311,10 +311,10 @@ export default function Matches() {
               <TableCell align="center">
                   <Grid container>
                   <Button className = {classes.button} variant="contained" color="primary">
-                 History   
+                 Lịch sử   
                 </Button>
                 <Button className = {classes.button} variant="contained" color="primary">
-                 Chat   
+                 Tin nhắn   
                 </Button>
                 <SavedBtn className = {classes.button} status = {row.status}/>
                   </Grid>

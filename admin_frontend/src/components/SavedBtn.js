@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
 
 const SavedBtn = (props) => {
   const classes = useStyles();
-  const savedBtnText = (props.status==="Unsaved")?"SAVED": "UNSAVED";
-  const colorBtn = (savedBtnText === "SAVED")?"primary":"secondary";
+  const savedBtnText = (props.status==="Unsaved")?"LƯU": "BỎ LƯU";
+  const colorBtn = (savedBtnText === "LƯU")?"primary":"secondary";
   const [open, setOpen] = useState(false);
 
   const handleSaved = () => {
@@ -44,23 +44,23 @@ const SavedBtn = (props) => {
         variant="contained"
         color={colorBtn}
         className={classes.button}
-        onClick={(savedBtnText === "SAVED")?handleSaved:handleUnsaved}
+        onClick={(savedBtnText === "LƯU")?handleSaved:handleUnsaved}
       >
         {savedBtnText}
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">CONFIRM</DialogTitle>
+            <DialogTitle id="form-dialog-title">XÁC NHẬN</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Are you sure for <strong>{savedBtnText}</strong> this match???
+                    Bạn có chắc <strong>{savedBtnText}</strong> trận đấu này???
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                    Yes
+                    Có
                 </Button>
                 <Button onClick={handleClose} color="secondary">
-                    No
+                    Không
                 </Button>
             </DialogActions>
         </Dialog>

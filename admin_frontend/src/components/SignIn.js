@@ -97,7 +97,7 @@ const SignIn = (props) => {
           <AccountCircle />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Administrator
+          Trang quản lý
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSignIn}>
           <TextField
@@ -118,7 +118,7 @@ const SignIn = (props) => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Mật khẩu"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -131,7 +131,7 @@ const SignIn = (props) => {
             color="primary"
             className={classes.submit}
           >
-            Sign in as Admin
+            Đăng nhập admin
           </Button>
         </form>
       </div>
