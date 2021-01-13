@@ -1,11 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
-import NavBar from './NavBar';
-import io from '../socket';
-import { UserContext } from '../contexts';
-import Users from './Users';
 
-  
+
 import React from 'react';
+import axios from 'axios';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -28,6 +25,8 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { mainListItems, secondaryListItems } from './listItem';
 import UserAccount from './UserAccount';
 import Matches from './Matches';
+import AdminCtx from '../context/Admin';
+import { Switch, useHistory, Route } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -110,13 +109,53 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function ListUsers() {
+  return (
+    <div>users</div>
+  );
+}
+
+function ListMatches() {
+  return (
+    <div>matches</div>
+  );
+}
+
+function Home() {
+  return (
+    <div>Home</div>
+  );
+}
 
 function DashBoard() {
-  const [users, setUsers] = useState([]);
-  const { userCtx } = useContext(UserContext);
-
   const classes = useStyles();
+  const history = useHistory();
+  const [admin, setAdmin] = useContext(AdminCtx);
   const [open, setOpen] = React.useState(true);
+
+  useEffect(() => {
+    const api = 'http://localhost:8000/admin_api/auth';
+    const opts = {
+      headers: {
+        Authorization: localStorage.getItem('admin_token')
+      }
+    };
+
+    (async (api, opts) => {
+      try {
+        const res = await axios(api, opts);
+        const obj = await res.data;
+        setAdmin(obj.admin); // Set admin context
+      } catch (err) {
+        setAdmin(null); // Set null context
+        history.replace('/login'); // Redirect to Login screen
+      }
+    })(api, opts);
+  }, [history, setAdmin]);
+
+  useEffect(() => {
+  }, [history, admin]);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -125,81 +164,64 @@ function DashBoard() {
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  useEffect(() => {
-    io.emit("online", userCtx.user);
-    io.on("list", (list) => {
-      setUsers(list);
-    });
-  }, [userCtx]);
-  if (users) {
+  const handleLogout = () => {
+    localStorage.removeItem("admin_token");
+    history.go(0);
+  }
+
+  if (admin) {
     return (
       <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
+        <CssBaseline />
+        <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              Dashboard
           </Typography>
-          <IconButton color="inherit">
-            <ExitToAppIcon/>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{mainListItems}</List>
-        <Divider />
-        {/* <List>{secondaryListItems}</List> */}
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          {/* <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-              </Paper>
-            </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-              </Paper>
-            </Grid>
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-      
-              </Paper>
-            </Grid>
-          </Grid> */}
-          <Matches/>
-        </Container>
-      </main>
-    </div>
+            <IconButton color="inherit" onClick={handleLogout}>
+              <ExitToAppIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          }}
+          open={open}
+        >
+          <div className={classes.toolbarIcon}>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <Divider />
+          <List>{mainListItems}</List>
+          <Divider />
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+          <Container maxWidth="lg" className={classes.container}>
+            <Switch>
+              <Route exact path='/users' component={ListUsers} />
+              <Route exact path='/matches' component={Matches} />
+              <Route exact path='/' component={Home} />
+            </Switch>
+          </Container>
+        </main>
+      </div>
     );
   } else {
-    return (
-      <NavBar>
-        <Users users={users}/> 
-      </NavBar>
-    );
+    return null;
   }
 }
 

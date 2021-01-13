@@ -13,23 +13,25 @@ if (process.env.NODE_ENV != "production") {
   const Admin = require("../models/Admin");
 
   router.post("/", async (req, res) => {
-    console.log("OK");
     try {
       const { username, password } = req.body;
+      
       // Hash password
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
+
       // Crate new admin
       const newAdmin = new Admin({
         username,
         password: hashPassword
       });
       await newAdmin.save();
+
       res.status(201).json({
         admin: newAdmin
       });
     } catch (err) {
-      console.error(err.message);
+      console.log(err.message);
       res.status(500).json({
         msg: "Server Error"
       });

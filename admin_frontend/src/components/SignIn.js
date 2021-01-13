@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import {
   Avatar,
   Button,
@@ -10,9 +10,8 @@ import {
 } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 import Alert from '@material-ui/lab/Alert';
-import { withRouter } from 'react-router-dom';
-import { UserContext } from '../contexts';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,11 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// init state
-const initUserState = {
-  username: "",
-  password: "",
-};
 const initAlertState = {
   visible: false,
   serverity: "",
@@ -46,9 +40,10 @@ const initAlertState = {
 };
 
 const SignIn = (props) => {
-  const [user, setUser] = useState(initUserState);
+  const history = useHistory();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [alert, setAlert] = useState(initAlertState);
-  const {userCtx, setUserCtx} = useContext(UserContext);
 
   const classes = useStyles();
 
@@ -56,21 +51,17 @@ const SignIn = (props) => {
     e.preventDefault();
     (async () => {
       try {
-        const res = await axios.post("http://localhost:8000/admin_api/auth/", user)
-        console.log(res)
-        if (res.data.success) {
-          localStorage.setItem("access_token", res.data.token);
-          setUserCtx({
-              ...userCtx,
-              is_auth: true,
-              user: res.data.user,
-              });
-          props.history.replace("/");
+        const res = await axios.post("http://localhost:8000/admin_api/auth", {
+          username,
+          password
+        });
+        const obj = await res.data;
+        if (obj.admin) {
+          localStorage.setItem("admin_token", obj.token);
+          history.replace('/');
         }
       } catch (err) {
-        console.log("err", err.message);
         setAlert({
-          ...alert,
           visible: true,
           serverity: "error",
           msg: err.response.data.msg
@@ -80,12 +71,12 @@ const SignIn = (props) => {
   }
 
   const handleUsernameChange = (e) => {
-    setUser({ ...user, username: e.target.value });
+    setUsername(e.target.value);
     setAlert(initAlertState);
   }
 
   const handlePasswordChange = (e) => {
-    setUser({ ...user, password: e.target.value });
+    setPassword(e.target.value);
     setAlert(initAlertState);
   }
 
@@ -146,4 +137,4 @@ const SignIn = (props) => {
   );
 }
 
-export default withRouter(SignIn);
+export default SignIn;
