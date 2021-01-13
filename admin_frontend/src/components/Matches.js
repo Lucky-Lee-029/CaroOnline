@@ -217,10 +217,6 @@ export default function Matches() {
         setPage(0);
     };
 
-    const handleChangeSelection = (event) => {
-      setSelection(event.target.value);
-    };
-
     const handleSearch = (event) => {
       setSearchValue(event.target.value);
     };
