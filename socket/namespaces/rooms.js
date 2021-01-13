@@ -50,10 +50,6 @@ function handle(io) {
     });
 
     socket.on("join", ({ roomId, user }) => {
-<<<<<<< HEAD
-      console.log("join room", roomId);
-=======
->>>>>>> 7d4141613a265574b96c13826528d82b7978c4e9
       const roomsJoined = socket.adapter.sids.get(socket.id);
       if (roomsJoined > 1) {
         socket.emit("err_join_room", "Can not join room");
