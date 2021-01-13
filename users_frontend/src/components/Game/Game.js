@@ -95,7 +95,7 @@ const Game = (props) => {
 
   useEffect(() => {
     nspRooms.on("got_winner", () => {
-        updateCup(-props.location.cup);
+      
         setOpen(true);
     })
   }, []);
@@ -119,9 +119,10 @@ const Game = (props) => {
 
   useEffect(()=>{
     nspRooms.on("lose",()=>{
-      updateCup(-props.location.cup);
       setOpen(true);
       setWinner("rival");
+      updateCup(-props.location.cup);
+      console.log("cup", props.location.cup)
     })
   },[]);
 
@@ -143,6 +144,7 @@ const Game = (props) => {
       let currentUser = (history.length % 2 === 0) ? Config.xPlayer : Config.oPlayer;
       nspRooms.emit("win_game", currentUser, String(props.location.state));
       setWinner("you");
+      updateCup(props.location.cup)
       const model = getModel();
       console.log(model);
     }
@@ -151,8 +153,14 @@ const Game = (props) => {
 
   const updateCup = async (cup)=>{
     console.log("Update: ", cup);
+    let model ={};
+    model.cup = cup;
     let api = `http://localhost:8000/users_api/cup/` + user.profile._id;
-    await axios.post(api, cup);
+    await axios.put(api, model, {
+      headers: {
+        Authorization: localStorage.getItem('token')
+      }
+    });
   }
 
   const saveGame = async (model)=>{
@@ -199,7 +207,7 @@ const Game = (props) => {
       </WinDialog>
       <CssBaseline />
       <header className="App-header">
-        <Status messages={winner ? ("Winner: " + winner) : (isYourTurn ? "Your turn" : "Waiting for players")} />
+        <Status messages={winner ? ("Winner: " + winner) : (isYourTurn ? "Lượt của bạn" : "Chờ đối thủ")} />
         <div className="board-game">
           <div>
             <Board winCells={winCells}
@@ -216,7 +224,7 @@ const Game = (props) => {
                   <TableBody>
                     <TableRow>
                       <TableCell>
-                        Your info
+                        Thông tin của bạn
                       </TableCell>
                       <TableCell>
                         {rivalGame===""? "Chờ đối thủ" : rivalGame.profile.name}
@@ -226,8 +234,8 @@ const Game = (props) => {
                       <div style={{marginTop: 20}}>
                       {
                         !isStart ? (
-                          isReady ? (<Button className="isreadybtn">Waiting for players</Button>) :
-                            (<Button className="isreadybtn"  variant="contained" color="primary" onClick={handelReady}>Ready</Button>)
+                          isReady ? (<Button className="isreadybtn">Chờ đối thủ</Button>) :
+                            (<Button className="isreadybtn"  variant="contained" color="primary" onClick={handelReady}>Sẵn sàng</Button>)
                         ) : (null)
                       }
                       </div>
@@ -240,7 +248,7 @@ const Game = (props) => {
                             onTimeOut={onTimeOut}
                           />
                         ) : (
-                            <TableCell>Wait</TableCell>
+                            <TableCell>Chờ</TableCell>
                           )
                       }
                       {
@@ -250,7 +258,7 @@ const Game = (props) => {
                             onTimeOut={onTimeOut}
                           />
                         ) : (
-                            <TableCell>Wait</TableCell>
+                            <TableCell>Chờ</TableCell>
                           )
                       }
                     </TableRow>
@@ -259,7 +267,7 @@ const Game = (props) => {
                 <Table>
                   <TableBody>
                     <TableRow>
-                      Chat
+                      Nhắn tin
                                         </TableRow>
                     {
                       chats.map((item) => {
@@ -281,7 +289,7 @@ const Game = (props) => {
                   autoComplete="mess"
                   onChange={handleChatChange}
                 />
-                <Button variant="contained" color="primary" onClick={handleSendChat}>Send</Button>
+                <Button variant="contained" color="primary" onClick={handleSendChat}>Gửi</Button>
               </CardContent>
             </Card>
             <Button
@@ -291,7 +299,7 @@ const Game = (props) => {
               color="primary"
               endIcon={<ExitToApp />}
             >
-              leave
+              Rời khỏi
             </Button>
           </div>
         </div>
@@ -434,7 +442,6 @@ const Game = (props) => {
 
     return null;
   }
-
   function userClick(row, col) {
     // prevent click in rival turn
     if (!isYourTurn) {
@@ -472,6 +479,7 @@ const Game = (props) => {
       const model = getModel();
       console.log(model);
       setWinner("you");
+      updateCup(props.location.cup);
       saveGame(model);
       // setWinCells(checkWin(row, col, currentUser, step));
     }
@@ -491,7 +499,6 @@ const Game = (props) => {
     let newState = data;
     console.log("current user: " + currentUser);
     newState.squares[data.x][data.y] = currentUser;
-    const newHis = currentHis.concat(newState);
     setHistory(currentHis => {
       return currentHis.concat(newState);
     });

@@ -87,10 +87,23 @@ const SignUp = (props) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          ĐĂNG KÝ
             </Typography>
         <form className={classes.form} onSubmit={handleSubmitSignUp}>
           <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="name"
+                label="Tên"
+                id="name"
+                autoComplete="your-name"
+                onChange={handleNicknameChange}
+              />
+            </Grid>
+
             <Grid item xs={12}>
               <TextField
                 autoComplete="username"
@@ -111,7 +124,7 @@ const SignUp = (props) => {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email"
                 name="email"
                 autoComplete="email"
                 onChange={handleEmailChange}
@@ -123,31 +136,13 @@ const SignUp = (props) => {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Mật khẩu"
                 type="password"
                 id="password"
                 autoComplete="current-password"
                 onChange={handlePasswordChange}
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
-                fullWidth
-                name="name"
-                label="Name"
-                id="name"
-                autoComplete="your-name"
-                onChange={handleNicknameChange}
-              />
-            </Grid>
-            {/* <Grid item xs={12}>
-                <FormControlLabel
-                    control={<Checkbox value="allowExtraEmails" color="primary" />}
-                    label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-                </Grid> */}
           </Grid>
           <Button
             type="submit"
@@ -156,12 +151,12 @@ const SignUp = (props) => {
             color="primary"
             className={classes.submit}
           >
-            Sign Up
+            Đăng ký
             </Button>
           <Grid container justify="flex-end">
             <Grid item>
               <Link href="/login" variant="body2">
-                Already have an account? Sign in
+                Bạn đã có tài khoản? Đăng nhập
                 </Link>
             </Grid>
           </Grid>

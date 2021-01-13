@@ -21,7 +21,10 @@ import GoogleLogin from 'react-google-login';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100vh',
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   image: {
     backgroundImage: 'url(https://source.unsplash.com/random)',
@@ -103,12 +106,12 @@ function Login(props) {
     <div>
       <Grid container component="main" className={classes.root}>
         <CssBaseline />
-        <Grid item xs={false} sm={4} md={7} className={classes.image} />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        {/* <Grid item xs={false} sm={4} md={7} className={classes.image} /> */}
+        
           <div className={classes.paper}>
             <Avatar className={classes.avatar}></Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              ĐĂNG NHẬP
             </Typography>
             <form className={classes.form} noValidate onSubmit={handleSubmitLogin}>
               <TextField
@@ -129,15 +132,11 @@ function Login(props) {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Mật khẩu"
                 type="password"
                 id="password"
                 autoComplete="current-password"
                 onChange={handlePasswordChange}
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
               />
               <Button
                 type="submit"
@@ -146,17 +145,17 @@ function Login(props) {
                 color="primary"
                 className={classes.submit}
               >
-                Sign In
+                Đăng nhập
                     </Button>
               <Grid container>
                 <Grid item xs>
                   <Link href="/forgot_password" variant="body2">
-                    Forgot password?
+                    Quên mật khẩu?
                     </Link>
                 </Grid>
                 <Grid item>
                   <Link href="/signup" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                    {"Bạn chưa có tài khoản? Đăng ký"}
                   </Link>
                 </Grid>
               </Grid>
@@ -164,14 +163,14 @@ function Login(props) {
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={12}>
                   <Typography align="center" color="textSecondary" >
-                    OR
+                    HOẶC
                     </Typography>
                 </Grid>
 
                 <Grid item className={classes.marginAuto} xs={12} sm={6}>
                   <GoogleLogin
                     clientId={process.env.REACT_APP_GG_APP_ID}
-                    buttonText="LOGIN WITH GOOGLE"
+                    buttonText="ĐĂNG NHẬP GOOGLE"
                     onSuccess={responseGoogle}
                     isSignedIn={false}
                   />
@@ -184,6 +183,7 @@ function Login(props) {
                     fields="name,email,picture.type(large)"
                     callback={responseFacebook}
                     icon="fa-facebook"
+                    textButton="ĐĂNG NHẬP FACEBOOK"
                   />
                 </Grid>
               </Grid>
@@ -197,7 +197,7 @@ function Login(props) {
             </form>
           </div>
         </Grid>
-      </Grid>
+  
     </div>
   )
 }

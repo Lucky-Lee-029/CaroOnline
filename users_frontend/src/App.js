@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom';
 import Login from './components/Login/Login';
 import DashBoard from './components/Dashboard/Dashboard';
 import SignUp from './components/SignUp/SignUp';
-import ReviewGame from './components/ReviewMatch/ReviewGame'
+import ReviewGame from './components/ReviewMatch/ReviewGame';
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import rootReducers from './reducers/rootReducers';

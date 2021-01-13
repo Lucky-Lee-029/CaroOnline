@@ -221,13 +221,13 @@ function Row(props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box margin={1}>
               <Typography variant="h6" gutterBottom component="div">
-                <strong>Details User Information</strong>
+                <strong>Thông tin chi tiết</strong>
               </Typography>
                 <ul>
                     <li>Email: {row.detail.email}</li>
-                    <li>Date Join: {row.detail.dateJoin}</li>
-                    <li>Number of matches participated: {row.detail.numberMatch}</li>
-                    <li>Ratio of winning: {row.detail.ratioWinning} %</li>
+                    <li>Ngày tham gia: {row.detail.dateJoin}</li>
+                    <li>Số trận đấu đã tham gia: {row.detail.numberMatch}</li>
+                    <li>Tỉ lệ thắng: {row.detail.ratioWinning} %</li>
                 </ul>
             </Box>
           </Collapse>
@@ -310,7 +310,7 @@ export default function UserAccount() {
                     </InputAdornment>
                   )
                 }}
-                placeholder="Search user"
+                placeholder="Tìm kiếm người chơi"
                 variant="outlined"
                 value = {searchValue}
                 onChange = {handleSearch}
@@ -324,11 +324,11 @@ export default function UserAccount() {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell align="center"><strong>Name</strong></TableCell>
-            <TableCell align="center"><strong>Rank</strong></TableCell>
-            <TableCell align="center"><strong>Trophy</strong></TableCell>
-            <TableCell align="center"><strong>Status</strong></TableCell>
-            <TableCell align="center"><strong>Option</strong></TableCell>
+            <TableCell align="center"><strong>Tên</strong></TableCell>
+            <TableCell align="center"><strong>Hạng</strong></TableCell>
+            <TableCell align="center"><strong>Số cúp</strong></TableCell>
+            <TableCell align="center"><strong>Trạng thái</strong></TableCell>
+            <TableCell align="center"><strong>Lựa chọn</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

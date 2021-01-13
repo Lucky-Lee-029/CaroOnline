@@ -56,7 +56,8 @@ const SignIn = (props) => {
     e.preventDefault();
     (async () => {
       try {
-        const res = await axios.post(process.env.REACT_APP_API_URL + "auth/", user)
+        const res = await axios.post("http://localhost:8000/admin_api/auth/", user)
+        console.log(res)
         if (res.data.success) {
           localStorage.setItem("access_token", res.data.token);
           setUserCtx({
@@ -67,6 +68,7 @@ const SignIn = (props) => {
           props.history.replace("/");
         }
       } catch (err) {
+        console.log("err", err.message);
         setAlert({
           ...alert,
           visible: true,
@@ -95,7 +97,7 @@ const SignIn = (props) => {
           <AccountCircle />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Administrator
+          Trang quản lý
         </Typography>
         <form className={classes.form} noValidate onSubmit={handleSignIn}>
           <TextField
@@ -116,7 +118,7 @@ const SignIn = (props) => {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Mật khẩu"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -129,7 +131,7 @@ const SignIn = (props) => {
             color="primary"
             className={classes.submit}
           >
-            Sign in as Admin
+            Đăng nhập admin
           </Button>
         </form>
       </div>

@@ -93,19 +93,19 @@ const StyledTableRow = withStyles((theme) => ({
 
 const topusers = [
   {
-    title: '2nd Player',
+    title: 'Hạng 2',
     username: 'Phi Long',
     trophy: '25',
     // description: ['10 users included', '2 GB of storage', 'Help center access', 'Email support'],
   },
   {
-    title: '1st Player',
+    title: 'Hạng 1',
     subheader: 'Pro Player',
     username: 'Gia Lợi',
     trophy: '30',
   },
   {
-    title: '3rd Player',
+    title: 'Hạng 3',
     username: 'Hải Lê',
     trophy: '21',
   },
@@ -223,10 +223,10 @@ export default function Chart() {
       {/* Hero unit */}
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
         <Typography component="h2" variant="h2" align="center" color="textPrimary" gutterBottom>
-          CHART
+          BẢNG XẾP HẠNG
         </Typography>
         <Typography variant="h5" align="center" color="textSecondary" component="p">
-          Top Pro Player
+          Top những người chơi tại Caro Online
         </Typography>
       </Container>
       {/* End hero unit */}
@@ -234,14 +234,14 @@ export default function Chart() {
         <Grid container spacing={5} alignItems="flex-end">
           {topusers.map((user) => (
             // Enterprise card is full width at sm breakpoint
-            <Grid item key={user.title} xs={12} sm={user.title === '3rd Player' ? 12 : 6} md={4}>
+            <Grid item key={user.title} xs={12} sm={user.title === 'Hạng 3' ? 12 : 6} md={4}>
               <Card>
                 <CardHeader
                   title={user.title}
                   subheader={user.username}
                   titleTypographyProps={{ align: 'center' }}
                   subheaderTypographyProps={{ align: 'center' }}
-                  action={user.title === '1st Player' ? <StarIcon /> : null}
+                  action={user.title === 'Hạng 1' ? <StarIcon /> : null}
                   className={classes.cardHeader}>
                   </CardHeader>
                 <CardContent>
@@ -267,10 +267,10 @@ export default function Chart() {
           <Table className={classes.table} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="center">Rank</StyledTableCell>
-                <StyledTableCell align="center">User Name</StyledTableCell>
-                <StyledTableCell align="center">Ratio</StyledTableCell>
-                <StyledTableCell align="center">Trophy</StyledTableCell>
+                <StyledTableCell align="center">Hạng</StyledTableCell>
+                <StyledTableCell align="center">Tên</StyledTableCell>
+                <StyledTableCell align="center">Tỉ lệ thắng</StyledTableCell>
+                <StyledTableCell align="center">Số cúp</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>

@@ -21,8 +21,8 @@ const useStyles = makeStyles((theme) => ({
 
 const BlockedBtn = (props) => {
   const classes = useStyles();
-  const blockedBtnText = (props.status==="Non-Blocked")?"BLOCKED": "UNBLOCKED";
-  const colorBtn = (blockedBtnText === "BLOCKED")?"secondary":"primary";
+  const blockedBtnText = (props.status==="Non-Blocked")?"KHÓA": "MỞ KHÓA";
+  const colorBtn = (blockedBtnText === "KHÓA")?"secondary":"primary";
   const [open, setOpen] = useState(false);
 
   const handleBlocked = () => {
@@ -40,27 +40,27 @@ const BlockedBtn = (props) => {
     <Grid item >
       <Button
         //fullWidth
-        startIcon={(blockedBtnText === "BLOCKED")?<EnhancedEncryptionIcon/>:<NoEncryptionIcon/>}
+        startIcon={(blockedBtnText === "KHÓA")?<EnhancedEncryptionIcon/>:<NoEncryptionIcon/>}
         variant="contained"
         color={colorBtn}
         className={classes.button}
-        onClick={(blockedBtnText === "BLOCKED")?handleBlocked:handleUnblocked}
+        onClick={(blockedBtnText === "KHÓA")?handleBlocked:handleUnblocked}
       >
         {blockedBtnText}
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">CONFIRM</DialogTitle>
+            <DialogTitle id="form-dialog-title">XÁC NHẬN</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Are you sure for <strong>{blockedBtnText}</strong> this user???
+                    Bạn có chắc <strong>{blockedBtnText}</strong> người dùng này?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">
-                    Yes
+                    Có
                 </Button>
                 <Button onClick={handleClose} color="secondary">
-                    No
+                    Không
                 </Button>
             </DialogActions>
         </Dialog>

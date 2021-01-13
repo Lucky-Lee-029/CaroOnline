@@ -83,7 +83,7 @@ export default function ForgotPassword(props) {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          NEW PASSWORD
+          MẬT KHẨU MỚI
             </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
@@ -110,7 +110,7 @@ export default function ForgotPassword(props) {
             className={classes.submit}
             onClick={handleSubmit}
           >
-            Change
+            ĐỔI
             </Button>
           {(alert) ?
             <Alert fullWidth severity={alert.color}>{alert.text}</Alert> : null}

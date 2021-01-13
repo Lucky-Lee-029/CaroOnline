@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: "20px 30px",
+  },
+  margin: {
+    marginBottom: 20,
   }
 }));
 
@@ -116,7 +119,7 @@ export default function CreateRoomDialog() {
         className={classes.button}
         onClick={handleClickOpen}
       >
-        CREATE NEW ROOM
+        TẠO PHÒNG MỚI
       </Button>
       <Dialog
         fullWidth={true}
@@ -125,11 +128,12 @@ export default function CreateRoomDialog() {
         onClose={handleClose}
         aria-labelledby="max-width-dialog-title"
       >
-        <DialogTitle id="max-width-dialog-title">Room Information</DialogTitle>
+        <DialogTitle id="max-width-dialog-title">THÔNG TIN PHÒNG</DialogTitle>
         <DialogContent>
           <form className={classes.form} noValidate>
-            <InputLabel htmlFor="cups">Cups</InputLabel>
+            <InputLabel htmlFor="cups">Số cúp đặt cược</InputLabel>
             <Select
+              className = {classes.margin}
               value={val}
               onChange={handleValChange}
               inputProps={{
@@ -143,8 +147,9 @@ export default function CreateRoomDialog() {
               <MenuItem value={500}>500</MenuItem>
               <MenuItem value={1000}>1000</MenuItem>
             </Select>
-            <InputLabel htmlFor="turn">Cups</InputLabel>
+            <InputLabel htmlFor="turn">Thời gian nước đi</InputLabel>
             <Select
+              className = {classes.margin}
               value={turn}
               onChange={handleTurnChange}
               inputProps={{
@@ -159,7 +164,7 @@ export default function CreateRoomDialog() {
             <FormControlLabel
               className={classes.formControlLabel}
               control={<Switch checked={status} onChange={handleStatusChange} />}
-              label="Private"
+              label="Riêng tư"
             />
             {(status) ?
               <TextField
@@ -168,7 +173,7 @@ export default function CreateRoomDialog() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Mật khẩu"
                 type="password"
                 id="password"
                 autoComplete="current-password"
@@ -178,10 +183,10 @@ export default function CreateRoomDialog() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Close
+            Đóng
           </Button>
           <Button onClick={handleCreateRoom} color="primary" autoFocus>
-            Create
+            Tạo
           </Button>
         </DialogActions>
       </Dialog>

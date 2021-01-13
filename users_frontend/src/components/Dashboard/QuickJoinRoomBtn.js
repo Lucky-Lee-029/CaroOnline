@@ -68,7 +68,7 @@ const QuickJoinRoomBtn = (props) => {
         className={classes.button}
         onClick={handleCreateRoom}
       >
-        Quick Join {flashRoom}
+       Tham gia nhanh {flashRoom}
       </Button>
     </Grid>
   );

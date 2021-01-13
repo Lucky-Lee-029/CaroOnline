@@ -285,7 +285,7 @@ function Dashboard() {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">User infomation</DialogTitle>
+          <DialogTitle id="alert-dialog-title">Thông tin người dùng</DialogTitle>
           <DialogContent>
             <Grid container style={{ flexRow: 1 }} spacing={1}>
               <Grid item xs={4} align="center">
@@ -304,7 +304,7 @@ function Dashboard() {
               </Grid>
               <Grid item xs={4}>
                 <Paper className={classes.paper}>
-                  Created At
+                  Tham gia vào
                 </Paper>
               </Grid>
               <Grid item xs={8}>
@@ -316,7 +316,7 @@ function Dashboard() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} variant="contained" color="primary" autoFocus>
-              Invite
+              Mời
           </Button>
           </DialogActions>
         </Dialog>
@@ -353,7 +353,7 @@ function Dashboard() {
             subheader={
               <>
                 <ListSubheader>
-                  Players đang <strong>online</strong>
+                  Người chơi đang <strong>online</strong>
                 </ListSubheader>
               </>
             }

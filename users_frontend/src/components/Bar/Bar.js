@@ -100,6 +100,9 @@ export default function SearchAppBar() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+    history.push({
+      pathname: '/profile',
+    });
   };
 
   const handleLogout = () => {
@@ -134,8 +137,8 @@ export default function SearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleLogout}>Log out</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Thông tin cá nhân</MenuItem>
+      <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
     </Menu>
   );
 
@@ -154,7 +157,7 @@ export default function SearchAppBar() {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder="Tìm kiếm"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,

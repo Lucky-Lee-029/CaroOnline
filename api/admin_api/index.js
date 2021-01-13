@@ -13,9 +13,9 @@ if (process.env.NODE_ENV != "production") {
   const Admin = require("../models/Admin");
 
   router.post("/", async (req, res) => {
+    console.log("OK");
     try {
       const { username, password } = req.body;
-
       // Hash password
       const salt = await bcrypt.genSalt(10);
       const hashPassword = await bcrypt.hash(password, salt);
