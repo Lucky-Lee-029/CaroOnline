@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';;
+import Box from '@material-ui/core/Box';
 import IconButton from '@material-ui/core/IconButton';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -12,9 +12,8 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import { useHistory } from 'react-router';
 import { Grid } from "@material-ui/core";
-
-
 import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import FirstPageIcon from '@material-ui/icons/FirstPage';
@@ -30,8 +29,7 @@ import {
     SvgIcon,
   } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import SavedBtn from './SavedBtn';
-import MenuItem from '@material-ui/core/MenuItem';
+
 
 //Pagination
 const useStyles1 = makeStyles((theme) => ({
@@ -201,6 +199,7 @@ inputSelection : {
 
 export default function Matches() {
     const classes = useStyles();
+    const history = useHistory();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const [selection, setSelection] = React.useState('All');
@@ -225,6 +224,12 @@ export default function Matches() {
       setSearchValue(event.target.value);
     };
 
+    const watchMatch = (id)=>{
+      history.push({
+        pathname: '/match',
+        state: id,
+      });
+    };
     function Search (rows) {
       return rows.filter(
         (row) => (row.player1).toLowerCase().indexOf(searchValue) > -1 || (row.player2).toLowerCase().indexOf(searchValue) > -1
@@ -284,7 +289,7 @@ export default function Matches() {
               <TableCell align="center">{row.player2}</TableCell>
               <TableCell align="center">{row.winner}</TableCell>
               <TableCell align="center">
-                <Button  variant="contained" color="primary">
+                <Button  variant="contained" color="primary" onClick={()=>{watchMatch("5ffd974b6bc9d958b71ae84c")}}>
                     Xem Lịch sử   
                 </Button>
               </TableCell>
