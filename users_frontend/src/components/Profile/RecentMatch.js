@@ -20,12 +20,12 @@ import Button from '@material-ui/core/Button';
 import { useHistory } from 'react-router';
 
 // Generate Match Data
-function createData(id, date, opponent, result, trophy) {
-  return { id, date, opponent, result, trophy };
+function createData(id, date, opponent, result, trophy, winner, loser) {
+  return { id, date, opponent, result, trophy, winner, loser };
 }
 
 const rows = [
-  createData(1, '16 Dec, 2020', 'BlackPink', 'Win', 312),
+  createData(1, '16 Dec, 2020', 'BlackPink', 'Win', 312, "", ""),
 ];
 
 function preventDefault(event) {
@@ -125,6 +125,11 @@ export default function RecentMatch() {
     setPage(0);
   };
 
+  const convertToDate = (millis) => {
+    let time = new Date(millis);
+    return time.toString().slice(0,24);
+  }
+
   useEffect(()=>{
     if(!user){
       return;
@@ -166,9 +171,9 @@ export default function RecentMatch() {
             : matchs
           ).map((row) => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.opponent}</TableCell>
-              <TableCell>{row.result}</TableCell>
+              <TableCell>{row.history ? (convertToDate(row.history[1].time)) : "10-10-2010"}</TableCell>
+              <TableCell>{(user && row.winner && row.loser) ? (user._id == row.loser._id ? row.winner.profile.name : row.loser.profile.name) : ""}</TableCell>
+              <TableCell>{(user) ? (user._id===row.winner._id?"Thắng":"Thua") : "Hòa"}</TableCell>
               <TableCell>{row.cup}</TableCell>
               <TableCell align="right">
               <Button variant="contained" color="primary" onClick={()=>handleViewMatch(row._id)}>

@@ -139,6 +139,8 @@ const ReviewGame=(props)=>{
         .then(res => {
             const allHistory = res.data.games[0];
             console.log(allHistory);
+            setWinner(allHistory.winner._id);
+            setLoser(allHistory.loser._id);
             setChats(allHistory.chats);
             setHistory(allHistory.history);
         })

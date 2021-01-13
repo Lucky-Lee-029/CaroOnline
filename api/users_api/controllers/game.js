@@ -29,8 +29,18 @@ async function getGame(req, res) {
         { winner: userId }
       ]
     })
-    .populate("loser")
-    .populate("winner");
+    .populate({
+      path: "loser",
+      populate: {
+        path: "profile"
+      }
+    })
+    .populate({
+      path: "winner",
+      populate: {
+        path: "profile"
+      }
+    })
     console.log(games);
 
     res.json({
