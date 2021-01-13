@@ -45,7 +45,7 @@ function handle(io) {
         const room = genRoom(user, roomInfo);
         console.log("Id: ", room);
         socket.join(room);
-        socket.emit("create_room_success", room);
+        socket.emit("create_room_success_flash", room);
         io.emit("quick_join", room);
       }
     });

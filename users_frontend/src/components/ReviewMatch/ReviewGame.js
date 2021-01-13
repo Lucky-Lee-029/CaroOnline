@@ -59,6 +59,8 @@ const ReviewGame=(props)=>{
     const [step, setStep] = useState(0);
     const [winner, setWinner] = useState("");
     const [loser, setLoser] = useState("");
+    const [winnerProfile, setWinnerProfile] = useState("");
+    const [loserProfile, setLoserProfile] = useState("");
     const [stepchat, setStepchat] = useState(0);
     const [history, setHistory] = useState([
         {
@@ -139,13 +141,18 @@ const ReviewGame=(props)=>{
         .then(res => {
             const allHistory = res.data.games[0];
             console.log(allHistory);
-            setWinner(allHistory.winner._id);
-            setLoser(allHistory.loser._id);
+            setWinner(allHistory.winner.profile.name);
+            setLoser(allHistory.loser.profile.name);
             setChats(allHistory.chats);
             setHistory(allHistory.history);
         })
         .catch(error => console.log(error));
     },[match])
+
+    useEffect(()=>{
+
+    },[winner])
+
     return(
         <div className="App"> 
             <header className="App-header">

@@ -41,8 +41,9 @@ const QuickJoinRoomBtn = (props) => {
     }
   }
 
+
   useEffect(() => {
-    nspRooms.on("create_room_success", (stateId)=>{
+    nspRooms.on("create_room_success_flash", (stateId)=>{
         history.push({
           pathname: '/game',
           state: stateId,
@@ -68,10 +69,9 @@ const QuickJoinRoomBtn = (props) => {
         className={classes.button}
         onClick={handleCreateRoom}
       >
-       Tham gia nhanh {flashRoom}
+       Tham gia nhanh
       </Button>
     </Grid>
   );
 };
-
 export default QuickJoinRoomBtn;
