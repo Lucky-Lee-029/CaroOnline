@@ -6,6 +6,8 @@ const auth = require("./middleware/auth");
 const authCtrl = require("./controllers/auth");
 const usersCtrl = require("./controllers/users");
 const gameCtrl = require("./controllers/game");
+const winRateCtrl = require("./controllers/win_rate");
+
 // Create admin (testing)
 if (process.env.NODE_ENV != "production") {
   const bcrypt = require("bcrypt");
@@ -71,6 +73,12 @@ router.route("/game")
   
 router.route("/games")
   .get(auth, gameCtrl.getGames)
+  .post()
+  .put()
+  .delete();
+
+router.route("/win_rate/:id")
+  .get(auth, winRateCtrl.getWinRate)
   .post()
   .put()
   .delete();
