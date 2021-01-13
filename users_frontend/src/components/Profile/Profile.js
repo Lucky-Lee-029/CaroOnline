@@ -78,17 +78,17 @@ export default function Dashboard() {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Information */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
+            <Grid item xs={12}>
+              <Paper>
                 <Information />
               </Paper>
             </Grid>
             {/* Avatar */}
-            <Grid item xs={12} md={4} lg={3}>
+            {/* <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
                 <AvatarUser />
               </Paper>
-            </Grid>
+            </Grid> */}
             {/* Recent Matches */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>

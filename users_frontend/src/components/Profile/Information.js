@@ -22,7 +22,10 @@ cover: {
     height: 100,
     margin: 'auto'
   },
-  
+padding: {
+  paddingTop: 30,
+  paddingBottom: 30,
+},
 });
 
 export default function Information() {
@@ -32,18 +35,19 @@ export default function Information() {
   return (
     <React.Fragment>
       <Title>Thông tin của tôi</Title>
-      <Grid container>
+      <Grid container className = {classes.padding}>
         <Grid item xs={12} sm ={6}>
-          <Typography component="p" variant="h4">
+        <Avatar className = {classes.cover} alt="Avatar" src={"https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=2470717529842686&height=200&width=200&ext=1613045022&hash=AeQbSUNu9Sl114a953E"} />
+          <Typography align="center" component="p" variant="h4">
             {user==null? "Tên:" : user.profile.name}
           </Typography>
-          <Typography color="textSecondary" className={classes.depositContext}>
+          <Typography align="center" color="textSecondary" className={classes.depositContext}>
             Tham gia vào ngày: {user==null? "10-10-2020" : user.createdAt.slice(0,10)}
           </Typography>
-          <Typography color="textSecondary" className={classes.depositContext}>
+          <Typography align="center" color="textSecondary" className={classes.depositContext}>
             Số trận đấu đã tham gia: 1000
           </Typography>
-          <Typography color="textSecondary" className={classes.depositContext}>
+          <Typography align="center" color="textSecondary" className={classes.depositContext}>
             Tỉ lệ thắng: 90% 
           </Typography>
         </Grid>

@@ -21,9 +21,10 @@ const useStyles = makeStyles((theme) => ({
 
 const BlockedBtn = (props) => {
   const classes = useStyles();
-  const blockedBtnText = (props.status==="Non-Blocked")?"KHÓA": "MỞ KHÓA";
+  const blockedBtnText = (props.status.text==="Non-Blocked")?"KHÓA": "MỞ KHÓA";
   const colorBtn = (blockedBtnText === "KHÓA")?"secondary":"primary";
   const [open, setOpen] = useState(false);
+
 
   const handleBlocked = () => {
     console.log(props.idUser);
