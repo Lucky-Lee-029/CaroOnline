@@ -270,7 +270,7 @@ const Game = (props) => {
                   <TableBody>
                     <TableRow>
                       Nhắn tin
-                                        </TableRow>
+                    </TableRow>
                     {
                       chats.map((item) => {
                         return (

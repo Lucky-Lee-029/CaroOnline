@@ -105,63 +105,63 @@ const rows = [
         id: 1,
         player1: 'Gia Lợi',
         player2: 'Phi Long',
-        result: 'Win',
+        winner: 'Win',
         status: 'Saved'
     },
     {
         id: 2,
         player1: 'Gia Lợi',
         player2: 'Phi Long',
-        result: 'Loss',
+        winner: 'Loss',
         status: 'Unsaved'
     },
     {
         id: 3,
         player1: 'Gia Lợi',
         player2: 'Phi Long',
-        result: 'Draw',
+        winner: 'Draw',
         status: 'Saved'
     },
     {
         id: 4,
         player1: 'Phi Long',
         player2: 'BlackPink',
-        result: 'Loss',
+        winner: 'Loss',
         status: 'Unsaved'
     },
     {
         id: 5,
         player1: 'Gia Lợi',
         player2: 'IU',
-        result: 'Win',
+        winner: 'Win',
         status: 'Saved'
     },
     {
         id: 6,
         player1: 'IU',
         player2: 'Phi Long',
-        result: 'Win',
+        winner: 'Win',
         status: 'Unsaved'
     },
     {
         id: 7,
         player1: 'BlackPink',
         player2: 'Gia Lợi',
-        result: 'Draw',
+        winner: 'Draw',
         status: 'Unsaved'
     },
     {
         id: 8,
         player1: 'IU',
         player2: 'BlackPink',
-        result: 'Draw',
+        winner: 'Draw',
         status: 'Saved'
     },
     {
       id: 9,
       player1: 'test',
       player2: 'Gia Lợi',
-      result: 'Draw',
+      winner: 'Draw',
       status: 'Unsaved'
   },
   ];
@@ -221,15 +221,6 @@ export default function Matches() {
       setSelection(event.target.value);
     };
 
-    function Filter (rows) {
-      if (selection === 'All')
-        return rows;
-      else 
-        return rows.filter(
-            (row) => (row.status).includes(selection)
-        );
-    };
-
     const handleSearch = (event) => {
       setSearchValue(event.target.value);
     };
@@ -260,7 +251,7 @@ export default function Matches() {
                     </InputAdornment>
                   )
                 }}
-                placeholder="Search"
+                placeholder="Tìm kiếm người chơi"
                 variant="outlined"
                 value = {searchValue}
                 onChange = {handleSearch}
@@ -270,35 +261,20 @@ export default function Matches() {
         </Card>
     </Box>
     <TableContainer component={Paper}>
-      <TextField
-          id="status"
-          select
-          label="Select your option"
-          value={selection}
-          onChange={handleChangeSelection}
-          variant="outlined"
-          className = {classes.inputSelection}>
-          {selections.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-              {option.label}
-              </MenuItem>
-          ))}
-      </TextField>
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
             <TableCell align="center"><strong>Mã trận</strong></TableCell>
             <TableCell align="center"><strong>Người chơi 1</strong></TableCell>
             <TableCell align="center"><strong>Người chơi 2</strong></TableCell>
-            <TableCell align="center"><strong>Kết quả</strong></TableCell>
-            <TableCell align="center"><strong>Trạng thái</strong></TableCell>
+            <TableCell align="center"><strong>Người chơi thắng</strong></TableCell>
             <TableCell align="center"><strong>Lựa chọn</strong></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
             {(rowsPerPage > 0
-            ? Search(Filter(rows)).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : Search(Filter(rows))
+            ? Search(rows).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            : Search(rows)
           ).map((row) => (
             <TableRow key={row.id}>
               <TableCell align="center" component="th">
@@ -306,18 +282,11 @@ export default function Matches() {
               </TableCell>
               <TableCell align="center">{row.player1}</TableCell>
               <TableCell align="center">{row.player2}</TableCell>
-              <TableCell align="center">{row.player1} <strong>{row.result}</strong> {row.player2}</TableCell>
-              <TableCell align="center">{row.status}</TableCell>
+              <TableCell align="center">{row.winner}</TableCell>
               <TableCell align="center">
-                  <Grid container>
-                  <Button className = {classes.button} variant="contained" color="primary">
-                 Lịch sử   
+                <Button  variant="contained" color="primary">
+                    Xem Lịch sử   
                 </Button>
-                <Button className = {classes.button} variant="contained" color="primary">
-                 Tin nhắn   
-                </Button>
-                <SavedBtn className = {classes.button} status = {row.status}/>
-                  </Grid>
               </TableCell>
             </TableRow>
           ))}
@@ -350,3 +319,4 @@ export default function Matches() {
     </Container>
   );
 }
+
