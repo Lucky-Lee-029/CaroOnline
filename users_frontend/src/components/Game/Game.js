@@ -93,7 +93,6 @@ const Game = (props) => {
 
   useEffect(() => {
     nspRooms.on("got_winner", () => {
-
       setOpen(true);
     })
   }, []);

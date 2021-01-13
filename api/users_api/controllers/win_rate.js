@@ -15,7 +15,7 @@ async function getWinRate(req, res) {
     });
 
     res.json({
-      rate: winGame.length / game.length * 100
+      rate: (game.length === 0 ? 0 : winGame.length / game.length * 100)
     });
   } catch (err) {
     res.status(500).json({

@@ -173,7 +173,9 @@ const ReviewGame=(props)=>{
     }
     function findStepChat(timeStep){
         for(let i=0; i< chats.length;i++){
-            if(chats[i].time > timeStep){
+            var date = new Date(chats[i].time);
+            var chatMillis = date.getTime(); 
+            if( chatMillis > timeStep){
                 return i-1;
             }
         }
