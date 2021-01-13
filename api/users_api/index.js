@@ -20,7 +20,7 @@ router.route("/auth/fb")
   .post(authCtrl.loginWithFb)
   .put()
   .delete();
-  
+
 router.route("/auth/gg")
   .get()
   .post(authCtrl.loginWithGg)
@@ -63,22 +63,29 @@ router.route("/game")
   .put()
   .delete();
 
+router.route("/game/matches")
+  .get(auth, gameCtrl.getMatches)
+  .post()
+  .put()
+  .delete();
+
 router.route("/cup/:id")
   .get()
   .post()
   .put(auth, cupCtrl.updateCup)
   .delete();
 
-router.route("/ranking/:id")
-   .get()
-   .post()
-   .put()
-   .delete();
+router.route("/win_rate")
+  .get(auth, winRateCtrl.getWinRate)
+  .post()
+  .put()
+  .delete();
 
-router.route("/win_rate/:id")
-   .get(auth, winRateCtrl.getWinRate)
-   .post()
-   .put()
-   .delete();
+router.route("/ranking/:id")
+  .get()
+  .post()
+  .put()
+  .delete();
+
 
 module.exports = router;

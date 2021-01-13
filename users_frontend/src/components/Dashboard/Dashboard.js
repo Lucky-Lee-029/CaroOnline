@@ -211,8 +211,6 @@ function Dashboard() {
     }
   }, [history, user]);
 
-
-
   useEffect(() => {
     nspOnlineUsers.on("list_users", (users) => {
       const obj = Object.entries(users).sort(); // Convert obj to array

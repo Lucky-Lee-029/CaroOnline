@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import UserCtx from '../../context/User';
 import PropTypes from 'prop-types';
@@ -27,16 +27,6 @@ function createData(id, date, opponent, result, trophy, winner, loser) {
 const rows = [
   createData(1, '16 Dec, 2020', 'BlackPink', 'Win', 312, "", ""),
 ];
-
-function preventDefault(event) {
-  event.preventDefault();
-}
-
-const useStyles = makeStyles((theme) => ({
-  seeMore: {
-    marginTop: theme.spacing(3),
-  },
-}));
 
 //Pagination
 const useStyles1 = makeStyles((theme) => ({
@@ -108,8 +98,7 @@ TablePaginationActions.propTypes = {
 
 
 export default function RecentMatch() {
-  const [user, setUser] = useContext(UserCtx);
-  const classes = useStyles();
+  const [user] = useContext(UserCtx);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [matchs, setMatchs] = useState(rows);
@@ -127,26 +116,25 @@ export default function RecentMatch() {
 
   const convertToDate = (millis) => {
     let time = new Date(millis);
-    return time.toString().slice(0,24);
+    return time.toString().slice(0, 24);
   }
 
-  useEffect(()=>{
-    if(!user){
+  useEffect(() => {
+    if (!user) {
       return;
     }
-    axios.get(`http://localhost:8000/users_api/game?userId=${user._id}`,{
-        headers: {
-            Authorization: localStorage.getItem('token'),
-        }
+    axios.get(`http://localhost:8000/users_api/game?userId=${user._id}`, {
+      headers: {
+        Authorization: localStorage.getItem('token'),
+      }
     })
-    .then(res => {
+      .then(res => {
         const allHistory = res.data.games;
-        console.log(allHistory);
         setMatchs(allHistory);
-    })
-    .catch(error => console.log(error));
-  },[user]);
-  const handleViewMatch = (id)=>{
+      })
+      .catch(error => console.log(error));
+  }, [user]);
+  const handleViewMatch = (id) => {
     history.push({
       pathname: '/review',
       state: id,
@@ -166,23 +154,23 @@ export default function RecentMatch() {
           </TableRow>
         </TableHead>
         <TableBody>
-        {(rowsPerPage > 0
+          {(rowsPerPage > 0
             ? matchs.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : matchs
-          ).map((row) => (
-            <TableRow key={row.id}>
+          ).map((row, index) => (
+            <TableRow key={index}>
               <TableCell>{row.history ? (convertToDate(row.history[1].time)) : "10-10-2010"}</TableCell>
-              <TableCell>{(user && row.winner && row.loser) ? (user._id == row.loser._id ? row.winner.profile.name : row.loser.profile.name) : ""}</TableCell>
-              <TableCell>{(user) ? (user._id===row.winner._id?"Thắng":"Thua") : "Hòa"}</TableCell>
+              <TableCell>{(user && row.winner && row.loser) ? (user._id === row.loser._id ? row.winner.profile.name : row.loser.profile.name) : ""}</TableCell>
+              <TableCell>{(user) ? (user._id === row.winner._id ? "Thắng" : "Thua") : "Hòa"}</TableCell>
               <TableCell>{row.cup}</TableCell>
               <TableCell align="right">
-              <Button variant="contained" color="primary" onClick={()=>handleViewMatch(row._id)}>
-                Xem lại
+                <Button variant="contained" color="primary" onClick={() => handleViewMatch(row._id)}>
+                  Xem lại
               </Button>
-              </TableCell> 
+              </TableCell>
             </TableRow>
           ))}
-            {emptyRows > 0 && (
+          {emptyRows > 0 && (
             <TableRow style={{ height: 53 * emptyRows }}>
               <TableCell colSpan={6} />
             </TableRow>

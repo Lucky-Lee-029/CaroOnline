@@ -126,7 +126,6 @@ export default function SearchAppBar() {
     return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
   }
 
-
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -146,28 +145,15 @@ export default function SearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      <CssBaseline /> 
+      <CssBaseline />
       <AppBar position="static">
         <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Caro Online
+          <Typography className={classes.title} variant="h6" noWrap onClick={() => history.push('/')}>
+              Caro Online
           </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Tìm kiếm"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="Chart" color="inherit">
+            <IconButton aria-label="Chart" color="inherit" onClick={() => history.push('/chart')}>
               <InsertChartIcon />
             </IconButton>
             <IconButton aria-label="show 8 new notifications" color="inherit">
@@ -175,22 +161,22 @@ export default function SearchAppBar() {
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            {(user)?
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              {(user.type === 'local') ?
-                <Avatar className={classes.small} style={{ backgroundColor: stringToHslColor(user.profile.name, 100, 50) }}>
-                  {user.profile.name[0]}
-                </Avatar> :
-                <Avatar className={classes.small} alt={user._id} src={user.profile.avatar} />
-              }
-            </IconButton> : null}
+            {(user) ?
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                {(user.type === 'local') ?
+                  <Avatar className={classes.small} style={{ backgroundColor: stringToHslColor(user.profile.name, 100, 50) }}>
+                    {user.profile.name[0]}
+                  </Avatar> :
+                  <Avatar className={classes.small} alt={user._id} src={user.profile.avatar} />
+                }
+              </IconButton> : null}
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
