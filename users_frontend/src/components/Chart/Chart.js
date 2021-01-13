@@ -245,19 +245,15 @@ export default function Chart() {
                   className={classes.cardHeader}>
                   </CardHeader>
                 <CardContent>
+                <Typography align="center" component="h2" variant="h4" color="textPrimary">
+                      {user.username}
+                    </Typography>
                   <div className={classes.cardChart}>
                     <Typography component="h2" variant="h3" color="textPrimary">
                       {user.trophy}
                     </Typography>
                     <Avatar className = {classes.cover} alt="Trophy" src={Trophy} />
                   </div>
-                  {/* <ul>
-                    {user.description.map((line) => (
-                      <Typography component="li" variant="subtitle1" align="center" key={line}>
-                        {line}
-                      </Typography>
-                    ))}
-                  </ul> */}
                 </CardContent>
               </Card>
             </Grid>

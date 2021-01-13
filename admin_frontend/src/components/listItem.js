@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom'
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -11,25 +12,19 @@ import BookmarksIcon from '@material-ui/icons/Bookmarks';
 
 export const mainListItems = (
   <div>
-    <ListItem button>
+    <ListItem button component={Link} to='/'>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
-    {/* <ListItem button>
-      <ListItemIcon>
-        <AccountCircleIcon/>
-      </ListItemIcon>
-      <ListItemText primary="My Account" />
-    </ListItem> */}
-    <ListItem button>
+    <ListItem button component={Link} to='/matches'>
       <ListItemIcon>
          <BookmarksIcon/>
       </ListItemIcon>
       <ListItemText primary="Danh sách trận đấu" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component={Link} to='/users'>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>

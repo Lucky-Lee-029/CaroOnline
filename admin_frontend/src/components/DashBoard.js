@@ -123,7 +123,7 @@ function ListMatches() {
 
 function Home() {
   return (
-    <div>Home</div>
+    <div>Trang chủ Dashboard</div>
   );
 }
 
