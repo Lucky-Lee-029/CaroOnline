@@ -208,6 +208,13 @@ function Dashboard() {
   useEffect(() => {
     if (user) {
       nspOnlineUsers.emit("active", user);
+      if (!user.active) {
+        history.replace({
+          pathname: '/login',
+          state: { error: "Tài khoản của bạn đã bị khoá, chịu" }
+        });
+        localStorage.removeItem("token");
+      }
       if (user.type === 'local' && !user.local.isVerified) {
         history.replace('/verify_email');
       }

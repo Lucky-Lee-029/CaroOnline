@@ -188,8 +188,11 @@ function Login(props) {
                 </Grid>
               </Grid>
               <Box mt={5}>
-                {(props.location.state) ? 
-                <Alert severity="success">{props.location.state.success}</Alert> : null}
+                {(props.location.state) ?
+                <div>
+                {props.location.state.success ? <Alert severity="success">{props.location.state.success}</Alert> : null}
+                {props.location.state.error ? <Alert severity="error">{props.location.state.error}</Alert> : null}
+                </div> : null}
               </Box>
               <Box mt={5}>
                 {(error) ? <Alert severity="error">{error}</Alert> : null}
