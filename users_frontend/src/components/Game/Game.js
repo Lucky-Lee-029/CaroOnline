@@ -47,6 +47,8 @@ const Game = (props) => {
     })
   }]);
 
+  console.log("CUPPPPPPPP:" + props.location.cup);
+
   const getTime = () => {
     let date = new Date();
     return date.getTime();
