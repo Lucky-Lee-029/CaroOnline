@@ -64,6 +64,18 @@ function handle(io) {
       }
     });
 
+    // Tim phong
+    socket.on("find_room", roomId => {
+      console.log("Find room: " + roomId);
+      if(!rooms[roomId]){
+        console.log("Khong co phong")
+        socket.emit("room_not_exists");
+      }else{
+        console.log("Tim thay phong");
+        socket.emit("room_exists", rooms[roomId], roomId);
+      }
+    });
+
     socket.on("leave", () => {
       const roomsJoined = socket.adapter.sids.get(socket.id);
       if (!roomsJoined) {

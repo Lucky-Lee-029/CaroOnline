@@ -25,9 +25,9 @@ import { ExitToApp } from '@material-ui/icons';
 
 const Game = (props) => {
   const _history = useHistory();
-  const [user, setUser] = useContext(UserCtx);
   const [chats, setChats] = useState([]);
   const [message, setMessage] = useState("");
+  const [user, setUser] = useContext(UserCtx);
   const [currentSquare, setCurrentSquare] = useState({ x: 0, y: 0 });
   const [step, setStep] = useState(0);
   const [currentPlayer, setCurrentPlayer] = useState(0);
@@ -47,6 +47,8 @@ const Game = (props) => {
       return Array(Config.brdSize).fill(null)
     })
   }]);
+
+  console.log("CUPPPPPPPP:" + props.location.cup);
 
   const getTime = () => {
     let date = new Date();
@@ -78,13 +80,16 @@ const Game = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log("Listening rival");
     nspRooms.on("ready_client", () => {
+      console.log("Rival ready!");
       setIsRivalReady(true);
     })
   }, [])
 
   useEffect(() => {
     nspRooms.on("new_chat", (data) => {
+      console.log("new chat");
       setChats(currentChats => {
         return currentChats.concat(data);
       });
@@ -100,9 +105,13 @@ const Game = (props) => {
 
   useEffect(() => {
     setWinCells(checkWin(currentSquare.x, currentSquare.y, winner, step));
+    console.log("-" + currentSquare.x + ", " + currentSquare.y + "," + ", " + winner + ", " + step);
   }, [winner]);
 
   useEffect(() => {
+    console.log("STEP" + step);
+    console.log("Data lenght: " + history.length);
+    console.log(history);
     setStep(history.length - 1);
   }, [history]);
   useEffect(() => {
@@ -116,6 +125,7 @@ const Game = (props) => {
       setOpen(true);
       setWinner("rival");
       updateCup(-props.location.cup);
+      console.log("cup", props.location.cup)
     })
   }, []);
 
@@ -139,23 +149,21 @@ const Game = (props) => {
       setWinner("you");
       updateCup(props.location.cup)
       const model = getModel();
+      console.log(model);
     }
   }
 
 
   const updateCup = async (cup) => {
-    try {
-      const model = { cup };
-      const api = `http://localhost:8000/users_api/cup/${user._id}`;
-      await axios.put(api, model, {
-        headers: {
-          Authorization: localStorage.getItem('token')
-        }
-      });
-      history.replace('/');
-    } catch (err) {
-      console.log(err.response);
-    }
+    console.log("Update: ", cup);
+    let model = {};
+    model.cup = cup;
+    let api = `http://localhost:8000/users_api/cup/` + user.profile._id;
+    await axios.put(api, model, {
+      headers: {
+        Authorization: localStorage.getItem('token')
+      }
+    });
   }
 
   const saveGame = async (model) => {
@@ -471,8 +479,11 @@ const Game = (props) => {
     nspRooms.emit("play_new_step", newState, String(props.location.state));
     // emit event win game
     if (checkWin(row, col, currentUser, step)) {
+      console.log("WON");
       nspRooms.emit("win_game", currentUser, String(props.location.state));
+      console.log("-" + row + ", " + col + "," + ", " + currentUser + ", " + step);
       const model = getModel();
+      console.log(model);
       setWinner("you");
       updateCup(props.location.cup);
       saveGame(model);
@@ -488,9 +499,11 @@ const Game = (props) => {
   function handleNewStep(data) {
     let currentUser = (history.length % 2 !== 0) ? Config.xPlayer : Config.oPlayer;
     let currentHis = history;
+    console.log(history);
     setCurrentPlayer(1 - currentPlayer);
     setCurrentSquare({ x: data.x, y: data.y });
     let newState = data;
+    console.log("current user: " + currentUser);
     newState.squares[data.x][data.y] = currentUser;
     setHistory(currentHis => {
       return currentHis.concat(newState);

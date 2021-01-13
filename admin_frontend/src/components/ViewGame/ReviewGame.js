@@ -1,9 +1,5 @@
 import React, { useContext, useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Board from '../Game/Board';
-import Config from '../../constants/configs';
-import UserCtx from '../../context/User';
-import '../Game/css/game.css';
 import axios from 'axios';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
@@ -16,6 +12,9 @@ import CardHeader from '@material-ui/core/CardHeader';
 import TextField from '@material-ui/core/TextField';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import Board from './Board';
+import Config from './configs';
+import './css/game.css';
 const useStyles = makeStyles((theme) => ({
     root: {
       width: '100%',
@@ -62,80 +61,23 @@ const ReviewGame=(props)=>{
     const [winnerProfile, setWinnerProfile] = useState("");
     const [loserProfile, setLoserProfile] = useState("");
     const [stepchat, setStepchat] = useState(0);
-    const [history, setHistory] = useState([
-        {
+    const [history, setHistory] = useState([{
             x: null,
             y: null,
             squares: Array(Config.brdSize).fill(null).map(() => {
                 return Array(Config.brdSize).fill(null)
             })
-        },
-        {
-            x: 1,
-            y: 1,
-            squares: sq1
-        },
-        {
-            x: 2,
-            y: 2,
-            squares: sq2
-        },
-        {
-            x: 2,
-            y: 4,
-            squares: sq3
-        },
-        {
-            x: 1,
-            y: 1,
-            squares: sq1
-        },
-        {
-            x: 2,
-            y: 2,
-            squares: sq2
-        },
-        {
-            x: 2,
-            y: 4,
-            squares: sq3
-        },
-        {
-            x: 1,
-            y: 1,
-            squares: sq1
-        },
-        {
-            x: 2,
-            y: 2,
-            squares: sq2
-        },
-        {
-            x: 2,
-            y: 4,
-            squares: sq3
-        },
-        {
-            x: 2,
-            y: 2,
-            squares: sq2
-        },
-        {
-            x: 2,
-            y: 4,
-            squares: sq3
-        }
-    ])
+    }])
     const [match, setMatch] = useState(props.location.state);
-    const [chats, setChats] = useState([{content: "AAAAAA"}]);
+    const [chats, setChats] = useState([{content: "Hello"}]);
 
     useEffect(()=>{
         if(!match){
             return;
         }
-        axios.get(`http://localhost:8000/users_api/game?id=${match}`,{
+        axios.get(`http://localhost:8000/admin_api/game?id=${match}`,{
             headers: {
-                Authorization: localStorage.getItem('token'),
+                Authorization: localStorage.getItem('admin_token'),
             }
         })
         .then(res => {
@@ -146,17 +88,11 @@ const ReviewGame=(props)=>{
             setHistory(allHistory.history);
         })
         .catch(error => console.log(error));
-    },[match])
-
-    useEffect(()=>{
-
-    },[winner])
+    },[])
 
     return(
         <div className="App"> 
             <header className="App-header">
-                {/* <Status 
-                    messages={winner ? ("Winner: " + winner) : "Playing..."}/> */}
                 <div className="board-game-review">
                     <div>
                         <Board  winCells={null}

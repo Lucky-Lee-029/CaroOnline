@@ -111,90 +111,6 @@ const useRowStyles = makeStyles({
   },
 });
 
-
-
-const rows = [
-    {
-        name: 'Gia Lợi',
-        rank: 1,
-        trophy: 30,
-        status: 'Non-Blocked', 
-        detail: 
-        {
-            email: 'gialoi@gmail.com',
-            dateJoin: '2020-12-15',
-            numberMatch: 100,
-            ratioWinning: 90,      
-        },
-      },
-      {
-        name: 'Phi Long',
-        rank: 2,
-        trophy: 27,
-        status: 'Non-Blocked', 
-        detail: 
-        {
-            email: 'philong@gmail.com',
-            dateJoin: '2020-12-15',
-            numberMatch: 100,
-            ratioWinning: 85,      
-        },
-      },
-      {
-        name: 'Hải Lê',
-        rank: 3,
-        trophy: 20,
-        status: 'Non-Blocked', 
-        detail: 
-        {
-            email: 'haile@gmail.com',
-            dateJoin: '2020-12-15',
-            numberMatch: 100,
-            ratioWinning: 80,      
-        },
-      },
-      {
-        name: 'IU',
-        rank: 8,
-        trophy: 1,
-        status: 'Blocked', 
-        detail: 
-        {
-            email: 'iu@gmail.com',
-            dateJoin: '2020-12-15',
-            numberMatch: 100,
-            ratioWinning: 10,      
-        },
-      },
-      {
-        name: 'BlackPink',
-        rank: 4,
-        trophy: 15,
-        status: 'Non-Blocked', 
-        detail: 
-        {
-            email: 'bp@gmail.com',
-            dateJoin: '2020-12-15',
-            numberMatch: 100,
-            ratioWinning: 70,      
-        },
-      },
-      {
-        name: 'Bulb',
-        rank: 8,
-        trophy: 7,
-        status: 'Non-Blocked', 
-        detail: 
-        {
-            email: 'test@gmail.com',
-            dateJoin: '2020-12-15',
-            numberMatch: 100,
-            ratioWinning: 60,      
-        },
-      },
-  ];
-
-
   
 function Row(props) {
   const { row } = props;
@@ -214,7 +130,7 @@ function Row(props) {
         </TableCell>
         <TableCell align="center">{row.ranking}</TableCell>
         <TableCell align="center">{row.cup}</TableCell>
-        <TableCell align="center">{(row.active)?"Non-Blocked":"Blocked"}</TableCell>
+        <TableCell align="center">{(row.active)?"Không bị khóa":"Bị khóa"}</TableCell>
         <TableCell align="center">
             <BlockedBtn idUser = {row._id} status = {(row.active)?{active: true, text:"Non-Blocked"}:{active: false, text:"Blocked"}}/>
         </TableCell>
@@ -329,7 +245,7 @@ export default function UserAccount() {
       .catch(error => console.log(error))
     },[])
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, listUser.length - page * rowsPerPage);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);

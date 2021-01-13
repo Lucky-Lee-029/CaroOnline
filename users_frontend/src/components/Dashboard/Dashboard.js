@@ -4,6 +4,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import SearchAppBar from "../Bar/Bar";
 import { Grid, Typography } from '@material-ui/core';
 import GridItem from './Grid';
+import SearchRoom from './Search';
 import QuickJoinRoomBtn from './QuickJoinRoomBtn'
 import UserCtx from '../../context/User';
 import { nspOnlineUsers, nspRooms } from '../../socket';
@@ -65,6 +66,7 @@ function VerifyEmail() {
 
   if (user) {
     return (
+
       <Grid
         container
         spacing={2}
@@ -73,6 +75,7 @@ function VerifyEmail() {
         justify="center"
         style={{ minHeight: 250 }}
       >
+        
         <Grid item>
           <TextField
             label="Email"
@@ -328,6 +331,7 @@ function Dashboard() {
                 <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
                   <QuickJoinRoomBtn user={user} handleJoinRoom={() => { }} />
                   <CreateRoomDialog />
+                  <SearchRoom/>
                 </Grid>
                 <Grid container item xs={12} spacing={2}>
                   {
