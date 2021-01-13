@@ -5,13 +5,13 @@ async function getWinRate(req, res) {
   try {
     const game = await Game.find({
       $or: [
-        { loser: req.user.id },
-        { winner: req.user.id }
+        { loser: req.params.id },
+        { winner: req.params.id }
       ]
     });
 
     const winGame = await Game.find({
-      winner: req.user.id
+      winner: req.params.id
     });
 
     res.json({

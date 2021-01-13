@@ -75,7 +75,7 @@ router.route("/cup/:id")
   .put(auth, cupCtrl.updateCup)
   .delete();
 
-router.route("/win_rate")
+router.route("/win_rate/:id")
   .get(auth, winRateCtrl.getWinRate)
   .post()
   .put()

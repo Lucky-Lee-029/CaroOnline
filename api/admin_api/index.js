@@ -68,5 +68,11 @@ router.route("/game")
   .post(auth, gameCtrl.storeGame)
   .put()
   .delete();
+  
+router.route("/games")
+  .get(auth, gameCtrl.getGames)
+  .post()
+  .put()
+  .delete();
 
 module.exports = router;

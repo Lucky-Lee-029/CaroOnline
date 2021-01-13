@@ -31,6 +31,7 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import { green } from '@material-ui/core/colors';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   cardHeader: {
     backgroundColor:
-      theme.palette.type === 'light' ? theme.palette.common.black : theme.palette.common.white,
+      theme.palette.type === 'light' ? green[600] : theme.palette.common.white,
     color: 'white',
   },
   subheader:{
@@ -75,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: green[600],
     color: theme.palette.common.white,
   },
   body: {
@@ -238,7 +239,6 @@ export default function Chart() {
               <Card>
                 <CardHeader
                   title={user.title}
-                  subheader={user.username}
                   titleTypographyProps={{ align: 'center' }}
                   subheaderTypographyProps={{ align: 'center' }}
                   action={user.title === 'Hạng 1' ? <StarIcon /> : null}

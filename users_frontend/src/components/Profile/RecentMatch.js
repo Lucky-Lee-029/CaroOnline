@@ -149,7 +149,7 @@ export default function RecentMatch() {
             <TableCell>Thời gian</TableCell>
             <TableCell>Đối thủ</TableCell>
             <TableCell>Kết quả</TableCell>
-            <TableCell>Số cúp</TableCell>
+            <TableCell>Số cúp cược</TableCell>
             <TableCell align="right">Xem lại</TableCell>
           </TableRow>
         </TableHead>

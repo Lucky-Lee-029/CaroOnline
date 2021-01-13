@@ -66,7 +66,7 @@ export default function Information() {
     if (user) {
       (async () => {
         try {
-          const res = await axios(`http://localhost:8000/users_api/win_rate`, {
+          const res = await axios(`http://localhost:8000/users_api/win_rate/${user._id}`, {
             headers: {
               Authorization: localStorage.getItem("token")
             }
