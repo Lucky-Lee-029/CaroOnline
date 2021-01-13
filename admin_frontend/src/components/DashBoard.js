@@ -26,6 +26,7 @@ import { mainListItems, secondaryListItems } from './listItem';
 import UserAccount from './UserAccount';
 import Matches from './Matches';
 import AdminCtx from '../context/Admin';
+import ReviewGame from './ViewGame/ReviewGame';
 import { Switch, useHistory, Route } from 'react-router-dom';
 
 const drawerWidth = 240;
@@ -201,6 +202,7 @@ function DashBoard() {
           <div className={classes.appBarSpacer} />
           <Container maxWidth="lg" className={classes.container}>
             <Switch>
+              <Route exact path='/match' component={ReviewGame} />
               <Route exact path='/users' component={UserAccount} />
               <Route exact path='/matches' component={Matches} />
               <Route exact path='/' component={Home} />

@@ -5,7 +5,7 @@ const auth = require("./middleware/auth");
 // Controllers
 const authCtrl = require("./controllers/auth");
 const usersCtrl = require("./controllers/users");
-
+const gameCtrl = require("./controllers/game");
 // Create admin (testing)
 if (process.env.NODE_ENV != "production") {
   const bcrypt = require("bcrypt");
@@ -60,6 +60,12 @@ router.route("/block/:id")
 router.route("/user/:id")
   .get(usersCtrl.getUserDetail)
   .post()
+  .put()
+  .delete();
+
+router.route("/game")
+  .get(auth, gameCtrl.getGame)
+  .post(auth, gameCtrl.storeGame)
   .put()
   .delete();
 
