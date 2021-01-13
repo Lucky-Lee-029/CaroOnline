@@ -100,9 +100,6 @@ export default function SearchAppBar() {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    history.push({
-      pathname: '/profile',
-    });
   };
 
   const handleLogout = () => {
@@ -136,7 +133,7 @@ export default function SearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Thông tin cá nhân</MenuItem>
+      <MenuItem onClick={() => { history.push('/profile'); handleMenuClose() }}>Thông tin cá nhân</MenuItem>
       <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
     </Menu>
   );
@@ -149,7 +146,7 @@ export default function SearchAppBar() {
       <AppBar position="static">
         <Toolbar>
           <Typography className={classes.title} variant="h6" noWrap onClick={() => history.push('/')}>
-              Caro Online
+            Caro Online
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>

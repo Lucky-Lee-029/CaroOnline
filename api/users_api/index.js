@@ -33,6 +33,13 @@ router.route("/user")
   .put()
   .delete();
 
+router.route("/users")
+  .get(auth, userCtrl.getUsers)
+  .post()
+  .put()
+  .delete();
+
+
 router.route("/user/verify_email/:token")
   .get()
   .post()
@@ -75,7 +82,7 @@ router.route("/cup/:id")
   .put(auth, cupCtrl.updateCup)
   .delete();
 
-router.route("/win_rate")
+router.route("/win_rate/:id")
   .get(auth, winRateCtrl.getWinRate)
   .post()
   .put()
