@@ -23,7 +23,23 @@ async function getUserDetail(req, res) {
   }
 }
 
+async function setUserStatus(req, res) {
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, {
+      $set: { active: req.body.active }
+    });
+    res.json({
+      msg: "Block user success"
+    });
+  } catch (err) {
+    res.status(500).json({
+      msg: "Server Error"
+    });
+  }
+}
+
 module.exports = {
   getUsers,
-  getUserDetail
+  getUserDetail,
+  setUserStatus
 }
