@@ -40,8 +40,6 @@ async function getGame(req, res) {
         path: "profile"
       }
     })
-    console.log(games);
-
     res.json({
       games
     });
