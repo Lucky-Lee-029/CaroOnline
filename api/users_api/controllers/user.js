@@ -104,7 +104,7 @@ async function sendEmailToVerify(req, res) {
     });
 
     await tran.sendMail({
-      from: "Caro online",
+      from: `noreply ${process.env.NODEMAIL_USER}`,
       to: req.body.email,
       subject: "Verify email",
       html:
@@ -178,7 +178,7 @@ async function forgotPassword(req, res) {
       });
 
       await tran.sendMail({
-        from: "Caro online",
+        from: `noreply ${process.env.NODEMAIL_USER}`,
         to: req.body.email,
         subject: "Forgot password",
         html:
