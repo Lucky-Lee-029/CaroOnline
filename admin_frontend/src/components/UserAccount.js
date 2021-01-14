@@ -297,7 +297,7 @@ export default function UserAccount() {
               <TableCell />
               <TableCell align="center"><strong>Tên</strong></TableCell>
               <TableCell align="center"><strong>Số cúp</strong></TableCell>
-              <TableCell align="center"><strong>Lựa chọn</strong></TableCell>
+              <TableCell align="center"><strong>Trạng thái</strong></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -318,7 +318,7 @@ export default function UserAccount() {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                 colSpan={3}
-                count={listUser.length}
+                count={Search(listUser).length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 SelectProps={{

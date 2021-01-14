@@ -303,7 +303,7 @@ export default function Matches() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={3}
-              count={listMatches.length}
+              count={Search(listMatches).length}
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
