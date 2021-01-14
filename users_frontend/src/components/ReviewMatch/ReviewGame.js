@@ -235,9 +235,15 @@ const ReviewGame=(props)=>{
         let timeStep = history[step].time;
         setStepchat(findStepChat(timeStep));
     }
+    function dateToMillis(tg){
+        let date = new Date(tg);
+        return date.getTime(); 
+    }
     function findStepChat(timeStep){
         for(let i=0; i< chats.length;i++){
-            if(chats[i].time > timeStep){
+            let timeChat = dateToMillis(chats[i].time);
+            console.log("Thoi gian:" + timeChat + " : " + timeStep);
+            if(timeChat > timeStep){
                 return i-1;
             }
         }

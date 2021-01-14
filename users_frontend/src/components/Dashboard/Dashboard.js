@@ -334,6 +334,9 @@ function Dashboard() {
       <Grid container className={classes.root}>
         <Grid item xs={10}>
           <Switch>
+            <Route exact path="/review" component={ReviewGame} />
+          </Switch>
+          <Switch>
             <Route exact path='/' render={() =>
               <React.Fragment>
                 <Grid container item xs={12} direction="row" justify="space-between" className={classes.functionBtn}>
@@ -356,7 +359,6 @@ function Dashboard() {
             <Route exact path="/chart" component={Chart} />
             <Route exact path="/game" component={Game} />
             <Route exact path='/verify_email' component={VerifyEmail} />
-            <Route exact path="/review" component={ReviewGame} />
           </Switch>
         </Grid>
         <Grid item xs={2}>
