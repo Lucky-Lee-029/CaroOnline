@@ -309,10 +309,10 @@ export default function Chart() {
               {(rowsPerPage > 0
                 ? Array.from(users).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 : Array.from(users)
-              ).map((row) => (
+              ).map((row, index) => (
                 <StyledTableRow key={row._id}>
                   <StyledTableCell align="center" component="th" scope="row">
-                    {row.rank}
+                    {Array.from(users).indexOf(row) + 1}
                   </StyledTableCell>
                   <StyledTableCell align="center">{row.profile.name}</StyledTableCell>
                   <StyledTableCell align="center">{row.cup} </StyledTableCell>
