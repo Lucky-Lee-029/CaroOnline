@@ -54,8 +54,11 @@ const Game = (props) => {
   }
 
   useEffect(() => {
+    if(!user){
+      return;
+    }
     nspRooms.emit("join_game", user, props.location.state);
-  }, [])
+  }, [user])
 
   useEffect(() => {
     nspRooms.on("rival_join", user => {
@@ -221,10 +224,10 @@ const Game = (props) => {
                   <TableBody>
                     <TableRow>
                       <TableCell>
-                        Thông tin của bạn
+                        <b>{user ? user.profile.name : "Bạn"}</b>
                       </TableCell>
                       <TableCell>
-                        {rivalGame === "" ? "Chờ đối thủ" : rivalGame.profile.name}
+                        <b>{rivalGame === "" ? "Chờ đối thủ" : rivalGame.profile.name}</b>
                       </TableCell>
                     </TableRow>
                     <TableRow>

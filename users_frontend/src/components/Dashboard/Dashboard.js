@@ -32,6 +32,7 @@ import Chart from '../Chart/Chart';
 import Profile from '../Profile/Profile';
 import Game from '../Game/Game';
 import Alert from '@material-ui/lab/Alert';
+import ReviewGame from '../ReviewMatch/ReviewGame';
 
 function VerifyEmail() {
   const [user, setUser] = useContext(UserCtx);
@@ -355,6 +356,7 @@ function Dashboard() {
             <Route exact path="/chart" component={Chart} />
             <Route exact path="/game" component={Game} />
             <Route exact path='/verify_email' component={VerifyEmail} />
+            <Route exact path="/review" component={ReviewGame} />
           </Switch>
         </Grid>
         <Grid item xs={2}>

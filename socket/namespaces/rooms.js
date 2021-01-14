@@ -57,7 +57,9 @@ function handle(io) {
         socket.emit("err_join_room", "Can not join room");
       } else {
         socket.join(roomId);
-        rooms[roomId].players.push(user);
+        if(user){
+          rooms[roomId].players.push(user);
+        }
         rooms[roomId].status = "Full";
         socket.emit("join_room_success", rooms[roomId]);
         io.emit("rooms", rooms);
@@ -119,8 +121,10 @@ function handle(io) {
       io.emit("rooms", rooms);
     })
     socket.on("join_game", (user, room) => {
+      console.log("join: " + room);
+      console.log(rooms[room]);
       socket.to(room).emit("rival_join", user);
-      if (rooms[room].players.length === 2) {
+      if (rooms[room].players.length > 1) {
         socket.emit("old_player", rooms[room].players[0]);
       }
     })

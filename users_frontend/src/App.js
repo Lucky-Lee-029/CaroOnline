@@ -73,7 +73,6 @@ function App() {
     <UserCtx.Provider value={userState}>
       <BrowserRouter>
         <Switch>
-          <Route path="/review" component={ReviewGame} />
           <Route exact path="/forgot_password" component={ForgotPassword} />
           <Route exact path="/forgot_password/:token" component={ChangePassword} />
           <Route exact path='/verify_email/:token' component={SendEmail} />

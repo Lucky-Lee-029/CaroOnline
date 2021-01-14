@@ -37,7 +37,7 @@ export default function SearchRoom() {
   useEffect(()=>{
     nspRooms.on("room_exists", (roomInfo, id) => {
         nspRooms.emit("join", { roomId: id, user: user });
-        history.replace({
+        history.push({
             pathname: '/game',
             state: id,
             time: roomInfo.turn,
