@@ -21,6 +21,7 @@ export default function SearchRoom() {
   const [user, setUser] = useContext(UserCtx);
   const [roomId, setRoomId] = useState("");
   const history = useHistory();
+
   const onChangeRoom = (e) => {
     setRoomId(e.target.value.toString());
   }
@@ -35,6 +36,9 @@ export default function SearchRoom() {
   },[])
 
   useEffect(()=>{
+    if(!user){
+      return;
+    }
     nspRooms.on("room_exists", (roomInfo, id) => {
         nspRooms.emit("join", { roomId: id, user: user });
         history.push({

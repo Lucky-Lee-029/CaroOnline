@@ -283,6 +283,41 @@ function Dashboard() {
     });
   }, [setListRooms]);
 
+  const roomsSort = (a, b, type) => {
+    switch(type){
+      case 1:
+        return inCreaseSort(a, b);
+        break;
+      case 2:
+        return deCreaseSort(a, b);
+        break;
+      case 3:
+        return inCupSort(a, b);
+        break;
+      case 4:
+        return deCupSort(a, b);
+        break;
+      default:
+        return inCreaseSort(a, b);
+        break;
+    }
+  }
+  const inCreaseSort = (a, b) => {
+    return a[0] - b[0];
+  }
+
+  const deCreaseSort = (a, b) => {
+    return b[0] - a[0];
+  }
+
+  const inCupSort = (a, b) => {
+    return a[1].cups - b[1].cups;
+  }
+
+  const deCupSort = (a, b) => {
+    return b[1].cups - a[1].cups;
+  }
+
   return (
     <div>
       {(userDialog) ?
@@ -346,7 +381,7 @@ function Dashboard() {
                 </Grid>
                 <Grid container item xs={12} spacing={2}>
                   {
-                    listRooms.map(room => (
+                    listRooms.sort(function(a,b){return roomsSort(a,b,4)}).map(room => (
                       <Grid item xs={12} sm={4} key={room[0]}>
                         <GridItem roomInfo={room} />
                       </Grid>

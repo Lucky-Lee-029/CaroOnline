@@ -127,9 +127,8 @@ const Game = (props) => {
   const handleSendChat = () => {
     const data = {
       content: message,
-      id: 1,
       time: getTime(),
-      name: user.profile.name
+      username: user.profile.name
     }
     nspRooms.emit("chat", data, String(props.location.state));
   }
@@ -273,7 +272,7 @@ const Game = (props) => {
                       chats.map((item) => {
                         return (
                           <TableRow>
-                            <b>{item.name}:</b> {item.content}
+                            <b>{item.username}:</b> {item.content}
                           </TableRow>
                         )
                       })

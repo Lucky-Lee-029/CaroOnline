@@ -127,7 +127,7 @@ const ReviewGame=(props)=>{
         }
     ])
     const [match, setMatch] = useState(props.location.state);
-    const [chats, setChats] = useState([{content: "AAAAAA"}]);
+    const [chats, setChats] = useState([]);
 
     useEffect(()=>{
         if(!match){
@@ -212,7 +212,7 @@ const ReviewGame=(props)=>{
                                             chats.filter((element, index)=>{return index<=stepchat}).map((item)=>{
                                                 return(
                                                     <ListItem>
-                                                        {item.content}
+                                                        <b>{item.username}: </b>{item.content}
                                                     </ListItem>
                                                 )
                                             })

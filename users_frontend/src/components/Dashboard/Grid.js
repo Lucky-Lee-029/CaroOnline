@@ -17,6 +17,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { nspRooms } from "../../socket";
 import UserCtx from "../../context/User";
 import { useHistory } from 'react-router';
+import { SettingsApplicationsSharp } from "@material-ui/icons";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +55,7 @@ const GridItem = ({ roomInfo }) => {
   const classes = useStyles();
   const [user] = useContext(UserCtx);
   const [open, setOpen] = useState(false);
+  const [password, setPassword] = useState("");
   const history = useHistory();
 
   const handleJoinRoomPublic = () => { alert("Public") };
@@ -69,6 +71,22 @@ const GridItem = ({ roomInfo }) => {
     setOpen(false);
   };
 
+  const handleRequestJoin = (roomId, time, isPrivate) =>{
+    if(!isPrivate){
+      handleJoinRoom(roomId, time);
+    }else{
+      setOpen(true);
+    }
+  }
+
+  const handleJoinPrivate = (roomId, time, pass) =>{
+    if(password === pass){
+      handleJoinRoom(roomId, time);
+    }else{
+      setOpen(false);
+    }
+  }
+
   const handleJoinRoom = (roomId, time) => {
     console.log(roomId);
     nspRooms.emit("join", { roomId, user });
@@ -79,6 +97,10 @@ const GridItem = ({ roomInfo }) => {
       cup: roomInfo[1].cups
     });
   };
+
+  const handleInputPass = e =>{
+    setPassword(e.target.value);
+  }
 
   return (
     roomInfo[1].status !== "Full" && roomInfo[1].status !== "Playing" ?
@@ -102,7 +124,7 @@ const GridItem = ({ roomInfo }) => {
           <CardActions>
             <Button
               size="small" variant="contained" color="primary"
-              onClick={() => handleJoinRoom(roomInfo[0], roomInfo[1].turn)} >
+              onClick={() => handleRequestJoin(roomInfo[0], roomInfo[1].turn, roomInfo[1].isPrivate)} >
               Tham gia
               </Button>
               <Button
@@ -122,6 +144,7 @@ const GridItem = ({ roomInfo }) => {
                   id="passwordRoom"
                   label="Password"
                   type="passwordRoom"
+                  onChange={handleInputPass}
                   fullWidth
                 />
               </DialogContent>
@@ -129,7 +152,7 @@ const GridItem = ({ roomInfo }) => {
                 <Button onClick={handleClose} color="primary">
                   Thoát
                 </Button>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={() => handleJoinPrivate(roomInfo[0], roomInfo[1].turn, roomInfo[1].password)} color="primary">
                   Nhập
                 </Button>
               </DialogActions>

@@ -57,8 +57,10 @@ function handle(io) {
         socket.emit("err_join_room", "Can not join room");
       } else {
         socket.join(roomId);
-        if(user){
-          rooms[roomId].players.push(user);
+        if(user && ! rooms[roomId].players.includes(user)){
+          if(rooms[roomId].players.length < 2){
+            rooms[roomId].players.push(user);
+          }
         }
         rooms[roomId].status = "Full";
         socket.emit("join_room_success", rooms[roomId]);
@@ -106,11 +108,18 @@ function handle(io) {
       if (!user)
         return;
       if (rooms[roomId].players[0]._id === user._id) {
+        console.log("leave 1");
         rooms[roomId].players.shift();
       } else {
+        console.log("leave 2");
         rooms[roomId].players.pop();
       }
-
+      // for(let i =0 ; i< rooms[roomId].players.length ; i++){
+      //   if ( rooms[roomId].players[i]._id === user._id) {
+      //     rooms[roomId].players.splice(i, 1); 
+      //   }
+      // }
+      // console.log(rooms[roomId].players);
       if (rooms[roomId].players.length < 1) {
         delete rooms[roomId];
       } else if (rooms[roomId].players.length < 2) {
@@ -121,8 +130,6 @@ function handle(io) {
       io.emit("rooms", rooms);
     })
     socket.on("join_game", (user, room) => {
-      console.log("join: " + room);
-      console.log(rooms[room]);
       socket.to(room).emit("rival_join", user);
       if (rooms[room].players.length > 1) {
         socket.emit("old_player", rooms[room].players[0]);

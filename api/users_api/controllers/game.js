@@ -5,9 +5,11 @@ async function storeGame(req, res) {
   try {
     const newGame = new Game(req.body);
     await newGame.save();
-
+    console.log(req.body);
+    console.log("save game");
     res.status(201).json({ newGame });
   } catch (err) {
+    console.log(err);
     res.status(500).json({
       msg: "Server error"
     });
